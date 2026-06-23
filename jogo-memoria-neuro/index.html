@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Um jogo da memória com símbolos relacionados à reabilitação neurológica."
+    />
+    <meta name="theme-color" content="#061B31" />
+    <title>Memória em Movimento</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-navigation">
+          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
+          <div class="brand-lock" aria-label="Reability">
+            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
+            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+          </div>
+        </div>
+        <p class="eyebrow">Cuidado, ciência e humanidade</p>
+        <h1 id="game-title">Memória em Movimento</h1>
+        <p class="intro">
+          Encontre os pares e exercite a atenção de um jeito leve.
+        </p>
+
+        <div class="game-status" aria-label="Status do jogo">
+          <p>Pares <strong id="matches">0</strong>/<span id="total-matches">8</span></p>
+          <p>Tentativas <strong id="moves">0</strong></p>
+          <p>Tempo <strong id="timer">00:00</strong></p>
+        </div>
+
+        <div
+          id="game-board"
+          class="game-board"
+          role="group"
+          aria-label="Cartas do jogo da memória"
+        ></div>
+
+        <div class="game-actions">
+          <button id="restart-button" class="button button-secondary" type="button">
+            Recomeçar jogo
+          </button>
+          <button id="share-button" class="button button-primary" type="button">
+            Compartilhar desafio
+          </button>
+        </div>
+
+        <p id="share-feedback" class="feedback" aria-live="polite"></p>
+      </section>
+    </main>
+
+    <dialog id="victory-dialog" class="victory-dialog" aria-labelledby="victory-title">
+      <div class="victory-content">
+        <p class="eyebrow">Parabéns!</p>
+        <h2 id="victory-title">Você encontrou todos os pares.</h2>
+        <p id="victory-summary"></p>
+        <button id="play-again-button" class="button button-primary" type="button">
+          Jogar novamente
+        </button>
+      </div>
+    </dialog>
+
+    <script src="./script.js" defer></script>
+    <script src="../disclaimer.js" defer></script>
+  </body>
+</html>

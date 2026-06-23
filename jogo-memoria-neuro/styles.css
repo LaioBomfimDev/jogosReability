@@ -1,0 +1,273 @@
+@import url("../reability.css");
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.page-shell {
+  display: grid;
+  min-height: 100vh;
+  padding: 28px;
+  place-items: center;
+}
+
+.game-card {
+  position: relative;
+  width: min(100%, 690px);
+  padding: clamp(26px, 5vw, 46px);
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  background: linear-gradient(135deg, var(--surface), #f7f1e4);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.game-navigation {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.game-navigation .brand-lock {
+  gap: 8px;
+  text-align: left;
+}
+
+.game-navigation .brand-mark {
+  width: 38px;
+  height: 38px;
+  font-size: 21px;
+}
+
+.game-navigation .brand-name {
+  font-size: 1.05rem;
+}
+
+.game-navigation .brand-name small {
+  font-size: 0.53rem;
+}
+
+.back-link {
+  color: var(--navy);
+  font: 800 0.82rem var(--sans);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--gold-dark);
+  text-decoration: underline;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  color: var(--navy);
+  font-family: var(--serif);
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: clamp(2.25rem, 7vw, 3.7rem);
+  line-height: 1;
+}
+
+h2 {
+  font-size: clamp(1.7rem, 5vw, 2.35rem);
+  line-height: 1.08;
+}
+
+.intro {
+  max-width: 450px;
+  margin: 0 auto 28px;
+  color: #3e4142;
+  font-size: 1.06rem;
+  line-height: 1.55;
+}
+
+.game-status {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.game-status p {
+  margin: 0;
+  padding: 12px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: rgba(255, 253, 246, 0.75);
+  color: var(--muted);
+  font: 800 0.72rem var(--sans);
+  text-transform: uppercase;
+}
+
+.game-status strong {
+  color: var(--navy);
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(9px, 2vw, 14px);
+}
+
+.memory-card {
+  position: relative;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  perspective: 800px;
+  background: transparent;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  border-radius: inherit;
+  place-items: center;
+  backface-visibility: hidden;
+  transition: transform 260ms ease, background 180ms ease;
+}
+
+.card-front {
+  background: linear-gradient(145deg, var(--navy), var(--navy-3));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.card-front::before {
+  width: 29%;
+  height: 29%;
+  border: 2px solid var(--gold-2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 7px rgba(168, 149, 76, 0.1);
+  content: "";
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--navy);
+  font-size: clamp(2.45rem, 13vw, 4.75rem);
+  line-height: 1;
+}
+
+.memory-card.is-open .card-front,
+.memory-card.is-matched .card-front {
+  transform: rotateY(180deg);
+}
+
+.memory-card.is-open .card-back,
+.memory-card.is-matched .card-back {
+  transform: rotateY(360deg);
+}
+
+.memory-card.is-matched .card-back {
+  background: var(--gold-soft);
+}
+
+.memory-card:disabled {
+  cursor: default;
+}
+
+.game-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.button {
+  min-height: 46px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button-primary {
+  color: #071523;
+  background: var(--gold-2);
+}
+
+.button-primary:hover {
+  background: var(--gold);
+}
+
+.button-secondary {
+  border-color: var(--line);
+  color: var(--navy);
+  background: var(--surface);
+}
+
+.button-secondary:hover {
+  background: var(--navy-soft);
+}
+
+.feedback {
+  min-height: 1.25rem;
+  margin: 14px 0 0;
+  color: var(--gold-dark);
+  font: 800 0.86rem var(--sans);
+}
+
+.victory-dialog {
+  width: min(calc(100% - 32px), 440px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.victory-dialog::backdrop {
+  background: rgba(3, 12, 22, 0.78);
+}
+
+.victory-content {
+  padding: 34px;
+  text-align: center;
+}
+
+@media (max-width: 430px) {
+  .page-shell {
+    padding: 12px;
+  }
+
+  .game-card {
+    border-radius: 22px;
+  }
+
+  .game-navigation {
+    flex-direction: column-reverse;
+    align-items: center;
+    margin-bottom: 26px;
+  }
+
+  .game-status p {
+    font-size: 0.62rem;
+  }
+
+  .game-actions .button {
+    width: 100%;
+    min-height: 52px;
+  }
+}

@@ -1,0 +1,7 @@
+# Cópia de referência usada durante a adaptação; não faz parte do site publicado.
+codigo-fonte-autorizado/
+
+# Arquivos locais do ambiente e do servidor de desenvolvimento.
+.agents/
+.codex/
+server-*.log

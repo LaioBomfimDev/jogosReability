@@ -1,0 +1,155 @@
+:root {
+  --navy: #061b31;
+  --navy-2: #0b243a;
+  --navy-3: #102e49;
+  --navy-soft: #e9eef2;
+  --gold: #a8954c;
+  --gold-2: #b8aa60;
+  --gold-dark: #857536;
+  --gold-soft: #efe8c9;
+  --paper: #f7f4ea;
+  --paper-2: #efe8d7;
+  --surface: #fffdf6;
+  --white: #ffffff;
+  --ink: #1f252b;
+  --muted: #6f6a5f;
+  --line: #d7d0be;
+  --radius: 24px;
+  --radius-sm: 16px;
+  --shadow: 0 24px 65px rgba(6, 27, 49, 0.16);
+  --soft: 0 12px 28px rgba(6, 27, 49, 0.08);
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: Inter, Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  background: linear-gradient(130deg, var(--paper) 0%, #ede5d5 52%, #fbfaf3 100%);
+  font-family: var(--serif);
+  line-height: 1.5;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.brand-lock {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--navy);
+}
+
+.brand-mark {
+  display: block;
+  width: 60px;
+  height: 56px;
+  object-fit: contain;
+}
+
+.brand-name {
+  margin: 0;
+  font: 800 1.3rem/1 var(--serif);
+  letter-spacing: 0.02em;
+}
+
+.brand-name small {
+  display: block;
+  margin-top: 5px;
+  color: var(--gold-dark);
+  font: 800 0.62rem/1 var(--sans);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 14px;
+  color: var(--gold-dark);
+  font: 900 0.72rem var(--sans);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 36px;
+  height: 1px;
+  background: var(--gold);
+  content: "";
+}
+
+.button {
+  border: 1px solid transparent;
+  font-family: var(--sans);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--gold-2);
+  outline-offset: 3px;
+}
+
+.health-notice-dialog {
+  width: min(calc(100% - 32px), 560px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.health-notice-dialog::backdrop {
+  background: rgba(3, 12, 22, 0.82);
+}
+
+.health-notice-dialog__content {
+  padding: clamp(26px, 6vw, 40px);
+  text-align: center;
+}
+
+.health-notice-dialog h2 {
+  margin: 0 0 16px;
+  color: var(--navy);
+  font: 800 clamp(1.8rem, 5vw, 2.5rem) / 1.08 var(--serif);
+}
+
+.health-notice-dialog p:not(.eyebrow) {
+  margin: 0 0 14px;
+  color: #3e4142;
+  line-height: 1.58;
+}
+
+.health-notice-dialog__button {
+  min-height: 48px;
+  margin-top: 10px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  color: #071523;
+  background: var(--gold-2);
+  cursor: pointer;
+}
+
+.health-notice-dialog__button:hover {
+  background: var(--gold);
+}

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Um desafio recreativo para descobrir o número secreto."
+    />
+    <meta name="theme-color" content="#061B31" />
+    <title>Desafio do Número</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-navigation">
+          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
+          <div class="brand-lock" aria-label="Reability">
+            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
+            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+          </div>
+        </div>
+        <p class="eyebrow">Cuidado, ciência e humanidade</p>
+        <h1 id="game-title">Desafio do Número</h1>
+        <p class="intro">
+          Escolha o nível do desafio e descubra o número secreto com as pistas.
+        </p>
+
+        <section id="difficulty-screen" class="difficulty-screen" aria-labelledby="difficulty-title">
+          <h2 id="difficulty-title">Escolha seu nível</h2>
+          <div class="difficulty-options">
+            <button class="difficulty-option" type="button" data-level="Fácil" data-limit="20">
+              <span class="difficulty-name">Fácil</span>
+              <strong>1 a 20</strong>
+              <small>Para começar com leveza.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="Médio" data-limit="100">
+              <span class="difficulty-name">Médio</span>
+              <strong>1 a 100</strong>
+              <small>Um desafio para pensar um pouco mais.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="Difícil" data-limit="1000">
+              <span class="difficulty-name">Difícil</span>
+              <strong>1 a 1000</strong>
+              <small>Para quem quer ir mais longe.</small>
+            </button>
+          </div>
+        </section>
+
+        <section id="game-area" class="game-area" hidden>
+          <p id="selected-level" class="selected-level"></p>
+          <p id="instruction" class="instruction" aria-live="polite"></p>
+
+          <form id="guess-form" class="guess-form">
+            <label for="guess">Seu palpite</label>
+            <div class="input-row">
+              <input id="guess" name="guess" type="number" min="1" inputmode="numeric" required />
+              <button class="button button-primary" type="submit">Conferir</button>
+            </div>
+          </form>
+
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+          <p id="attempts" class="attempts">Tentativas: 0</p>
+
+          <div class="game-actions">
+            <button id="new-game-button" class="button button-secondary" type="button">
+              Novo número
+            </button>
+            <button id="change-level-button" class="button button-tertiary" type="button">
+              Trocar nível
+            </button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./script.js" defer></script>
+    <script src="../disclaimer.js" defer></script>
+  </body>
+</html>
