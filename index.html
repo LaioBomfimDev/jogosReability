@@ -13,6 +13,8 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
+    <link rel="preload" as="image" href="./assets/brand/reability-signature-transparent.png" type="image/png" fetchpriority="high" />
+    <link rel="stylesheet" href="./reability.css" />
     <link rel="stylesheet" href="./home.css" />
   </head>
   <body>
@@ -20,8 +22,11 @@
       <section class="welcome" aria-labelledby="page-title">
         <img
           class="brand-signature"
-          src="./assets/brand/reability-signature.png"
+          src="./assets/brand/reability-signature-transparent.png"
           alt="Reability — Transformando limites em possibilidades"
+          width="720"
+          height="565"
+          decoding="async"
         />
         <p class="eyebrow">Cuidado, ciência e humanidade</p>
         <h1 id="page-title">Jogue, reflita e aprenda</h1>
