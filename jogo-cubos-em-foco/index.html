@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Cubos em Foco: um desafio de padrão geométrico, rotação e organização espacial."
+    />
+    <meta name="theme-color" content="#061B31" />
+    <title>Cubos em Foco | Reability</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-navigation">
+          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
+          <div class="brand-lock" aria-label="Reability">
+            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
+            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+          </div>
+        </div>
+
+        <p class="eyebrow">Desafio visual e espacial</p>
+        <h1 id="game-title">Cubos em Foco</h1>
+        <p class="intro">
+          Compare as faces, monte o desenho e vença o relógio. Este é um desafio recreativo — não é uma avaliação clínica.
+        </p>
+
+        <section class="objective" aria-labelledby="objective-title">
+          <div class="objective-copy">
+            <p class="section-label">Objetivo</p>
+            <h2 id="objective-title">Recrie este padrão</h2>
+            <p>As faces amarelas e pretas inteiras só precisam estar na posição certa. As diagonais também precisam estar viradas na direção certa.</p>
+          </div>
+          <div id="target-grid" class="target-grid" aria-label="Padrão geométrico a ser montado"></div>
+        </section>
+
+        <section class="challenge" aria-labelledby="challenge-title">
+          <div class="challenge-header">
+            <div>
+              <p class="section-label">Sua grade</p>
+              <h2 id="challenge-title">Organize os cubos</h2>
+            </div>
+            <p id="game-message" class="game-message" aria-live="polite">Pronto para observar o padrão?</p>
+          </div>
+
+          <div class="game-status" aria-live="polite" aria-atomic="true">
+            <p>Pontos <strong id="score">0</strong></p>
+            <p>Combo <strong id="combo">x1</strong></p>
+            <p>Montados <strong id="mounted">0</strong>/9</p>
+          </div>
+
+          <div class="time-panel">
+            <div class="time-heading">
+              <span>Tempo</span>
+              <strong id="time-left">01:15</strong>
+            </div>
+            <div class="time-track" aria-label="Tempo restante">
+              <span id="time-bar" class="time-bar"></span>
+            </div>
+          </div>
+
+          <p class="instructions">
+            <span aria-hidden="true">↻</span> Toque numa face diagonal para girá-la 90°.
+            <span aria-hidden="true">↔</span> Arraste uma face para trocar sua posição.
+          </p>
+
+          <div id="puzzle-grid" class="puzzle-grid" role="group" aria-label="Grade de cubos embaralhados"></div>
+
+          <div class="game-actions">
+            <button id="start-button" class="button button-primary" type="button">Iniciar desafio</button>
+            <button id="restart-button" class="button button-secondary" type="button">Novo padrão</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="result-dialog" class="result-dialog" aria-labelledby="result-title">
+      <div class="result-dialog__content">
+        <p id="result-eyebrow" class="eyebrow">Desafio concluído</p>
+        <h2 id="result-title">Cubos em Foco</h2>
+        <p id="result-summary"></p>
+        <div class="result-dialog__actions">
+          <button id="play-again-button" class="button button-primary" type="button">Jogar de novo</button>
+          <a class="button button-secondary" href="../index.html">Ver outros jogos</a>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="./script.js" defer></script>
+    <script src="../disclaimer.js" defer></script>
+  </body>
+</html>

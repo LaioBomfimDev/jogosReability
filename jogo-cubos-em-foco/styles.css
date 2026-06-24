@@ -1,0 +1,508 @@
+@import url("../reability.css");
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+.page-shell {
+  display: grid;
+  min-height: 100vh;
+  padding: 28px;
+  place-items: center;
+}
+
+.game-card {
+  width: min(100%, 850px);
+  padding: clamp(24px, 5vw, 46px);
+  border: 1px solid var(--line);
+  border-radius: 34px;
+  background: linear-gradient(135deg, var(--surface), #f6f0e2);
+  box-shadow: var(--shadow);
+}
+
+.game-navigation {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.game-navigation .brand-lock {
+  gap: 8px;
+  text-align: left;
+}
+
+.game-navigation .brand-mark {
+  width: 38px;
+  height: 38px;
+}
+
+.game-navigation .brand-name {
+  font-size: 1.05rem;
+}
+
+.game-navigation .brand-name small {
+  font-size: 0.53rem;
+}
+
+.back-link {
+  color: var(--navy);
+  font: 800 0.82rem var(--sans);
+  text-decoration: none;
+}
+
+.back-link:hover {
+  color: var(--gold-dark);
+  text-decoration: underline;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  color: var(--navy);
+  font-family: var(--serif);
+}
+
+h1 {
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: clamp(2.35rem, 7vw, 3.9rem);
+  line-height: 1;
+}
+
+h2 {
+  margin-bottom: 7px;
+  font-size: clamp(1.45rem, 4vw, 2.05rem);
+  line-height: 1.05;
+}
+
+.game-card > .eyebrow {
+  display: flex;
+  justify-content: center;
+}
+
+.intro {
+  max-width: 610px;
+  margin: 0 auto 30px;
+  color: #3e4142;
+  text-align: center;
+  font-size: 1.05rem;
+  line-height: 1.55;
+}
+
+.objective,
+.challenge {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.objective {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 230px;
+  align-items: center;
+  gap: clamp(20px, 5vw, 52px);
+  padding: clamp(20px, 4vw, 30px);
+  background: linear-gradient(110deg, var(--navy) 0%, #173a56 100%);
+}
+
+.objective-copy h2 {
+  color: var(--white);
+}
+
+.objective-copy p:not(.section-label) {
+  max-width: 450px;
+  margin-bottom: 0;
+  color: #e7edf1;
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.section-label {
+  margin-bottom: 7px;
+  color: var(--gold-dark);
+  font: 900 0.68rem var(--sans);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.objective .section-label {
+  color: #e8d883;
+}
+
+.target-grid,
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(6px, 1.6vw, 10px);
+}
+
+.target-grid {
+  width: min(100%, 230px);
+  justify-self: end;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  background: rgba(3, 13, 23, 0.28);
+}
+
+.cube-face {
+  position: relative;
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(6, 27, 49, 0.46);
+  border-radius: 7px;
+  background: #111d29;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16), inset 0 -5px 10px rgba(2, 11, 19, 0.2);
+}
+
+.cube-face__surface {
+  position: absolute;
+  inset: -1px;
+  display: block;
+  transform: rotate(var(--face-rotation, 0deg));
+  transform-origin: center;
+  transition: transform 240ms cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+
+.cube-face--yellow .cube-face__surface {
+  background: #f1c84d;
+}
+
+.cube-face--black .cube-face__surface {
+  background: #111d29;
+}
+
+.cube-face--diagonal .cube-face__surface {
+  background: linear-gradient(135deg, #f1c84d 0 49.25%, #111d29 50% 100%);
+}
+
+.cube-face::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+  content: "";
+  pointer-events: none;
+}
+
+.challenge {
+  margin-top: 18px;
+  padding: clamp(20px, 4vw, 32px);
+  background: rgba(255, 253, 246, 0.76);
+}
+
+.challenge-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.challenge-header h2,
+.challenge-header .section-label {
+  margin-bottom: 0;
+}
+
+.game-message {
+  max-width: 260px;
+  margin-bottom: 2px;
+  color: var(--gold-dark);
+  text-align: right;
+  font: 800 0.85rem/1.35 var(--sans);
+}
+
+.game-status {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.game-status p {
+  margin: 0;
+  padding: 11px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--muted);
+  text-align: center;
+  font: 800 0.7rem var(--sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.game-status strong {
+  color: var(--navy);
+}
+
+.time-panel {
+  margin-top: 17px;
+}
+
+.time-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 7px;
+  color: var(--muted);
+  font: 800 0.74rem var(--sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.time-heading strong {
+  color: var(--navy);
+}
+
+.time-track {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e7dfcb;
+}
+
+.time-bar {
+  display: block;
+  width: var(--time-progress, 100%);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #d3bb53, var(--gold-dark));
+  transition: width 100ms linear, background 200ms ease;
+}
+
+.time-bar.is-urgent {
+  background: #b05742;
+}
+
+.instructions {
+  margin: 17px 0 15px;
+  color: #4f514c;
+  text-align: center;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.instructions span {
+  display: inline-grid;
+  width: 23px;
+  height: 23px;
+  margin: 0 3px;
+  border-radius: 50%;
+  place-items: center;
+  color: var(--navy);
+  background: var(--gold-soft);
+  font: 900 1rem/1 var(--sans);
+}
+
+.puzzle-grid {
+  width: min(100%, 470px);
+  margin: 0 auto;
+  padding: clamp(9px, 2vw, 14px);
+  border: 1px solid #c7b981;
+  border-radius: 20px;
+  background: #d5c992;
+}
+
+.puzzle-slot {
+  min-width: 0;
+  border-radius: 10px;
+  background: rgba(6, 27, 49, 0.13);
+}
+
+.puzzle-cube {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  cursor: grab;
+  background: transparent;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.puzzle-cube:active {
+  cursor: grabbing;
+}
+
+.puzzle-cube .cube-face {
+  border-radius: 10px;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.puzzle-cube:not(:disabled):hover .cube-face,
+.puzzle-cube:not(:disabled):focus-visible .cube-face {
+  transform: translateY(-3px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2), 0 8px 16px rgba(6, 27, 49, 0.2);
+}
+
+.puzzle-cube:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 3px;
+}
+
+.puzzle-cube.is-correct .cube-face {
+  box-shadow: inset 0 0 0 3px #fff5bd, 0 0 0 3px rgba(132, 116, 46, 0.46);
+}
+
+.puzzle-cube.is-dragging {
+  opacity: 0.2;
+}
+
+.puzzle-cube:disabled {
+  cursor: default;
+}
+
+.drag-ghost {
+  position: fixed;
+  z-index: 10;
+  margin: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 13px 15px rgba(6, 27, 49, 0.28));
+  transform: translate(-50%, -50%) rotate(3deg) scale(1.06);
+}
+
+.game-actions,
+.result-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.game-actions {
+  margin-top: 22px;
+}
+
+.button {
+  display: inline-flex;
+  min-height: 47px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 19px;
+  border-radius: 999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 180ms ease, background 180ms ease;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+}
+
+.button-primary {
+  color: #071523;
+  background: var(--gold-2);
+}
+
+.button-primary:hover {
+  background: var(--gold);
+}
+
+.button-secondary {
+  border-color: var(--line);
+  color: var(--navy);
+  background: var(--surface);
+}
+
+.button-secondary:hover {
+  background: var(--navy-soft);
+}
+
+.result-dialog {
+  width: min(calc(100% - 32px), 465px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.result-dialog::backdrop {
+  background: rgba(3, 12, 22, 0.8);
+}
+
+.result-dialog__content {
+  padding: clamp(26px, 6vw, 38px);
+  text-align: center;
+}
+
+.result-dialog__content .eyebrow {
+  justify-content: center;
+}
+
+.result-dialog__content h2 {
+  font-size: clamp(1.85rem, 5vw, 2.4rem);
+}
+
+.result-dialog__content > p:not(.eyebrow) {
+  margin-bottom: 25px;
+  color: #3e4142;
+  line-height: 1.55;
+}
+
+@media (max-width: 590px) {
+  .page-shell {
+    padding: 12px;
+  }
+
+  .game-card {
+    padding: 25px 18px;
+    border-radius: 22px;
+  }
+
+  .game-navigation {
+    flex-direction: column-reverse;
+    align-items: center;
+    margin-bottom: 26px;
+  }
+
+  .objective {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .target-grid {
+    width: min(100%, 205px);
+    justify-self: center;
+  }
+
+  .challenge-header {
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .game-message {
+    max-width: none;
+    text-align: center;
+  }
+
+  .instructions span {
+    margin-left: 0;
+  }
+
+  .game-actions .button,
+  .result-dialog__actions .button {
+    width: 100%;
+    min-height: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

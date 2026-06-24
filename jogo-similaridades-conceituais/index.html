@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Um jogo recreativo de associações por relações funcionais e conceituais."
+    />
+    <meta name="theme-color" content="#061B31" />
+    <title>Conexões de Ideias</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-navigation">
+          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
+          <div class="brand-lock" aria-label="Reability">
+            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
+            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+          </div>
+        </div>
+
+        <p class="eyebrow">Pensamento flexível</p>
+        <h1 id="game-title">Conexões de Ideias</h1>
+        <p class="intro">
+          Observe as imagens e encontre a relação que faz sentido. Às vezes, ela está na função — não na aparência.
+        </p>
+
+        <div class="game-status" aria-label="Progresso do jogo">
+          <p>Rodada <strong id="round-number">1</strong>/<span id="total-rounds">6</span></p>
+          <p>Conexões <strong id="score">0</strong></p>
+        </div>
+
+        <section class="play-area" aria-labelledby="instruction">
+          <p id="instruction" class="instruction" aria-live="polite">
+            Arraste a carta solta para a imagem que combina com ela. Se preferir, toque na carta e depois no destino.
+          </p>
+
+          <div class="idea-tray" aria-label="Carta para conectar">
+            <p class="tray-label">Carta solta</p>
+            <button id="loose-card" class="idea-card loose-card" type="button" draggable="true" aria-pressed="false"></button>
+          </div>
+
+          <div id="target-grid" class="target-grid" role="group" aria-label="Imagens de destino"></div>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </section>
+
+        <div class="game-actions">
+          <button id="restart-button" class="button button-secondary" type="button">Recomeçar</button>
+          <button id="next-button" class="button button-primary" type="button" hidden>Próxima conexão</button>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="victory-dialog" class="victory-dialog" aria-labelledby="victory-title">
+      <div class="victory-content">
+        <p class="eyebrow">Caminho concluído</p>
+        <h2 id="victory-title">Você conectou todas as ideias.</h2>
+        <p id="victory-summary"></p>
+        <button id="play-again-button" class="button button-primary" type="button">Jogar novamente</button>
+      </div>
+    </dialog>
+
+    <script src="./script.js" defer></script>
+    <script src="../disclaimer.js" defer></script>
+  </body>
+</html>
