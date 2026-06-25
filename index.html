@@ -13,75 +13,115 @@
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png" />
     <link rel="manifest" href="./site.webmanifest" />
-    <link rel="preload" as="image" href="./assets/brand/reability-signature-transparent.png" type="image/png" fetchpriority="high" />
+    <link rel="preload" as="image" href="./assets/hero-reability.png" type="image/png" fetchpriority="high" />
     <link rel="stylesheet" href="./reability.css" />
     <link rel="stylesheet" href="./home.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="welcome" aria-labelledby="page-title">
-        <img
-          class="brand-signature"
-          src="./assets/brand/reability-signature-transparent.png"
-          alt="Reability — Transformando limites em possibilidades"
-          width="720"
-          height="565"
-          decoding="async"
-        />
-        <p class="eyebrow">Cuidado, ciência e humanidade</p>
-        <h1 id="page-title">Jogue, reflita e aprenda</h1>
-        <p class="intro">
-          Chegou pelo Instagram? Escolha um desafio, jogue no seu ritmo e entenda, na prática,
-          por que memória, atenção e raciocínio fazem parte do nosso cotidiano.
-        </p>
+        <header class="welcome-hero">
+          <div class="welcome-hero__copy">
+            <img
+              class="brand-signature"
+              src="./assets/brand/reability-signature-transparent.png"
+              alt="Reability — Transformando limites em possibilidades"
+              width="720"
+              height="565"
+              decoding="async"
+            />
+            <p class="eyebrow">Cuidado, ciência e humanidade</p>
+            <h1 id="page-title">Jogue, reflita e aprenda</h1>
+            <p class="intro">
+              Chegou pelo Instagram? Escolha um desafio, jogue no seu ritmo e entenda, na prática,
+              por que memória, atenção e raciocínio fazem parte do nosso cotidiano.
+            </p>
+          </div>
 
-        <div class="game-options">
+          <div class="welcome-hero__image" aria-hidden="true">
+            <img
+              src="./assets/hero-reability.png"
+              alt=""
+              width="879"
+              height="941"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </div>
+        </header>
+
+        <h2 class="sr-only">Escolha um jogo</h2>
+        <div class="game-options" aria-label="Jogos disponíveis">
           <article class="game-option">
-            <svg class="game-symbol" aria-hidden="true"><use href="./assets/icons/neuro-icons.svg#memory"></use></svg>
-            <span class="game-number">01</span>
-            <h2>Memória em Movimento</h2>
-            <p>Use atenção, comparação e tentativa para encontrar todos os pares.</p>
-            <a class="button" href="./jogo-memoria-neuro/index.html">Jogar memória</a>
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/memoria-visual.png" alt="" decoding="async" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 01</p>
+              <h3>Memória Visual</h3>
+              <p>Fortaleça sua memória com imagens.</p>
+              <a class="button" href="./jogo-memoria-neuro/index.html">Jogar agora</a>
+            </div>
           </article>
 
           <article class="game-option">
-            <svg class="game-symbol" aria-hidden="true"><use href="./assets/icons/neuro-icons.svg#numbers"></use></svg>
-            <span class="game-number">02</span>
-            <h2>Desafio do Número</h2>
-            <p>Use as pistas de maior ou menor e avance passo a passo até a resposta.</p>
-            <a class="button" href="./jogo-numero-neuro/index.html">Jogar desafio</a>
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/logica-numerica.png" alt="" decoding="async" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 02</p>
+              <h3>Lógica Numérica</h3>
+              <p>Resolva desafios matemáticos rápidos.</p>
+              <a class="button" href="./jogo-numero-neuro/index.html">Jogar agora</a>
+            </div>
           </article>
 
           <article class="game-option">
-            <svg class="game-symbol" aria-hidden="true"><use href="./assets/icons/neuro-icons.svg#brain"></use></svg>
-            <span class="game-number">03</span>
-            <h2>Cérebro Feliz</h2>
-            <p>Toque no cérebro sempre que ele aparecer e veja quantos pontos consegue em 45 segundos.</p>
-            <a class="button" href="./jogo-cerebro-feliz/index.html">Jogar agora</a>
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/atencao-plena.png" alt="" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 03</p>
+              <h3>Atenção Plena</h3>
+              <p>Mantenha o foco em tarefas simples.</p>
+              <a class="button" href="./jogo-cerebro-feliz/index.html">Jogar agora</a>
+            </div>
           </article>
 
           <article class="game-option game-option--concepts">
-            <svg class="game-symbol" aria-hidden="true"><use href="./assets/icons/neuro-icons.svg#puzzle"></use></svg>
-            <span class="game-number">04</span>
-            <h2>Conexões de Ideias</h2>
-            <p>Encontre a relação que une duas imagens — mesmo quando elas parecem bem diferentes.</p>
-            <a class="button" href="./jogo-similaridades-conceituais/index.html">Criar conexões</a>
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/conexoes-de-ideias.png" alt="" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 04</p>
+              <h3>Conexões de Ideias</h3>
+              <p>Descubra relações entre imagens.</p>
+              <a class="button" href="./jogo-similaridades-conceituais/index.html">Jogar agora</a>
+            </div>
           </article>
 
           <article class="game-option">
-            <svg class="game-symbol" aria-hidden="true"><use href="./assets/icons/neuro-icons.svg#puzzle"></use></svg>
-            <span class="game-number">05</span>
-            <h2>Cubos em Foco</h2>
-            <p>Recrie o padrão geométrico, girando as faces diagonais e trocando os cubos de lugar.</p>
-            <a class="button" href="./jogo-cubos-em-foco/index.html">Montar padrão</a>
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/cubos-em-foco.png" alt="" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 05</p>
+              <h3>Cubos em Foco</h3>
+              <p>Recrie o padrão geométrico.</p>
+              <a class="button" href="./jogo-cubos-em-foco/index.html">Jogar agora</a>
+            </div>
           </article>
 
           <article class="game-option">
-            <svg class="game-symbol" aria-hidden="true"><use href="./assets/icons/neuro-icons.svg#puzzle"></use></svg>
-            <span class="game-number">06</span>
-            <h2>Matriz em Movimento</h2>
-            <p>Encontre a peça que completa a matriz e descubra regras de giro, fusão e roubo de cor.</p>
-            <a class="button" href="./jogo-matriz-neuro/index.html">Resolver matriz</a>
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/matriz-em-movimento.png" alt="" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 06</p>
+              <h3>Matriz em Movimento</h3>
+              <p>Complete a sequência visual.</p>
+              <a class="button" href="./jogo-matriz-neuro/index.html">Jogar agora</a>
+            </div>
           </article>
         </div>
 
