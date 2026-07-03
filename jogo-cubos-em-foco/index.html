@@ -33,28 +33,43 @@
           Compare as faces, monte o desenho e vença o relógio. Este é um desafio recreativo — não é uma avaliação clínica.
         </p>
 
-        <section class="objective" aria-labelledby="objective-title">
-          <div class="objective-copy">
-            <p class="section-label">Objetivo</p>
-            <h2 id="objective-title">Recrie este padrão</h2>
-            <p>As faces amarelas e pretas inteiras só precisam estar na posição certa. As diagonais também precisam estar viradas na direção certa.</p>
-          </div>
-          <div id="target-grid" class="target-grid" aria-label="Padrão geométrico a ser montado"></div>
-        </section>
-
-        <section class="challenge" aria-labelledby="challenge-title">
-          <div class="challenge-header">
-            <div>
-              <p class="section-label">Sua grade</p>
-              <h2 id="challenge-title">Organize os cubos</h2>
+        <div class="game-workspace">
+          <aside class="objective" aria-labelledby="objective-title">
+            <div class="objective-copy">
+              <p class="section-label">Objetivo</p>
+              <h2 id="objective-title">Recrie este padrão</h2>
+              <p>Use a referência ao lado: as diagonais também precisam estar viradas na direção certa.</p>
             </div>
-            <p id="game-message" class="game-message" aria-live="polite">Pronto para observar o padrão?</p>
-          </div>
+            <div id="target-grid" class="target-grid" aria-label="Padrão geométrico a ser montado"></div>
+          </aside>
+
+          <section class="challenge" aria-labelledby="challenge-title">
+            <div class="challenge-header">
+              <div>
+                <p class="section-label">Sua grade</p>
+                <h2 id="challenge-title">Organize os cubos</h2>
+              </div>
+              <div class="challenge-tools">
+                <div class="level-picker" role="group" aria-label="Escolha o nível do desafio">
+                  <button class="level-option" type="button" data-level="easy" aria-pressed="false">
+                    Fácil <small>2×2 · 60 s</small>
+                  </button>
+                  <button class="level-option" type="button" data-level="medium" aria-pressed="true">
+                    Médio <small>3×3 · 75 s</small>
+                  </button>
+                  <button class="level-option" type="button" data-level="hard" aria-pressed="false">
+                    Difícil <small>4×4 · 90 s</small>
+                  </button>
+                </div>
+                <p id="daily-status" class="daily-status" aria-live="polite"></p>
+                <p id="game-message" class="game-message" aria-live="polite">Pronto para observar o padrão?</p>
+              </div>
+            </div>
 
           <div class="game-status" aria-live="polite" aria-atomic="true">
             <p>Pontos <strong id="score">0</strong></p>
             <p>Combo <strong id="combo">x1</strong></p>
-            <p>Montados <strong id="mounted">0</strong>/9</p>
+            <p>Montados <strong id="mounted">0</strong>/<span id="total-pieces">9</span></p>
           </div>
 
           <div class="time-panel">
@@ -78,7 +93,8 @@
             <button id="start-button" class="button button-primary" type="button">Iniciar desafio</button>
             <button id="restart-button" class="button button-secondary" type="button">Novo padrão</button>
           </div>
-        </section>
+          </section>
+        </div>
       </section>
     </main>
 
@@ -94,6 +110,7 @@
       </div>
     </dialog>
 
+    <script src="../daily-play.js" defer></script>
     <script src="./script.js" defer></script>
     <script src="../disclaimer.js" defer></script>
   </body>

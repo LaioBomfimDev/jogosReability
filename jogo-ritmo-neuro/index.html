@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Ritmo em Foco: um jogo de atenção, tempo de resposta e coordenação."
+    />
+    <meta name="theme-color" content="#061B31" />
+    <title>Ritmo em Foco | Reability</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="stylesheet" href="../reability.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-navigation">
+          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
+          <div class="brand-lock" aria-label="Reability">
+            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
+            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+          </div>
+        </div>
+
+        <p class="eyebrow">Atenção e tempo de resposta</p>
+        <h1 id="game-title">Ritmo em Foco</h1>
+        <p class="intro">
+          Toque quando o pulso chegar à linha. Treine foco, coordenação e ritmo em partidas curtas.
+          Este é um desafio recreativo — não é uma avaliação clínica.
+        </p>
+
+        <section id="level-screen" class="level-screen" aria-labelledby="level-title">
+          <h2 id="level-title">Escolha o ritmo</h2>
+          <p id="daily-status" class="daily-status" aria-live="polite"></p>
+          <div class="difficulty-options">
+            <button class="difficulty-option" type="button" data-level="easy">
+              <span>Fácil</span>
+              <strong>70 BPM</strong>
+              <small>40 segundos. Boa meta: 1800 pontos. Destaque: 3600.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="medium">
+              <span>Médio</span>
+              <strong>88 BPM</strong>
+              <small>45 segundos. Boa meta: 3200 pontos. Destaque: 6200.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="hard">
+              <span>Difícil</span>
+              <strong>108 BPM</strong>
+              <small>50 segundos. Boa meta: 5200 pontos. Destaque: 9200.</small>
+            </button>
+          </div>
+        </section>
+
+        <section id="play-screen" class="play-screen" hidden aria-label="Área do jogo">
+          <div class="play-heading">
+            <div>
+              <p id="selected-level" class="selected-level"></p>
+              <p id="game-daily-status" class="daily-status" aria-live="polite"></p>
+            </div>
+            <div class="play-actions">
+              <button id="audio-button" class="button button-secondary" type="button" aria-pressed="true">Som ligado</button>
+              <button id="pause-button" class="button button-secondary" type="button">Pausar</button>
+              <button id="restart-button" class="button button-secondary" type="button">Recomeçar</button>
+              <button id="change-level-button" class="button button-tertiary" type="button">Trocar ritmo</button>
+            </div>
+          </div>
+
+          <div class="game-status" aria-label="Status do jogo">
+            <p>Pontos <strong id="score">0</strong></p>
+            <p>Combo <strong id="combo">x0</strong></p>
+            <p>Precisão <strong id="accuracy">100%</strong></p>
+            <p>Vidas <strong id="lives">3</strong></p>
+          </div>
+
+          <div class="stage-layout">
+            <div class="canvas-shell">
+              <canvas
+                id="game-canvas"
+                width="420"
+                height="600"
+                aria-label="Quatro pistas de ritmo. Use D, F, J e K ou toque na pista."
+              ></canvas>
+              <div class="lane-touch" aria-label="Controles de toque">
+                <button class="lane-button lane-button--one" type="button" data-lane="0">D</button>
+                <button class="lane-button lane-button--two" type="button" data-lane="1">F</button>
+                <button class="lane-button lane-button--three" type="button" data-lane="2">J</button>
+                <button class="lane-button lane-button--four" type="button" data-lane="3">K</button>
+              </div>
+            </div>
+
+            <aside class="rhythm-panel" aria-labelledby="keys-title">
+              <div>
+                <p class="section-label">Teclas</p>
+                <h2 id="keys-title">Siga as quatro pistas</h2>
+                <div class="key-row" aria-hidden="true">
+                  <span>D</span>
+                  <span>F</span>
+                  <span>J</span>
+                  <span>K</span>
+                </div>
+              </div>
+
+              <div class="rhythm-progress">
+                <div class="time-heading">
+                  <span>Tempo</span>
+                  <strong id="time-left">00:40</strong>
+                </div>
+                <div class="time-track" aria-label="Progresso da partida">
+                  <span id="time-bar" class="time-bar"></span>
+                </div>
+              </div>
+
+              <p id="game-message" class="game-message" aria-live="polite">
+                Aguarde o pulso tocar a linha dourada.
+              </p>
+            </aside>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="result-dialog" class="result-dialog" aria-labelledby="result-title">
+      <div class="result-dialog__content">
+        <p id="result-eyebrow" class="eyebrow">Ritmo concluído</p>
+        <h2 id="result-title">Ritmo em Foco</h2>
+        <p id="result-summary"></p>
+        <div class="result-stats" aria-label="Resultado da partida">
+          <p>Acertos <strong id="result-hits">0</strong></p>
+          <p>Erros <strong id="result-misses">0</strong></p>
+          <p>Combo <strong id="result-combo">x0</strong></p>
+        </div>
+        <div class="result-dialog__actions">
+          <button id="play-again-button" class="button button-primary" type="button">Jogar de novo</button>
+          <button id="choose-level-button" class="button button-secondary" type="button">Escolher ritmo</button>
+          <a class="button button-tertiary" href="../index.html">Ver outros jogos</a>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="../daily-play.js" defer></script>
+    <script src="./script.js" defer></script>
+    <script src="../disclaimer.js" defer></script>
+  </body>
+</html>

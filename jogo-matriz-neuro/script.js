@@ -1,6 +1,11 @@
+const GAME_ID = "matriz-em-movimento";
+const GAME_TITLE = "Matriz em Movimento";
+
 const startScreen = document.querySelector("#start-screen");
 const gameInterface = document.querySelector("#game-interface");
 const difficultyButtons = document.querySelectorAll(".difficulty-option");
+const dailyStatus = document.querySelector("#daily-status");
+const gameDailyStatus = document.querySelector("#game-daily-status");
 const selectedModeElement = document.querySelector("#selected-mode");
 const modifierNameElement = document.querySelector("#modifier-name");
 const puzzleTitleElement = document.querySelector("#puzzle-title");
@@ -20,9 +25,24 @@ const playAgainButton = document.querySelector("#play-again-button");
 const chooseModeButton = document.querySelector("#choose-mode-button");
 
 const modes = {
-  leve: { name: "Leve", puzzles: 3, duration: null },
-  ritmo: { name: "Ritmo", puzzles: 5, duration: 75 },
-  intenso: { name: "Intenso", puzzles: 7, duration: 60 },
+  leve: {
+    name: "Leve",
+    puzzles: 3,
+    duration: null,
+    goals: { good: 200, standout: 350, goodLabel: "200 pontos", standoutLabel: "350 pontos" },
+  },
+  ritmo: {
+    name: "Ritmo",
+    puzzles: 5,
+    duration: 75,
+    goals: { good: 400, standout: 650, goodLabel: "400 pontos", standoutLabel: "650 pontos" },
+  },
+  intenso: {
+    name: "Intenso",
+    puzzles: 7,
+    duration: 60,
+    goals: { good: 575, standout: 950, goodLabel: "575 pontos", standoutLabel: "950 pontos" },
+  },
 };
 
 const directions = [
@@ -59,6 +79,44 @@ let isAnswerLocked = false;
 let isGameFinished = false;
 let timerInterval;
 let matrixCells = [];
+
+const currentModeKey = () => activeMode?.key || "leve";
+
+const currentModeName = () => activeMode?.name || "Leve";
+
+const updateDailyStatus = (modeKey = currentModeKey()) => {
+  const text = ReabilityDaily.statusText({
+    gameId: GAME_ID,
+    levelKey: modeKey,
+    levelName: modes[modeKey]?.name || currentModeName(),
+  });
+
+  dailyStatus.textContent = text;
+  gameDailyStatus.textContent = text;
+  difficultyButtons.forEach((button) => {
+    ReabilityDaily.updateLevelLock(button, GAME_ID, button.dataset.mode);
+  });
+};
+
+const requestDailyAttempt = async (modeKey) => {
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, modeKey);
+  updateDailyStatus(modeKey);
+
+  if (!attempt.ok) {
+    ReabilityDaily.showLimitDialog({
+      gameTitle: GAME_TITLE,
+      levelName: modes[modeKey].name,
+    });
+    return false;
+  }
+
+  return true;
+};
+
+const clearGoalResult = () => {
+  resultSummary.parentElement.querySelector(".goal-result")?.remove();
+};
 
 const shuffle = (items) => {
   const shuffled = [...items];
@@ -406,6 +464,10 @@ const finishGame = (timeExpired = false) => {
   resultSummary.textContent = timeExpired
     ? `O tempo acabou. Você resolveu ${correctAnswers} de ${activeMode.puzzles} matrizes e fez ${score} pontos.`
     : `Você resolveu ${correctAnswers} de ${activeMode.puzzles} matrizes e terminou com ${score} pontos.`;
+  ReabilityDaily.goals.showGoalResult(
+    resultSummary,
+    ReabilityDaily.goals.rateHigher(score, activeMode.goals),
+  );
 
   if (!resultDialog.open) resultDialog.showModal();
 };
@@ -423,7 +485,7 @@ const startTimer = () => {
 };
 
 const startGame = (modeKey) => {
-  activeMode = modes[modeKey];
+  activeMode = { key: modeKey, ...modes[modeKey] };
   puzzleQueue = createPuzzleQueue(activeMode.puzzles);
   currentRound = 0;
   score = 0;
@@ -436,8 +498,14 @@ const startGame = (modeKey) => {
   gameInterface.hidden = false;
   document.body.classList.add("game-in-progress");
   if (resultDialog.open) resultDialog.close();
+  clearGoalResult();
+  updateDailyStatus();
   showCurrentPuzzle();
   startTimer();
+};
+
+const beginGame = async (modeKey) => {
+  if (await requestDailyAttempt(modeKey)) startGame(modeKey);
 };
 
 const returnToModeSelection = () => {
@@ -447,11 +515,13 @@ const returnToModeSelection = () => {
   gameInterface.hidden = true;
   startScreen.hidden = false;
   if (resultDialog.open) resultDialog.close();
+  clearGoalResult();
+  updateDailyStatus();
   difficultyButtons[0].focus();
 };
 
 difficultyButtons.forEach((button) => {
-  button.addEventListener("click", () => startGame(button.dataset.mode));
+  button.addEventListener("click", () => beginGame(button.dataset.mode));
 });
 
 nextButton.addEventListener("click", () => {
@@ -465,8 +535,9 @@ nextButton.addEventListener("click", () => {
 });
 
 playAgainButton.addEventListener("click", () => {
-  const modeKey = Object.keys(modes).find((key) => modes[key] === activeMode);
-  startGame(modeKey);
+  beginGame(activeMode.key);
 });
 chooseModeButton.addEventListener("click", returnToModeSelection);
 resultDialog.addEventListener("cancel", (event) => event.preventDefault());
+
+updateDailyStatus();

@@ -154,6 +154,117 @@ input:focus-visible {
   background: var(--gold);
 }
 
+.daily-status {
+  max-width: 560px;
+  min-height: 1.4rem;
+  margin: 0 auto 14px;
+  color: var(--gold-dark);
+  font: 800 0.78rem/1.35 var(--sans);
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.daily-status:empty {
+  display: none;
+}
+
+.difficulty-option.is-daily-locked,
+.level-option.is-daily-locked,
+.mode-link.is-daily-locked {
+  opacity: 0.58;
+}
+
+.player-dialog,
+.daily-limit-dialog {
+  width: min(calc(100% - 32px), 480px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.player-dialog::backdrop,
+.daily-limit-dialog::backdrop {
+  background: rgba(3, 12, 22, 0.8);
+}
+
+.player-dialog__content,
+.daily-limit-dialog__content {
+  display: grid;
+  gap: 12px;
+  padding: clamp(26px, 6vw, 38px);
+  text-align: center;
+}
+
+.player-dialog h2,
+.daily-limit-dialog h2 {
+  margin: 0;
+  color: var(--navy);
+  font: 800 clamp(1.8rem, 5vw, 2.35rem) / 1.08 var(--serif);
+}
+
+.player-dialog p:not(.eyebrow),
+.daily-limit-dialog p:not(.eyebrow) {
+  margin: 0;
+  color: #3e4142;
+  line-height: 1.55;
+}
+
+.player-dialog label {
+  margin-top: 4px;
+  color: var(--gold-dark);
+  font: 900 0.72rem var(--sans);
+  letter-spacing: 0.12em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.player-dialog input {
+  min-height: 52px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--white);
+  font: 800 1.05rem var(--sans);
+}
+
+.player-dialog__error {
+  min-height: 1.25rem;
+  color: #9a3f31 !important;
+  font: 800 0.86rem/1.35 var(--sans);
+}
+
+.goal-result {
+  margin: -10px 0 22px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: #3e4142;
+  background: rgba(255, 253, 246, 0.82);
+  font: 800 0.94rem/1.45 var(--sans);
+}
+
+.goal-result--good {
+  border-color: #d4c47a;
+  color: #5e541f;
+  background: #f4edc8;
+}
+
+.goal-result--standout {
+  border-color: #8aa974;
+  color: #123f2b;
+  background: #dff1df;
+}
+
+.goal-result--training {
+  border-color: #cdd6dd;
+  color: #28445a;
+  background: #edf3f6;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -162,5 +273,34 @@ input:focus-visible {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+/* Responsividade mobile (100% tela inteira) para todos os jogos */
+@media (max-width: 600px) {
+  body .page-shell:has(.game-card) {
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+  }
+
+  body .game-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100vh !important;
+    min-height: 100svh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: clamp(10px, 2vh, 16px) clamp(8px, 2vw, 14px) !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    background: linear-gradient(135deg, var(--surface), #f7f1e4) !important;
+  }
+
+  body .game-navigation {
+    margin-bottom: clamp(10px, 2vh, 20px) !important;
+    flex-shrink: 0 !important;
   }
 }

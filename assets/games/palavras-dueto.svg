@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Jogo de duas palavras</title>
+  <desc id="desc">Dois tabuleiros de letras recebem o mesmo palpite com pistas coloridas.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#071523" />
+      <stop offset=".5" stop-color="#215d61" />
+      <stop offset="1" stop-color="#eed06c" />
+    </linearGradient>
+    <linearGradient id="card" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fffdf6" />
+      <stop offset="1" stop-color="#edf8f1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="18" flood-color="#061b31" flood-opacity=".28" />
+    </filter>
+  </defs>
+
+  <rect width="960" height="540" fill="url(#bg)" />
+  <path d="M0 110 C150 72 234 150 382 104 C573 45 695 98 960 38 L960 0 L0 0 Z" fill="#fffdf6" opacity=".14" />
+  <path d="M0 440 C176 365 296 462 458 375 C641 276 746 331 960 220 L960 540 L0 540 Z" fill="#fffdf6" opacity=".18" />
+
+  <g filter="url(#shadow)">
+    <rect x="88" y="82" width="360" height="332" rx="28" fill="url(#card)" />
+    <rect x="512" y="82" width="360" height="332" rx="28" fill="url(#card)" />
+    <path d="M448 248 C476 224 484 224 512 248" fill="none" stroke="#fff4bc" stroke-width="14" stroke-linecap="round" />
+    <path d="M448 248 C476 224 484 224 512 248" fill="none" stroke="#b6a34b" stroke-width="4" stroke-linecap="round" />
+
+    <g transform="translate(126 128)">
+      <rect width="54" height="54" rx="10" fill="#4d8f64" />
+      <text x="27" y="37" fill="#fffdf6" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">C</text>
+      <rect x="64" width="54" height="54" rx="10" fill="#c7a946" />
+      <text x="91" y="37" fill="#fffdf6" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">A</text>
+      <rect x="128" width="54" height="54" rx="10" fill="#7d8287" />
+      <text x="155" y="37" fill="#fffdf6" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">S</text>
+      <rect x="192" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <text x="219" y="37" fill="#061b31" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">A</text>
+      <rect x="256" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <text x="283" y="37" fill="#061b31" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">L</text>
+
+      <rect y="68" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="64" y="68" width="54" height="54" rx="10" fill="#4d8f64" />
+      <rect x="128" y="68" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="192" y="68" width="54" height="54" rx="10" fill="#c7a946" />
+      <rect x="256" y="68" width="54" height="54" rx="10" fill="#7d8287" />
+
+      <rect y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="64" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="128" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="192" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="256" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+    </g>
+
+    <g transform="translate(550 128)">
+      <rect width="54" height="54" rx="10" fill="#c7a946" />
+      <text x="27" y="37" fill="#fffdf6" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">C</text>
+      <rect x="64" width="54" height="54" rx="10" fill="#7d8287" />
+      <text x="91" y="37" fill="#fffdf6" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">A</text>
+      <rect x="128" width="54" height="54" rx="10" fill="#4d8f64" />
+      <text x="155" y="37" fill="#fffdf6" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">S</text>
+      <rect x="192" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <text x="219" y="37" fill="#061b31" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">A</text>
+      <rect x="256" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <text x="283" y="37" fill="#061b31" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="900" text-anchor="middle">L</text>
+
+      <rect y="68" width="54" height="54" rx="10" fill="#7d8287" />
+      <rect x="64" y="68" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="128" y="68" width="54" height="54" rx="10" fill="#c7a946" />
+      <rect x="192" y="68" width="54" height="54" rx="10" fill="#4d8f64" />
+      <rect x="256" y="68" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+
+      <rect y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="64" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="128" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="192" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+      <rect x="256" y="136" width="54" height="54" rx="10" fill="#f9fbf8" stroke="#cdd8d2" stroke-width="3" />
+    </g>
+
+    <g transform="translate(266 440)" opacity=".88">
+      <rect width="52" height="34" rx="9" fill="#e3ece7" />
+      <rect x="62" width="52" height="34" rx="9" fill="#e3ece7" />
+      <rect x="124" width="52" height="34" rx="9" fill="#4d8f64" />
+      <rect x="186" width="52" height="34" rx="9" fill="#e3ece7" />
+      <rect x="248" width="52" height="34" rx="9" fill="#c7a946" />
+      <rect x="310" width="52" height="34" rx="9" fill="#e3ece7" />
+      <rect x="372" width="52" height="34" rx="9" fill="#7d8287" />
+    </g>
+  </g>
+</svg>

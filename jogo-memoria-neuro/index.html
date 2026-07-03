@@ -29,32 +29,62 @@
         <p class="eyebrow">Cuidado, ciência e humanidade</p>
         <h1 id="game-title">Memória em Movimento</h1>
         <p class="intro">
-          Encontre os pares e exercite a atenção de um jeito leve.
+          Escolha um nível, encontre os pares e exercite a atenção de um jeito leve.
         </p>
 
-        <div class="game-status" aria-label="Status do jogo">
-          <p>Pares <strong id="matches">0</strong>/<span id="total-matches">8</span></p>
-          <p>Tentativas <strong id="moves">0</strong></p>
-          <p>Tempo <strong id="timer">00:00</strong></p>
-        </div>
+        <section id="start-screen" class="start-screen" aria-labelledby="difficulty-title">
+          <h2 id="difficulty-title">Escolha seu nível</h2>
+          <p id="daily-status" class="daily-status" aria-live="polite"></p>
+          <div class="difficulty-options">
+            <button class="difficulty-option" type="button" data-level="easy">
+              <span>Fácil</span>
+              <strong>6 pares</strong>
+              <small>Boa meta: 16 tentativas. Destaque: 12.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="medium">
+              <span>Médio</span>
+              <strong>8 pares</strong>
+              <small>Boa meta: 24 tentativas. Destaque: 18.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="hard">
+              <span>Difícil</span>
+              <strong>10 pares</strong>
+              <small>Boa meta: 34 tentativas. Destaque: 26.</small>
+            </button>
+          </div>
+        </section>
 
-        <div
-          id="game-board"
-          class="game-board"
-          role="group"
-          aria-label="Cartas do jogo da memória"
-        ></div>
+        <section id="game-area" class="game-area" hidden>
+          <p id="selected-level" class="selected-level"></p>
+          <p id="game-daily-status" class="daily-status" aria-live="polite"></p>
 
-        <div class="game-actions">
-          <button id="restart-button" class="button button-secondary" type="button">
-            Recomeçar jogo
-          </button>
-          <button id="share-button" class="button button-primary" type="button">
-            Compartilhar desafio
-          </button>
-        </div>
+          <div class="game-status" aria-label="Status do jogo">
+            <p>Pares <strong id="matches">0</strong>/<span id="total-matches">8</span></p>
+            <p>Tentativas <strong id="moves">0</strong></p>
+            <p>Tempo <strong id="timer">00:00</strong></p>
+          </div>
 
-        <p id="share-feedback" class="feedback" aria-live="polite"></p>
+          <div
+            id="game-board"
+            class="game-board"
+            role="group"
+            aria-label="Cartas do jogo da memória"
+          ></div>
+
+          <div class="game-actions">
+            <button id="restart-button" class="button button-secondary" type="button">
+              Recomeçar jogo
+            </button>
+            <button id="change-level-button" class="button button-tertiary" type="button">
+              Trocar nível
+            </button>
+            <button id="share-button" class="button button-primary" type="button">
+              Compartilhar desafio
+            </button>
+          </div>
+
+          <p id="share-feedback" class="feedback" aria-live="polite"></p>
+        </section>
       </section>
     </main>
 
@@ -69,6 +99,7 @@
       </div>
     </dialog>
 
+    <script src="../daily-play.js" defer></script>
     <script src="./script.js" defer></script>
     <script src="../disclaimer.js" defer></script>
   </body>

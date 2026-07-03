@@ -1,64 +1,29 @@
-const COMBO_WINDOW = 4_500;
-const MAX_COMBO = 5;
-const GAME_ID = "cubos-em-foco";
-const GAME_TITLE = "Cubos em Foco";
+const COMBO_WINDOW = 5_000;
+const MAX_COMBO = 9;
+const GAME_ID = "puzzle-rotacao";
+const GAME_TITLE = "Puzzle de Rotação";
 
 const LEVELS = {
-  easy: {
-    name: "Fácil",
-    gridSize: 2,
-    timeLimit: 60_000,
-    scoreMultiplier: 1,
-    goals: { good: 400, standout: 800, goodLabel: "400 pontos", standoutLabel: "800 pontos" },
-    layout: [
-      { type: "yellow", rotation: 0 },
-      { type: "diagonal", rotation: 90 },
-      { type: "diagonal", rotation: 180 },
-      { type: "black", rotation: 0 },
-    ],
-  },
-  medium: {
-    name: "Médio",
+  calmo: {
+    name: "Calmo",
     gridSize: 3,
-    timeLimit: 75_000,
-    scoreMultiplier: 1.5,
-    goals: { good: 1000, standout: 2000, goodLabel: "1000 pontos", standoutLabel: "2000 pontos" },
-    layout: [
-      { type: "yellow", rotation: 0 },
-      { type: "diagonal", rotation: 90 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 180 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 0 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 270 },
-      { type: "yellow", rotation: 0 },
-    ],
-  },
-  hard: {
-    name: "Difícil",
-    gridSize: 4,
     timeLimit: 90_000,
-    scoreMultiplier: 2,
-    goals: { good: 2200, standout: 4000, goodLabel: "2200 pontos", standoutLabel: "4000 pontos" },
-    layout: [
-      { type: "yellow", rotation: 0 },
-      { type: "diagonal", rotation: 90 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 180 },
-      { type: "diagonal", rotation: 270 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 0 },
-      { type: "yellow", rotation: 0 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 180 },
-      { type: "yellow", rotation: 0 },
-      { type: "diagonal", rotation: 90 },
-      { type: "diagonal", rotation: 0 },
-      { type: "black", rotation: 0 },
-      { type: "diagonal", rotation: 270 },
-      { type: "black", rotation: 0 },
-    ],
+    scoreMultiplier: 1,
+    goals: { good: 1200, standout: 2400, goodLabel: "1200 pontos", standoutLabel: "2400 pontos" },
+  },
+  ritmo: {
+    name: "Ritmo",
+    gridSize: 4,
+    timeLimit: 120_000,
+    scoreMultiplier: 1.35,
+    goals: { good: 2600, standout: 5200, goodLabel: "2600 pontos", standoutLabel: "5200 pontos" },
+  },
+  foco: {
+    name: "Foco",
+    gridSize: 5,
+    timeLimit: 150_000,
+    scoreMultiplier: 1.7,
+    goals: { good: 5200, standout: 9800, goodLabel: "5200 pontos", standoutLabel: "9800 pontos" },
   },
 };
 
@@ -66,7 +31,7 @@ const targetGrid = document.querySelector("#target-grid");
 const puzzleGrid = document.querySelector("#puzzle-grid");
 const scoreElement = document.querySelector("#score");
 const comboElement = document.querySelector("#combo");
-const mountedElement = document.querySelector("#mounted");
+const correctCountElement = document.querySelector("#correct-count");
 const totalPiecesElement = document.querySelector("#total-pieces");
 const timeLeftElement = document.querySelector("#time-left");
 const timeBar = document.querySelector("#time-bar");
@@ -82,7 +47,7 @@ const playAgainButton = document.querySelector("#play-again-button");
 
 const state = {
   active: false,
-  levelKey: "medium",
+  levelKey: "ritmo",
   score: 0,
   combo: 0,
   maxCombo: 0,
@@ -135,6 +100,8 @@ const shuffle = (items) => {
   return shuffled;
 };
 
+const normalizeRotation = (rotation) => ((rotation % 360) + 360) % 360;
+
 const formatTime = (milliseconds) => {
   const seconds = Math.ceil(milliseconds / 1000);
   const minutes = Math.floor(seconds / 60).toString().padStart(2, "0");
@@ -143,57 +110,154 @@ const formatTime = (milliseconds) => {
   return `${minutes}:${remainingSeconds}`;
 };
 
-const createFace = ({ type, rotation = 0 }) => {
-  const face = document.createElement("span");
-  face.className = `cube-face cube-face--${type}`;
-  face.style.setProperty("--face-rotation", `${rotation}deg`);
-  face.setAttribute("aria-hidden", "true");
-  face.innerHTML = '<span class="cube-face__surface"></span>';
+const tilePosition = (targetIndex) => {
+  const { gridSize } = activeLevel();
+  const row = Math.floor(targetIndex / gridSize);
+  const column = targetIndex % gridSize;
+  const denominator = Math.max(1, gridSize - 1);
 
-  return face;
+  return {
+    row,
+    column,
+    backgroundX: `${(column / denominator) * 100}%`,
+    backgroundY: `${(row / denominator) * 100}%`,
+  };
 };
 
-const renderTarget = () => {
-  targetGrid.style.setProperty("--grid-size", activeLevel().gridSize);
-  targetGrid.replaceChildren(...activeLevel().layout.map(createFace));
+const createTileSurface = (targetIndex, rotation = 0) => {
+  const position = tilePosition(targetIndex);
+  const surface = document.createElement("span");
+
+  surface.className = "tile-surface";
+  surface.style.setProperty("--bg-x", position.backgroundX);
+  surface.style.setProperty("--bg-y", position.backgroundY);
+  surface.style.setProperty("--bg-size", `${activeLevel().gridSize * 100}%`);
+  surface.style.setProperty("--piece-rotation", `${normalizeRotation(rotation)}deg`);
+  surface.setAttribute("aria-hidden", "true");
+
+  return surface;
+};
+
+const createTargetPieces = () => {
+  const total = activeLevel().gridSize ** 2;
+
+  return Array.from({ length: total }, (_, targetIndex) => ({ targetIndex, rotation: 0 }));
+};
+
+const isSolvedOrder = (pieces) => pieces.every((piece, index) => (
+  piece.targetIndex === index && normalizeRotation(piece.rotation) === 0
+));
+
+const createScrambledPieces = () => {
+  const targetPieces = createTargetPieces();
+  let pieces;
+
+  do {
+    pieces = shuffle(targetPieces).map((piece) => ({
+      targetIndex: piece.targetIndex,
+      rotation: Math.floor(Math.random() * 4) * 90,
+    }));
+  } while (isSolvedOrder(pieces));
+
+  return pieces;
 };
 
 const getCorrectSlots = () => new Set(
   state.pieces
-    .map((piece, index) => {
-      const target = activeLevel().layout[index];
-      const typeMatches = piece.type === target.type;
-      const rotationMatches = piece.type !== "diagonal" || piece.rotation === target.rotation;
-
-      return typeMatches && rotationMatches ? index : undefined;
-    })
+    .map((piece, index) => (
+      piece.targetIndex === index && normalizeRotation(piece.rotation) === 0 ? index : undefined
+    ))
     .filter((index) => index !== undefined),
 );
 
-const createScrambledPieces = () => {
-  let pieces;
+const updateGridSizes = () => {
+  targetGrid.style.setProperty("--grid-size", activeLevel().gridSize);
+  puzzleGrid.style.setProperty("--grid-size", activeLevel().gridSize);
+};
 
-  do {
-    pieces = shuffle(
-      activeLevel().layout.map((target, index) => ({
-        id: index,
-        type: target.type,
-        rotation: target.type === "diagonal" ? Math.floor(Math.random() * 4) * 90 : 0,
-      })),
-    );
-  } while (pieces.every((piece, index) => {
-    const target = activeLevel().layout[index];
-    return piece.type === target.type && (piece.type !== "diagonal" || piece.rotation === target.rotation);
-  }));
+const renderTarget = () => {
+  updateGridSizes();
 
-  return pieces;
+  const targetSlots = createTargetPieces().map((piece, index) => {
+    const slot = document.createElement("div");
+    const tile = document.createElement("span");
+
+    slot.className = "target-slot";
+    tile.className = "target-tile";
+    tile.append(createTileSurface(piece.targetIndex, 0));
+    slot.append(tile);
+    slot.setAttribute("aria-label", `Peça objetivo ${index + 1}`);
+
+    return slot;
+  });
+
+  targetGrid.replaceChildren(...targetSlots);
+};
+
+const pieceDescription = (piece) => {
+  const position = tilePosition(piece.targetIndex);
+  const rotation = normalizeRotation(piece.rotation);
+
+  return `Fragmento da linha ${position.row + 1}, coluna ${position.column + 1}, girado ${rotation} graus`;
 };
 
 const updateStatus = () => {
   scoreElement.textContent = state.score;
   comboElement.textContent = `x${Math.max(1, state.combo)}`;
-  mountedElement.textContent = state.correctSlots.size;
-  totalPiecesElement.textContent = activeLevel().layout.length;
+  correctCountElement.textContent = state.correctSlots.size;
+  totalPiecesElement.textContent = activeLevel().gridSize ** 2;
+};
+
+const updateLevelControls = () => {
+  levelButtons.forEach((button) => {
+    const isSelected = button.dataset.level === state.levelKey;
+
+    button.classList.toggle("is-selected", isSelected);
+    button.setAttribute("aria-pressed", isSelected);
+    button.disabled = state.active;
+    ReabilityDaily.updateLevelLock(button, GAME_ID, button.dataset.level);
+  });
+  updateDailyStatus();
+};
+
+const setMessage = (message) => {
+  gameMessage.textContent = message;
+};
+
+const renderBoard = () => {
+  updateGridSizes();
+
+  const slots = state.pieces.map((piece, index) => {
+    const slot = document.createElement("div");
+    const tile = document.createElement("button");
+
+    slot.className = "puzzle-slot";
+    slot.dataset.index = index;
+    tile.className = "puzzle-tile";
+    tile.type = "button";
+    tile.dataset.index = index;
+    tile.disabled = !state.active;
+    tile.setAttribute(
+      "aria-label",
+      `${pieceDescription(piece)}. ${
+        state.active ? "Toque para girar 90 graus ou arraste para trocar de posição." : "Inicie o desafio para mover."
+      }`,
+    );
+
+    if (state.correctSlots.has(index)) tile.classList.add("is-correct");
+
+    tile.append(createTileSurface(piece.targetIndex, piece.rotation));
+    tile.addEventListener("pointerdown", handlePointerDown);
+    tile.addEventListener("pointermove", handlePointerMove);
+    tile.addEventListener("pointerup", handlePointerUp);
+    tile.addEventListener("pointercancel", stopDrag);
+    tile.addEventListener("keydown", handleKeyboardRotation);
+    slot.append(tile);
+
+    return slot;
+  });
+
+  puzzleGrid.replaceChildren(...slots);
 };
 
 const updateClock = () => {
@@ -223,113 +287,6 @@ const stopDrag = () => {
   state.drag = undefined;
 };
 
-const pieceDescription = (piece) => {
-  if (piece.type === "yellow") return "Face amarela";
-  if (piece.type === "black") return "Face preta";
-
-  return "Face diagonal amarela e preta";
-};
-
-const renderBoard = () => {
-  puzzleGrid.style.setProperty("--grid-size", activeLevel().gridSize);
-
-  const slots = state.pieces.map((piece, index) => {
-    const slot = document.createElement("div");
-    slot.className = "puzzle-slot";
-    slot.dataset.index = index;
-
-    const cube = document.createElement("button");
-    cube.className = "puzzle-cube";
-    cube.type = "button";
-    cube.dataset.index = index;
-    cube.disabled = !state.active;
-    const interaction = piece.type === "diagonal"
-      ? "Toque para girar ou arraste para trocar de posição."
-      : "Arraste para trocar de posição.";
-    cube.setAttribute(
-      "aria-label",
-      `${pieceDescription(piece)}. ${state.active ? interaction : "Inicie o desafio para mover esta peça."}`,
-    );
-
-    if (state.correctSlots.has(index)) cube.classList.add("is-correct");
-    cube.append(createFace(piece));
-    cube.addEventListener("pointerdown", handlePointerDown);
-    cube.addEventListener("pointermove", handlePointerMove);
-    cube.addEventListener("pointerup", handlePointerUp);
-    cube.addEventListener("pointercancel", stopDrag);
-    cube.addEventListener("keydown", handleKeyboardRotation);
-    slot.append(cube);
-
-    return slot;
-  });
-
-  puzzleGrid.replaceChildren(...slots);
-};
-
-const setMessage = (message) => {
-  gameMessage.textContent = message;
-};
-
-const updateLevelControls = () => {
-  levelButtons.forEach((button) => {
-    const isSelected = button.dataset.level === state.levelKey;
-    button.classList.toggle("is-selected", isSelected);
-    button.setAttribute("aria-pressed", isSelected);
-    button.disabled = state.active;
-    ReabilityDaily.updateLevelLock(button, GAME_ID, button.dataset.level);
-  });
-  updateDailyStatus();
-};
-
-const evaluateBoard = () => {
-  const previousCorrectSlots = state.correctSlots;
-  const currentCorrectSlots = getCorrectSlots();
-  const newMatches = [...currentCorrectSlots].filter((index) => !previousCorrectSlots.has(index));
-  const lostMatches = [...previousCorrectSlots].filter((index) => !currentCorrectSlots.has(index));
-
-  state.correctSlots = currentCorrectSlots;
-
-  if (lostMatches.length) {
-    state.combo = 0;
-    state.lastMatchAt = undefined;
-  }
-
-  if (newMatches.length) {
-    const now = performance.now();
-    const isQuickMatch = state.lastMatchAt && now - state.lastMatchAt <= COMBO_WINDOW;
-    state.combo = isQuickMatch ? Math.min(MAX_COMBO, state.combo + newMatches.length) : newMatches.length;
-    state.maxCombo = Math.max(state.maxCombo, state.combo);
-    state.lastMatchAt = now;
-
-    const gainedPoints = Math.round(
-      newMatches.length * 100 * Math.max(1, state.combo) * activeLevel().scoreMultiplier,
-    );
-    state.score += gainedPoints;
-    setMessage(state.combo > 1 ? `Combo x${state.combo}! +${gainedPoints} pontos` : `Encaixe certo! +${gainedPoints} pontos`);
-  } else if (lostMatches.length) {
-    setMessage("Essa face saiu do encaixe. Compare com o objetivo.");
-  }
-
-  updateStatus();
-  renderBoard();
-
-  if (currentCorrectSlots.size === activeLevel().layout.length) endGame(true);
-};
-
-const rotatePiece = (index) => {
-  if (!state.active) return;
-
-  const piece = state.pieces[index];
-
-  if (piece.type !== "diagonal") {
-    setMessage("Faces inteiras não precisam girar — arraste-as para a posição certa.");
-    return;
-  }
-
-  piece.rotation = (piece.rotation + 90) % 360;
-  evaluateBoard();
-};
-
 const updateGhostPosition = (event) => {
   if (!state.drag?.ghost) return;
 
@@ -352,11 +309,61 @@ const startDragging = (event) => {
   updateGhostPosition(event);
 };
 
+const evaluateBoard = () => {
+  const previousCorrectSlots = state.correctSlots;
+  const currentCorrectSlots = getCorrectSlots();
+  const newMatches = [...currentCorrectSlots].filter((index) => !previousCorrectSlots.has(index));
+  const lostMatches = [...previousCorrectSlots].filter((index) => !currentCorrectSlots.has(index));
+
+  state.correctSlots = currentCorrectSlots;
+
+  if (lostMatches.length) {
+    state.combo = 0;
+    state.lastMatchAt = undefined;
+  }
+
+  if (newMatches.length) {
+    const now = performance.now();
+    const isQuickMatch = state.lastMatchAt && now - state.lastMatchAt <= COMBO_WINDOW;
+
+    state.combo = isQuickMatch ? Math.min(MAX_COMBO, state.combo + newMatches.length) : newMatches.length;
+    state.maxCombo = Math.max(state.maxCombo, state.combo);
+    state.lastMatchAt = now;
+
+    const gainedPoints = Math.round(
+      newMatches.length * 120 * Math.max(1, state.combo) * activeLevel().scoreMultiplier,
+    );
+    state.score += gainedPoints;
+    setMessage(
+      state.combo > 1
+        ? `Combo x${state.combo}! +${gainedPoints} pontos.`
+        : `Peça encaixada! +${gainedPoints} pontos.`,
+    );
+  } else if (lostMatches.length) {
+    setMessage("Uma peça correta saiu do lugar. Compare com o objetivo e recupere o ritmo.");
+  } else {
+    setMessage("Continue ajustando posição e giro.");
+  }
+
+  updateStatus();
+  renderBoard();
+
+  if (currentCorrectSlots.size === activeLevel().gridSize ** 2) endGame(true);
+};
+
+const rotatePiece = (index) => {
+  if (!state.active) return;
+
+  state.pieces[index].rotation = normalizeRotation(state.pieces[index].rotation + 90);
+  evaluateBoard();
+};
+
 function handlePointerDown(event) {
   if (!state.active || event.button !== 0) return;
 
   event.preventDefault();
   const source = event.currentTarget;
+
   source.setPointerCapture(event.pointerId);
   state.drag = {
     index: Number(source.dataset.index),
@@ -372,6 +379,7 @@ function handlePointerMove(event) {
   if (!state.drag || state.drag.pointerId !== event.pointerId) return;
 
   const distance = Math.hypot(event.clientX - state.drag.startX, event.clientY - state.drag.startY);
+
   if (!state.drag.dragging && distance > 8) startDragging(event);
   if (state.drag.dragging) updateGhostPosition(event);
 }
@@ -389,6 +397,7 @@ function handlePointerUp(event) {
 
   const dropTarget = document.elementFromPoint(event.clientX, event.clientY)?.closest(".puzzle-slot");
   const targetIndex = Number(dropTarget?.dataset.index);
+
   stopDrag();
 
   if (Number.isInteger(targetIndex) && targetIndex !== sourceIndex) {
@@ -400,7 +409,7 @@ function handlePointerUp(event) {
     return;
   }
 
-  setMessage("Arraste uma face sobre outra posição para trocá-las.");
+  setMessage("Solte a peça sobre outra casa para trocar as posições.");
 }
 
 function handleKeyboardRotation(event) {
@@ -422,18 +431,23 @@ const endGame = (isVictory) => {
   updateLevelControls();
 
   if (isVictory) {
-    resultEyebrow.textContent = "Padrão concluído";
-    resultSummary.textContent = `Você montou as ${activeLevel().layout.length} faces do nível ${activeLevel().name} com ${state.score} pontos e alcançou combo máximo x${Math.max(1, state.maxCombo)}.`;
+    const remaining = Math.max(0, activeLevel().timeLimit - (performance.now() - state.startedAt));
+    const timeBonus = Math.round((remaining / 1000) * 3 * activeLevel().scoreMultiplier);
+
+    state.score += timeBonus;
+    updateStatus();
+    resultEyebrow.textContent = "Puzzle concluído";
+    resultSummary.textContent = `Você completou o nível ${activeLevel().name} com ${state.score} pontos, bônus de tempo de ${timeBonus} e combo máximo x${Math.max(1, state.maxCombo)}.`;
   } else {
     resultEyebrow.textContent = "Tempo esgotado";
-    resultSummary.textContent = `Você deixou ${state.correctSlots.size} de ${activeLevel().layout.length} faces no lugar certo e fez ${state.score} pontos no nível ${activeLevel().name}.`;
+    resultSummary.textContent = `Você encaixou ${state.correctSlots.size} de ${activeLevel().gridSize ** 2} peças e fez ${state.score} pontos no nível ${activeLevel().name}.`;
   }
 
   ReabilityDaily.goals.showGoalResult(
     resultSummary,
     ReabilityDaily.goals.rateHigher(state.score, activeLevel().goals),
   );
-  resultDialog.showModal();
+  if (!resultDialog.open) resultDialog.showModal();
 };
 
 const prepareGame = (startImmediately = false) => {
@@ -441,6 +455,7 @@ const prepareGame = (startImmediately = false) => {
   stopDrag();
   if (resultDialog.open) resultDialog.close();
   clearGoalResult();
+
   state.active = startImmediately;
   state.score = 0;
   state.combo = 0;
@@ -449,6 +464,7 @@ const prepareGame = (startImmediately = false) => {
   state.pieces = createScrambledPieces();
   state.correctSlots = getCorrectSlots();
   state.startedAt = startImmediately ? performance.now() : undefined;
+
   renderTarget();
   updateStatus();
   updateClock();
@@ -458,7 +474,7 @@ const prepareGame = (startImmediately = false) => {
   if (startImmediately) {
     startButton.textContent = "Desafio em andamento";
     startButton.disabled = true;
-    setMessage(`${activeLevel().name}: encaixes rápidos aumentam o combo. Boa montagem!`);
+    setMessage(`${activeLevel().name}: encaixes em sequência ativam combos maiores.`);
     state.timer = window.setInterval(updateClock, 100);
   } else {
     startButton.textContent = "Iniciar desafio";
@@ -469,6 +485,7 @@ const prepareGame = (startImmediately = false) => {
 
 const selectLevel = (event) => {
   const levelKey = event.currentTarget.dataset.level;
+
   if (state.active || levelKey === state.levelKey) return;
 
   state.levelKey = levelKey;
@@ -483,5 +500,6 @@ startButton.addEventListener("click", startDailyGame);
 restartButton.addEventListener("click", startDailyGame);
 playAgainButton.addEventListener("click", startDailyGame);
 levelButtons.forEach((button) => button.addEventListener("click", selectLevel));
+resultDialog.addEventListener("cancel", (event) => event.preventDefault());
 
 prepareGame();

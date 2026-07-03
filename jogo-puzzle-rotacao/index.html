@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Puzzle de Rotação: organize peças embaralhadas, gire fragmentos e reconstrua o objetivo."
+    />
+    <meta name="theme-color" content="#061B31" />
+    <title>Puzzle de Rotação | Reability</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
+    <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
+    <link rel="manifest" href="../site.webmanifest" />
+    <link rel="stylesheet" href="../reability.css" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="game-card" aria-labelledby="game-title">
+        <div class="game-navigation">
+          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
+          <div class="brand-lock" aria-label="Reability">
+            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
+            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+          </div>
+        </div>
+
+        <p class="eyebrow">Raciocínio visoespacial</p>
+        <h1 id="game-title">Puzzle de Rotação</h1>
+        <p class="intro">
+          Observe o objetivo, reposicione os fragmentos e ajuste cada giro até a imagem voltar a fazer sentido.
+        </p>
+
+        <section class="objective-panel" aria-labelledby="objective-title">
+          <div class="objective-copy">
+            <p class="section-label">Objetivo</p>
+            <h2 id="objective-title">Monte este painel</h2>
+            <p>O desenho final fica sempre no topo para comparação rápida durante a partida.</p>
+          </div>
+          <div id="target-grid" class="target-grid" role="img" aria-label="Objetivo do puzzle"></div>
+        </section>
+
+        <section class="challenge-panel" aria-labelledby="challenge-title">
+          <div class="challenge-header">
+            <div>
+              <p class="section-label">Sua grade</p>
+              <h2 id="challenge-title">Gire e reposicione as peças</h2>
+            </div>
+            <div class="level-picker" role="group" aria-label="Escolha o nível do desafio">
+              <button class="level-option" type="button" data-level="calmo" aria-pressed="false">
+                Calmo <small>3×3 · 90 s</small>
+              </button>
+              <button class="level-option" type="button" data-level="ritmo" aria-pressed="true">
+                Ritmo <small>4×4 · 120 s</small>
+              </button>
+              <button class="level-option" type="button" data-level="foco" aria-pressed="false">
+                Foco <small>5×5 · 150 s</small>
+              </button>
+            </div>
+          </div>
+
+          <p id="daily-status" class="daily-status" aria-live="polite"></p>
+
+          <div class="game-status" aria-live="polite" aria-atomic="true">
+            <p>Pontos <strong id="score">0</strong></p>
+            <p>Combo <strong id="combo">x1</strong></p>
+            <p>Corretas <strong id="correct-count">0</strong>/<span id="total-pieces">16</span></p>
+          </div>
+
+          <div class="time-panel">
+            <div class="time-heading">
+              <span>Tempo</span>
+              <strong id="time-left">02:00</strong>
+            </div>
+            <div class="time-track" aria-label="Tempo restante">
+              <span id="time-bar" class="time-bar"></span>
+            </div>
+          </div>
+
+          <p id="game-message" class="game-message" aria-live="polite">
+            Escolha o nível e inicie para liberar os movimentos.
+          </p>
+
+          <p class="instructions">
+            <span aria-hidden="true">↻</span> Toque para girar 90°.
+            <span aria-hidden="true">↔</span> Arraste para trocar de posição.
+          </p>
+
+          <div id="puzzle-grid" class="puzzle-grid" role="group" aria-label="Peças embaralhadas do puzzle"></div>
+
+          <div class="game-actions">
+            <button id="start-button" class="button button-primary" type="button">Iniciar desafio</button>
+            <button id="restart-button" class="button button-secondary" type="button">Novo embaralhamento</button>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="result-dialog" class="result-dialog" aria-labelledby="result-title">
+      <div class="result-dialog__content">
+        <p id="result-eyebrow" class="eyebrow">Puzzle concluído</p>
+        <h2 id="result-title">Puzzle de Rotação</h2>
+        <p id="result-summary"></p>
+        <div class="result-dialog__actions">
+          <button id="play-again-button" class="button button-primary" type="button">Jogar de novo</button>
+          <a class="button button-secondary" href="../index.html">Ver outros jogos</a>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="../daily-play.js" defer></script>
+    <script src="./script.js" defer></script>
+    <script src="../disclaimer.js" defer></script>
+  </body>
+</html>

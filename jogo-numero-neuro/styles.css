@@ -77,14 +77,40 @@ h2 {
 }
 
 .intro {
-  margin-bottom: 28px;
+  margin-bottom: 14px;
   color: #3e4142;
   font-size: 1.05rem;
   line-height: 1.55;
 }
 
+.game-highlights {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 0 30px;
+}
+
+.game-highlights span {
+  padding: 8px 11px;
+  border: 1px solid #c7b76d;
+  border-radius: 999px;
+  color: var(--navy);
+  background: #fff6d6;
+  font: 900 0.72rem/1 var(--sans);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
 .difficulty-screen {
   text-align: left;
+}
+
+.difficulty-intro {
+  margin: -8px 0 16px;
+  color: #50504a;
+  font-size: 0.98rem;
+  line-height: 1.45;
 }
 
 .difficulty-options {
@@ -255,12 +281,73 @@ input {
   line-height: 1.45;
 }
 
-.attempts {
-  margin-bottom: 24px;
-  color: var(--muted);
-  font: 800 0.78rem var(--sans);
-  letter-spacing: 0.06em;
+.guess-history {
+  margin: 0 0 24px;
+  padding: 16px;
+  border: 1px solid #b9cfae;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, rgba(255, 253, 246, 0.9), rgba(239, 248, 240, 0.86));
+  box-shadow: 0 8px 18px rgba(21, 86, 76, 0.1);
+  text-align: left;
+}
+
+.guess-history__title {
+  margin-bottom: 12px;
+  color: var(--navy);
+  font: 900 0.78rem var(--sans);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+}
+
+.attempts {
+  color: var(--muted);
+}
+
+.guess-history__empty {
+  margin: 0;
+  color: var(--muted);
+  font: 0.95rem / 1.4 var(--serif);
+}
+
+.guess-history__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guess-history__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--navy);
+  background: var(--navy-soft);
+  font: 800 0.78rem var(--sans);
+}
+
+.guess-history__item strong {
+  font-size: 1rem;
+}
+
+.guess-history__item--higher {
+  border-color: #b8d6be;
+  background: #e8f3ec;
+}
+
+.guess-history__item--lower {
+  border-color: #ecc5b5;
+  background: #f9ebe5;
+}
+
+.guess-history__item--correct {
+  border-color: #93c6a1;
+  color: #083c2d;
+  background: #d8efdf;
 }
 
 .game-actions {

@@ -34,6 +34,7 @@
             Quando o cérebro aparecer, toque nele antes que mude de lugar. Cada toque vale um ponto.
           </p>
           <p class="level-instruction">Escolha o ritmo do desafio:</p>
+          <p id="daily-status" class="daily-status" aria-live="polite"></p>
           <div class="difficulty-options">
             <button class="difficulty-option" type="button" data-level="Fácil" data-delay="2000">
               <span>Fácil</span>
@@ -59,6 +60,7 @@
             <p>Tempo <strong id="time-left">45</strong>s</p>
           </div>
           <p id="selected-level" class="selected-level"></p>
+          <p id="game-daily-status" class="daily-status" aria-live="polite"></p>
           <p id="game-message" class="game-message" aria-live="polite">Toque no cérebro quando ele aparecer.</p>
           <div id="brain-board" class="brain-board" role="group" aria-label="Área do desafio Cérebro Feliz"></div>
           <button id="stop-button" class="button button-secondary" type="button">Encerrar desafio</button>
@@ -78,6 +80,7 @@
       </div>
     </dialog>
 
+    <script src="../daily-play.js" defer></script>
     <script src="./script.js" defer></script>
     <script src="../disclaimer.js" defer></script>
   </body>

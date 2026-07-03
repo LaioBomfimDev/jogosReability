@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Um desafio recreativo para descobrir o número secreto."
+      content="Lógica Numérica: descubra o número secreto acompanhando seus palpites enviados e as pistas de maior/menor."
     />
     <meta name="theme-color" content="#061B31" />
-    <title>Desafio do Número</title>
+    <title>Lógica Numérica</title>
     <link rel="icon" href="../assets/brand/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="../assets/brand/apple-touch-icon.png" />
@@ -27,34 +27,43 @@
           </div>
         </div>
         <p class="eyebrow">Cuidado, ciência e humanidade</p>
-        <h1 id="game-title">Desafio do Número</h1>
+        <h1 id="game-title">Lógica Numérica</h1>
         <p class="intro">
-          Escolha o nível do desafio e descubra o número secreto com as pistas.
+          Descubra o número secreto, acompanhe seus palpites enviados e use as pistas de maior/menor para ajustar a próxima tentativa.
         </p>
+        <div class="game-highlights" aria-label="Destaques da Lógica Numérica">
+          <span>Palpites enviados</span>
+          <span>Pistas maior/menor</span>
+        </div>
 
         <section id="difficulty-screen" class="difficulty-screen" aria-labelledby="difficulty-title">
           <h2 id="difficulty-title">Escolha seu nível</h2>
+          <p class="difficulty-intro">
+            Em todos os níveis, cada tentativa fica visível com a pista para tentar um número maior ou menor.
+          </p>
+          <p id="daily-status" class="daily-status" aria-live="polite"></p>
           <div class="difficulty-options">
             <button class="difficulty-option" type="button" data-level="Fácil" data-limit="20">
               <span class="difficulty-name">Fácil</span>
               <strong>1 a 20</strong>
-              <small>Para começar com leveza.</small>
+              <small>Histórico claro em um intervalo curto.</small>
             </button>
             <button class="difficulty-option" type="button" data-level="Médio" data-limit="100">
               <span class="difficulty-name">Médio</span>
               <strong>1 a 100</strong>
-              <small>Um desafio para pensar um pouco mais.</small>
+              <small>Use as pistas para afinar o raciocínio.</small>
             </button>
             <button class="difficulty-option" type="button" data-level="Difícil" data-limit="1000">
               <span class="difficulty-name">Difícil</span>
               <strong>1 a 1000</strong>
-              <small>Para quem quer ir mais longe.</small>
+              <small>Teste hipóteses com o histórico à vista.</small>
             </button>
           </div>
         </section>
 
         <section id="game-area" class="game-area" hidden>
           <p id="selected-level" class="selected-level"></p>
+          <p id="game-daily-status" class="daily-status" aria-live="polite"></p>
           <p id="instruction" class="instruction" aria-live="polite"></p>
 
           <form id="guess-form" class="guess-form">
@@ -66,7 +75,13 @@
           </form>
 
           <p id="feedback" class="feedback" aria-live="polite"></p>
-          <p id="attempts" class="attempts">Tentativas: 0</p>
+          <section class="guess-history" aria-labelledby="guess-history-title">
+            <h2 id="guess-history-title" class="guess-history__title">
+              Palpites enviados e pistas <span id="attempts" class="attempts">(0)</span>
+            </h2>
+            <p id="guess-history-empty" class="guess-history__empty">Envie um número para ver aqui seus palpites e a pista de maior/menor.</p>
+            <ol id="guess-history-list" class="guess-history__list" aria-live="polite"></ol>
+          </section>
 
           <div class="game-actions">
             <button id="new-game-button" class="button button-secondary" type="button">
@@ -80,6 +95,7 @@
       </section>
     </main>
 
+    <script src="../daily-play.js" defer></script>
     <script src="./script.js" defer></script>
     <script src="../disclaimer.js" defer></script>
   </body>

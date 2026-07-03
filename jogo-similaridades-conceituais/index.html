@@ -30,32 +30,61 @@
         <p class="eyebrow">Pensamento flexível</p>
         <h1 id="game-title">Conexões de Ideias</h1>
         <p class="intro">
-          Observe as imagens e encontre a relação que faz sentido. Às vezes, ela está na função — não na aparência.
+          Escolha um nível, observe as imagens e encontre a relação que faz sentido. Às vezes, ela está na função — não na aparência.
         </p>
 
-        <div class="game-status" aria-label="Progresso do jogo">
-          <p>Rodada <strong id="round-number">1</strong>/<span id="total-rounds">6</span></p>
-          <p>Conexões <strong id="score">0</strong></p>
-        </div>
-
-        <section class="play-area" aria-labelledby="instruction">
-          <p id="instruction" class="instruction" aria-live="polite">
-            Arraste a carta solta para a imagem que combina com ela. Se preferir, toque na carta e depois no destino.
-          </p>
-
-          <div class="idea-tray" aria-label="Carta para conectar">
-            <p class="tray-label">Carta solta</p>
-            <button id="loose-card" class="idea-card loose-card" type="button" draggable="true" aria-pressed="false"></button>
+        <section id="start-screen" class="start-screen" aria-labelledby="difficulty-title">
+          <h2 id="difficulty-title">Escolha seu nível</h2>
+          <p id="daily-status" class="daily-status" aria-live="polite"></p>
+          <div class="difficulty-options">
+            <button class="difficulty-option" type="button" data-level="easy">
+              <span>Fácil</span>
+              <strong>4 conexões</strong>
+              <small>Boa meta: até 2 erros. Destaque: sem erros.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="medium">
+              <span>Médio</span>
+              <strong>6 conexões</strong>
+              <small>Boa meta: até 3 erros. Destaque: até 1 erro.</small>
+            </button>
+            <button class="difficulty-option" type="button" data-level="hard">
+              <span>Difícil</span>
+              <strong>8 conexões</strong>
+              <small>Boa meta: até 4 erros. Destaque: até 2 erros.</small>
+            </button>
           </div>
-
-          <div id="target-grid" class="target-grid" role="group" aria-label="Imagens de destino"></div>
-          <p id="feedback" class="feedback" aria-live="polite"></p>
         </section>
 
-        <div class="game-actions">
-          <button id="restart-button" class="button button-secondary" type="button">Recomeçar</button>
-          <button id="next-button" class="button button-primary" type="button" hidden>Próxima conexão</button>
-        </div>
+        <section id="game-area" class="game-area" hidden>
+          <p id="selected-level" class="selected-level"></p>
+          <p id="game-daily-status" class="daily-status" aria-live="polite"></p>
+
+          <div class="game-status" aria-label="Progresso do jogo">
+            <p>Rodada <strong id="round-number">1</strong>/<span id="total-rounds">6</span></p>
+            <p>Conexões <strong id="score">0</strong></p>
+            <p>Erros <strong id="mistakes">0</strong></p>
+          </div>
+
+          <section class="play-area" aria-labelledby="instruction">
+            <p id="instruction" class="instruction" aria-live="polite">
+              Arraste a carta solta para a imagem que combina com ela. Se preferir, toque na carta e depois no destino.
+            </p>
+
+            <div class="idea-tray" aria-label="Carta para conectar">
+              <p class="tray-label">Carta solta</p>
+              <button id="loose-card" class="idea-card loose-card" type="button" draggable="true" aria-pressed="false"></button>
+            </div>
+
+            <div id="target-grid" class="target-grid" role="group" aria-label="Imagens de destino"></div>
+            <p id="feedback" class="feedback" aria-live="polite"></p>
+          </section>
+
+          <div class="game-actions">
+            <button id="restart-button" class="button button-secondary" type="button">Recomeçar</button>
+            <button id="change-level-button" class="button button-tertiary" type="button">Trocar nível</button>
+            <button id="next-button" class="button button-primary" type="button" hidden>Próxima conexão</button>
+          </div>
+        </section>
       </section>
     </main>
 
@@ -68,6 +97,7 @@
       </div>
     </dialog>
 
+    <script src="../daily-play.js" defer></script>
     <script src="./script.js" defer></script>
     <script src="../disclaimer.js" defer></script>
   </body>

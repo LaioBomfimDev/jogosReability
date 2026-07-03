@@ -1,8 +1,23 @@
+const GAME_ID = "cerebro-feliz";
+const GAME_TITLE = "Cérebro Feliz";
+const LEVEL_KEYS = {
+  "Fácil": "easy",
+  "Médio": "medium",
+  "Difícil": "hard",
+};
+const LEVEL_GOALS = {
+  easy: { good: 12, standout: 18, goodLabel: "12 pontos", standoutLabel: "18 pontos" },
+  medium: { good: 16, standout: 24, goodLabel: "16 pontos", standoutLabel: "24 pontos" },
+  hard: { good: 22, standout: 32, goodLabel: "22 pontos", standoutLabel: "32 pontos" },
+};
+
 const board = document.querySelector("#brain-board");
 const gameCard = document.querySelector(".game-card");
 const startScreen = document.querySelector("#start-screen");
 const gameInterface = document.querySelector("#game-interface");
 const difficultyButtons = document.querySelectorAll(".difficulty-option");
+const dailyStatus = document.querySelector("#daily-status");
+const gameDailyStatus = document.querySelector("#game-daily-status");
 const stopButton = document.querySelector("#stop-button");
 const scoreElement = document.querySelector("#score");
 const timeLeftElement = document.querySelector("#time-left");
@@ -26,6 +41,44 @@ let isPlaying = false;
 let isTransitioning = false;
 let timerInterval;
 let moveTimeout;
+
+const currentLevelKey = () => activeDifficulty?.key || "easy";
+
+const currentLevelName = () => activeDifficulty?.name || "Fácil";
+
+const updateDailyStatus = () => {
+  const text = ReabilityDaily.statusText({
+    gameId: GAME_ID,
+    levelKey: currentLevelKey(),
+    levelName: currentLevelName(),
+  });
+
+  dailyStatus.textContent = text;
+  gameDailyStatus.textContent = text;
+  difficultyButtons.forEach((button) => {
+    ReabilityDaily.updateLevelLock(button, GAME_ID, LEVEL_KEYS[button.dataset.level]);
+  });
+};
+
+const requestDailyAttempt = async () => {
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeDifficulty.key);
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    ReabilityDaily.showLimitDialog({
+      gameTitle: GAME_TITLE,
+      levelName: activeDifficulty.name,
+    });
+    return false;
+  }
+
+  return true;
+};
+
+const clearGoalResult = () => {
+  resultSummary.parentElement.querySelector(".goal-result")?.remove();
+};
 
 const createBoard = () => {
   board.replaceChildren();
@@ -107,6 +160,10 @@ const finishGame = (wasStopped = false) => {
   resultSummary.textContent = wasStopped
     ? `Você marcou ${score} ${score === 1 ? "ponto" : "pontos"} antes de encerrar o desafio.`
     : `Tempo encerrado! Você marcou ${score} ${score === 1 ? "ponto" : "pontos"}.`;
+  ReabilityDaily.goals.showGoalResult(
+    resultSummary,
+    ReabilityDaily.goals.rateHigher(score, LEVEL_GOALS[activeDifficulty.key]),
+  );
   resultDialog.showModal();
 };
 
@@ -142,6 +199,7 @@ function handleCellClick(event) {
 const startGame = () => {
   stopTimers();
   resultDialog.close();
+  clearGoalResult();
   score = 0;
   timeLeft = gameDuration;
   activeCellIndex = -1;
@@ -153,6 +211,7 @@ const startGame = () => {
   startScreen.hidden = true;
   gameInterface.hidden = false;
   selectedLevelElement.textContent = `${activeDifficulty.name} · cérebro a cada ${activeDifficulty.label}`;
+  updateDailyStatus();
   createBoard();
   updateStatus();
   gameMessage.textContent = "Toque no cérebro quando ele aparecer.";
@@ -167,25 +226,34 @@ const startGame = () => {
   }, 1000);
 };
 
-const selectDifficulty = (event) => {
+const selectDifficulty = async (event) => {
   const button = event.currentTarget;
   const delayInSeconds = Number(button.dataset.delay) / 1000;
   activeDifficulty = {
+    key: LEVEL_KEYS[button.dataset.level],
     name: button.dataset.level,
     delay: Number(button.dataset.delay),
     label: delayInSeconds === 1 ? "1 segundo" : `${delayInSeconds.toString().replace(".", ",")} segundos`,
   };
-  startGame();
+  if (await requestDailyAttempt()) startGame();
 };
 
 const showLevelSelection = () => {
   resultDialog.close();
+  clearGoalResult();
   gameInterface.hidden = true;
   startScreen.hidden = false;
+  updateDailyStatus();
   difficultyButtons[0].focus();
 };
 
+const playAgain = async () => {
+  if (await requestDailyAttempt()) startGame();
+};
+
 difficultyButtons.forEach((button) => button.addEventListener("click", selectDifficulty));
-playAgainButton.addEventListener("click", startGame);
+playAgainButton.addEventListener("click", playAgain);
 stopButton.addEventListener("click", () => finishGame(true));
 chooseLevelButton.addEventListener("click", showLevelSelection);
+
+updateDailyStatus();

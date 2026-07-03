@@ -33,8 +33,8 @@
             <p class="eyebrow">Cuidado, ciência e humanidade</p>
             <h1 id="page-title">Jogue, reflita e aprenda</h1>
             <p class="intro">
-              Chegou pelo Instagram? Escolha um desafio, jogue no seu ritmo e entenda, na prática,
-              por que memória, atenção e raciocínio fazem parte do nosso cotidiano.
+              Chegou pelo Instagram? Escolha um jogo, ajuste o nível e entenda,
+              na prática, por que memória, atenção e raciocínio fazem parte do nosso cotidiano.
             </p>
           </div>
 
@@ -54,34 +54,73 @@
         <div class="game-options" aria-label="Jogos disponíveis">
           <article class="game-option">
             <div class="game-visual" aria-hidden="true">
-              <img src="./assets/games/memoria-visual.png" alt="" decoding="async" />
+              <img
+                src="./assets/games/home/memoria-visual-768.jpg"
+                srcset="
+                  ./assets/games/home/memoria-visual-480.jpg 480w,
+                  ./assets/games/home/memoria-visual-768.jpg 768w,
+                  ./assets/games/home/memoria-visual-960.jpg 960w
+                "
+                sizes="(max-width: 520px) calc((100vw - 66px) / 2), (max-width: 760px) calc(100vw - 60px), 520px"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+                loading="lazy"
+              />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 01</p>
+              <p class="game-kicker">Jogo 01 · 3 níveis</p>
               <h3>Memória Visual</h3>
               <p>Fortaleça sua memória com imagens.</p>
               <a class="button" href="./jogo-memoria-neuro/index.html">Jogar agora</a>
             </div>
           </article>
 
-          <article class="game-option">
+          <article class="game-option game-option--logic">
             <div class="game-visual" aria-hidden="true">
-              <img src="./assets/games/logica-numerica.png" alt="" decoding="async" />
+              <img
+                src="./assets/games/home/logica-numerica-768.jpg"
+                srcset="
+                  ./assets/games/home/logica-numerica-480.jpg 480w,
+                  ./assets/games/home/logica-numerica-768.jpg 768w,
+                  ./assets/games/home/logica-numerica-960.jpg 960w
+                "
+                sizes="(max-width: 520px) calc((100vw - 66px) / 2), (max-width: 760px) calc(100vw - 60px), 520px"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+                loading="lazy"
+              />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 02</p>
+              <p class="game-kicker">Jogo 02 · Palpites guiados</p>
               <h3>Lógica Numérica</h3>
-              <p>Resolva desafios matemáticos rápidos.</p>
+              <p>Veja seus palpites enviados e siga as pistas de maior/menor.</p>
               <a class="button" href="./jogo-numero-neuro/index.html">Jogar agora</a>
             </div>
           </article>
 
           <article class="game-option">
             <div class="game-visual" aria-hidden="true">
-              <img src="./assets/games/atencao-plena.png" alt="" decoding="async" loading="lazy" />
+              <img
+                src="./assets/games/home/atencao-plena-768.jpg"
+                srcset="
+                  ./assets/games/home/atencao-plena-480.jpg 480w,
+                  ./assets/games/home/atencao-plena-768.jpg 768w,
+                  ./assets/games/home/atencao-plena-960.jpg 960w
+                "
+                sizes="(max-width: 520px) calc((100vw - 66px) / 2), (max-width: 760px) calc(100vw - 60px), 520px"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+                loading="lazy"
+              />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 03</p>
+              <p class="game-kicker">Jogo 03 · 3 níveis</p>
               <h3>Atenção Plena</h3>
               <p>Mantenha o foco em tarefas simples.</p>
               <a class="button" href="./jogo-cerebro-feliz/index.html">Jogar agora</a>
@@ -90,37 +129,141 @@
 
           <article class="game-option game-option--concepts">
             <div class="game-visual" aria-hidden="true">
-              <img src="./assets/games/conexoes-de-ideias.png" alt="" decoding="async" loading="lazy" />
+              <img
+                src="./assets/games/home/conexoes-de-ideias-768.jpg"
+                srcset="
+                  ./assets/games/home/conexoes-de-ideias-480.jpg 480w,
+                  ./assets/games/home/conexoes-de-ideias-768.jpg 768w,
+                  ./assets/games/home/conexoes-de-ideias-960.jpg 960w
+                "
+                sizes="(max-width: 520px) calc((100vw - 66px) / 2), (max-width: 760px) calc(100vw - 60px), 520px"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+                loading="lazy"
+              />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 04</p>
+              <p class="game-kicker">Jogo 04 · 3 níveis</p>
               <h3>Conexões de Ideias</h3>
               <p>Descubra relações entre imagens.</p>
               <a class="button" href="./jogo-similaridades-conceituais/index.html">Jogar agora</a>
             </div>
           </article>
 
-          <article class="game-option">
+          <article class="game-option game-option--cubos">
             <div class="game-visual" aria-hidden="true">
-              <img src="./assets/games/cubos-em-foco.png" alt="" decoding="async" loading="lazy" />
+              <img
+                src="./assets/games/home/cubos-em-foco-768.jpg"
+                srcset="
+                  ./assets/games/home/cubos-em-foco-480.jpg 480w,
+                  ./assets/games/home/cubos-em-foco-768.jpg 768w,
+                  ./assets/games/home/cubos-em-foco-960.jpg 960w
+                "
+                sizes="(max-width: 520px) calc(100vw - 54px), (max-width: 760px) calc(100vw - 60px), 520px"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+                loading="lazy"
+              />
+              <div class="level-ribbon">
+                <span>Fácil</span>
+                <span>Médio</span>
+                <span>Difícil</span>
+              </div>
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 05</p>
+              <p class="game-kicker">Jogo 05 · 3 níveis</p>
               <h3>Cubos em Foco</h3>
-              <p>Recrie o padrão geométrico.</p>
-              <a class="button" href="./jogo-cubos-em-foco/index.html">Jogar agora</a>
+              <p>Escolha entre grades 2×2, 3×3 e 4×4 com tempos progressivos.</p>
+              <a class="button" href="./jogo-cubos-em-foco/index.html">Escolher nível</a>
             </div>
           </article>
 
           <article class="game-option">
             <div class="game-visual" aria-hidden="true">
-              <img src="./assets/games/matriz-em-movimento.png" alt="" decoding="async" loading="lazy" />
+              <img
+                src="./assets/games/home/matriz-em-movimento-768.jpg"
+                srcset="
+                  ./assets/games/home/matriz-em-movimento-480.jpg 480w,
+                  ./assets/games/home/matriz-em-movimento-768.jpg 768w,
+                  ./assets/games/home/matriz-em-movimento-960.jpg 960w
+                "
+                sizes="(max-width: 520px) calc((100vw - 66px) / 2), (max-width: 760px) calc(100vw - 60px), 520px"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+                loading="lazy"
+              />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 06</p>
+              <p class="game-kicker">Jogo 06 · 3 ritmos</p>
               <h3>Matriz em Movimento</h3>
               <p>Complete a sequência visual.</p>
               <a class="button" href="./jogo-matriz-neuro/index.html">Jogar agora</a>
+            </div>
+          </article>
+
+          <article class="game-option">
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/puzzle-rotacao.svg" alt="" width="1280" height="720" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 07 · 3 níveis</p>
+              <h3>Puzzle de Rotação</h3>
+              <p>Gire e reposicione fragmentos.</p>
+              <a class="button" href="./jogo-puzzle-rotacao/index.html">Jogar agora</a>
+            </div>
+          </article>
+
+          <article class="game-option game-option--words">
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/palavras-em-jogo.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 08 · Palavras</p>
+              <h3>Palavra Secreta</h3>
+              <p>Descubra uma palavra de cinco letras.</p>
+              <a class="button" href="./jogo-termo-unico/index.html">Jogar agora</a>
+            </div>
+          </article>
+
+          <article class="game-option game-option--words">
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/palavras-dueto.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 09 · Palavras</p>
+              <h3>Dueto</h3>
+              <p>Resolva duas palavras com o mesmo palpite.</p>
+              <a class="button" href="./jogo-termo-dueto/index.html">Jogar agora</a>
+            </div>
+          </article>
+
+          <article class="game-option game-option--words">
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/palavras-quarteto.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 10 · Palavras</p>
+              <h3>Quarteto</h3>
+              <p>Quatro tabuleiros, uma sequência de palpites.</p>
+              <a class="button" href="./jogo-termo-quarteto/index.html">Jogar agora</a>
+            </div>
+          </article>
+
+          <article class="game-option game-option--rhythm">
+            <div class="game-visual" aria-hidden="true">
+              <img src="./assets/games/ritmo-em-foco.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
+            </div>
+            <div class="game-option__content">
+              <p class="game-kicker">Jogo 11 · 3 ritmos</p>
+              <h3>Ritmo em Foco</h3>
+              <p>Toque no momento certo e acompanhe quatro pistas de atenção.</p>
+              <a class="button" href="./jogo-ritmo-neuro/index.html">Jogar agora</a>
             </div>
           </article>
         </div>
