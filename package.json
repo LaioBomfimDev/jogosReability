@@ -1,0 +1,16 @@
+{
+  "name": "games-reability",
+  "version": "1.0.0",
+  "description": "Jogos educativos da clínica de reabilitação neurológica Reability",
+  "type": "module",
+  "scripts": {
+    "dev": "node static-server.mjs"
+  },
+  "keywords": [
+    "rehabilitation",
+    "neuro",
+    "games"
+  ],
+  "author": "",
+  "license": "ISC"
+}

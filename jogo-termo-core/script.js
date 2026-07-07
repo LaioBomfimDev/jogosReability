@@ -13,8 +13,8 @@ const config = Object.freeze({
 const DAILY_GAME_ID = "jogo-de-palavras";
 const WORD_GOALS = {
   unico: { good: 5, standout: 3, goodLabel: "5 tentativas", standoutLabel: "3 tentativas" },
-  dueto: { good: 6, standout: 4, goodLabel: "6 tentativas", standoutLabel: "4 tentativas" },
-  quarteto: { good: 8, standout: 6, goodLabel: "8 tentativas", standoutLabel: "6 tentativas" },
+  dueto: { good: 7, standout: 4, goodLabel: "7 tentativas", standoutLabel: "4 tentativas" },
+  quarteto: { good: 9, standout: 6, goodLabel: "9 tentativas", standoutLabel: "6 tentativas" },
 };
 
 const LETTER_COUNT = 5;
@@ -35,289 +35,407 @@ const SHARE_SQUARES = {
 };
 const KEYBOARD_ROWS = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
 
-const TARGET_WORDS = [
-  "amigo",
-  "aluno",
-  "anexo",
-  "antes",
-  "apoio",
-  "areia",
-  "avião",
-  "azedo",
-  "banco",
-  "barco",
-  "brasa",
-  "brisa",
-  "calma",
-  "campo",
-  "canto",
-  "carta",
-  "casal",
-  "causa",
-  "chave",
-  "cheio",
-  "chuva",
-  "claro",
-  "coisa",
-  "conta",
-  "corpo",
-  "corte",
-  "curva",
-  "dança",
-  "dente",
-  "dever",
-  "disco",
-  "duplo",
-  "entre",
-  "exato",
-  "fazer",
-  "festa",
-  "filme",
-  "final",
-  "força",
-  "forte",
-  "frase",
-  "fruto",
-  "gente",
-  "gesto",
-  "grade",
-  "grupo",
-  "haver",
-  "hiena",
-  "homem",
-  "idade",
-  "ideia",
-  "igual",
-  "jovem",
-  "justo",
-  "livro",
-  "lugar",
-  "luzes",
-  "marca",
-  "metal",
-  "metro",
-  "mundo",
-  "noite",
-  "nobre",
-  "olhos",
-  "ordem",
-  "papel",
-  "pardo",
-  "parte",
-  "passo",
-  "pedra",
-  "peixe",
-  "perda",
-  "perto",
-  "plano",
-  "ponto",
-  "porta",
-  "praia",
-  "prato",
-  "praça",
-  "preço",
-  "prova",
-  "quase",
-  "ritmo",
-  "risco",
-  "roupa",
-  "saber",
-  "sabor",
-  "saúde",
-  "senso",
-  "senha",
-  "sinal",
-  "sonho",
-  "sorte",
-  "tarde",
-  "tempo",
-  "terra",
-  "texto",
-  "tomar",
-  "tórax",
-  "trigo",
-  "troca",
-  "turno",
-  "valor",
-  "vento",
-  "verde",
-  "verso",
-  "vidro",
-  "vinho",
-  "vista",
-  "viver",
-  "voraz",
-  "zelar",
+// Respostas diárias: comuns, acolhedoras e agrupadas por tema para Dueto/Quarteto.
+const TARGET_WORD_GROUPS = [
+  ["aluno", "livro", "papel", "texto"],
+  ["frase", "letra", "verso", "pauta"],
+  ["apoio", "ajuda", "afeto", "calma"],
+  ["corpo", "dente", "olhos", "perna"],
+  ["passo", "gesto", "ritmo", "força"],
+  ["porta", "chave", "cesto", "mural"],
+  ["prato", "garfo", "arroz", "fruta"],
+  ["areia", "praia", "barco", "peixe"],
+  ["chuva", "vento", "nuvem", "tempo"],
+  ["verde", "claro", "vidro", "metal"],
+  ["amigo", "gente", "grupo", "casal"],
+  ["noite", "tarde", "turno", "antes"],
+  ["feliz", "sonho", "sorte", "suave"],
+  ["curva", "ponto", "linha", "plano"],
+  ["campo", "praça", "palco", "hotel"],
+  ["avião", "navio", "metro", "carro"],
+  ["sinal", "senha", "canal", "rádio"],
+  ["filme", "dança", "disco", "clipe"],
+  ["falar", "fazer", "saber", "ouvir"],
+  ["abrir", "tocar", "olhar", "andar"],
+  ["ideia", "senso", "ordem", "razão"],
+  ["bolsa", "caixa", "carta", "pasta"],
+  ["roupa", "tênis", "cinto", "blusa"],
+  ["folha", "fruto", "horta", "grama"],
+  ["conta", "valor", "total", "igual"],
+  ["perto", "longe", "entre", "quase"],
+  ["limpo", "lindo", "forte", "justo"],
+  ["breve", "cheio", "duplo", "exato"],
+  ["pedra", "terra", "brisa", "luzes"],
+  ["bicho", "coala", "panda", "tigre"],
+  ["manga", "amora", "limão", "milho"],
+  ["sabor", "leite", "cacau", "melão"],
+  ["tecla", "áudio", "vídeo", "dados"],
+  ["saúde", "banho", "pausa", "ativo"],
+  ["teste", "nível", "pista", "dicas"],
+  ["local", "norte", "ponte", "lagoa"],
+  ["forma", "fonte", "marca", "traço"],
+  ["festa", "beijo", "lazer", "balão"],
+  ["vista", "cores", "lente", "visão"],
+  ["bloco", "grade", "cubos", "peças"],
 ];
 
+const TARGET_WORDS = TARGET_WORD_GROUPS.flat();
+
+// Vocabulário aceito para palpites/testes; não entra no sorteio diário.
 const EXTRA_WORDS = [
   "termo",
-  "turma",
-  "viola",
-  "pulga",
-  "abrir",
+  "lápis",
+  "ações",
+  "aceno",
+  "acesa",
+  "aceso",
+  "achar",
   "acima",
   "adiar",
-  "afeto",
+  "adubo",
   "agora",
-  "ajuda",
-  "ambos",
-  "andar",
-  "anexo",
+  "agudo",
+  "ainda",
+  "álbum",
+  "algum",
+  "aliar",
+  "ameno",
+  "ampla",
+  "amplo",
+  "anéis",
+  "ânimo",
+  "apaga",
   "apego",
   "apito",
-  "arroz",
+  "apoia",
+  "arcos",
+  "aroma",
+  "assar",
   "astro",
   "atriz",
+  "atual",
+  "atuar",
+  "autor",
+  "aveia",
+  "aviso",
   "baixo",
   "balde",
+  "bambu",
+  "banca",
   "barra",
-  "beijo",
-  "bicho",
-  "bolsa",
+  "basta",
+  "batom",
+  "beber",
+  "berço",
+  "bolha",
+  "bolos",
   "bolso",
-  "breve",
-  "caixa",
-  "canal",
+  "bonde",
+  "bordo",
+  "botão",
+  "botas",
+  "broto",
+  "buquê",
+  "caber",
+  "cacho",
+  "cafés",
+  "calor",
+  "canoa",
+  "canil",
+  "capim",
+  "cargo",
+  "carne",
+  "casar",
+  "casas",
   "ceder",
-  "censo",
-  "cerco",
+  "cedro",
+  "cenas",
+  "cerca",
   "certa",
   "certo",
   "cesta",
-  "cinto",
+  "chefe",
+  "cheia",
+  "ciclo",
+  "cinza",
+  "citar",
   "civil",
-  "cível",
-  "cobra",
+  "clara",
+  "clima",
+  "clube",
   "cobre",
+  "cofre",
+  "colar",
   "comer",
   "comum",
+  "cones",
+  "copos",
   "coral",
+  "corda",
   "coroa",
+  "couro",
+  "couve",
+  "cravo",
+  "creme",
   "criar",
-  "crise",
-  "cruel",
-  "dente",
+  "curar",
+  "curto",
+  "dedos",
+  "deixa",
   "desde",
   "digno",
   "dizer",
-  "doido",
-  "dorso",
-  "drama",
-  "elite",
+  "donos",
+  "dobra",
+  "bolas",
+  "doces",
+  "donas",
+  "risos",
+  "dueto",
+  "dupla",
+  "durar",
+  "ecoar",
+  "todos",
   "enfim",
   "então",
+  "envio",
+  "ervas",
   "estar",
-  "exato",
+  "etapa",
+  "evita",
+  "telas",
   "êxito",
-  "falar",
-  "falso",
+  "extra",
+  "fácil",
+  "faixa",
+  "fases",
   "farto",
   "fatia",
-  "feliz",
+  "favor",
+  "feira",
   "ferro",
   "fibra",
   "ficha",
+  "filha",
+  "filho",
+  "final",
+  "firme",
+  "fitas",
   "fixar",
-  "folha",
-  "fonte",
-  "forma",
-  "forte",
+  "flora",
+  "fluir",
+  "focar",
+  "fogão",
+  "fones",
+  "forno",
+  "sucos",
+  "fotos",
+  "freio",
+  "frita",
   "fundo",
   "ganho",
-  "garfo",
+  "garoa",
   "gasto",
+  "gatos",
+  "geral",
+  "gerar",
+  "gesso",
   "girar",
   "globo",
-  "golpe",
-  "graça",
-  "grave",
-  "honra",
-  "hotel",
+  "gotas",
+  "grato",
+  "graus",
+  "guiar",
+  "magia",
+  "vasos",
   "humor",
+  "ideal",
+  "ilhas",
+  "ímpar",
+  "itens",
+  "janta",
+  "jarra",
   "jeito",
   "jogar",
+  "jovem",
+  "julho",
+  "junho",
+  "junto",
+  "lados",
+  "largo",
+  "pular",
+  "lavar",
+  "legal",
+  "luvas",
+  "lenta",
   "lento",
-  "limpo",
-  "linha",
-  "lindo",
-  "longo",
-  "lutar",
+  "levar",
+  "ligar",
+  "limpa",
+  "lista",
+  "litro",
+  "livre",
+  "lojas",
+  "lousa",
+  "verão",
   "maior",
+  "malha",
+  "mamão",
+  "manta",
+  "mapas",
+  "mares",
+  "massa",
+  "média",
+  "médio",
+  "meias",
+  "meiga",
+  "meigo",
   "menor",
+  "mesas",
   "mesma",
   "mesmo",
-  "moral",
-  "morte",
+  "mimos",
+  "meses",
+  "miolo",
+  "nadar",
+  "modos",
+  "moeda",
+  "molde",
+  "molas",
+  "morno",
   "motor",
+  "móvel",
+  "mover",
   "mudar",
-  "mural",
+  "mundo",
+  "museu",
+  "nariz",
   "natal",
-  "navio",
-  "negro",
   "ninho",
-  "nível",
-  "nuvem",
+  "notar",
+  "notas",
+  "novas",
+  "novos",
   "obter",
+  "oeste",
+  "oliva",
+  "ondas",
   "ontem",
+  "todas",
   "opção",
-  "ouvir",
-  "padre",
+  "varal",
+  "velas",
+  "ossos",
+  "pagam",
   "pagar",
-  "palco",
-  "pardo",
-  "pasta",
+  "palma",
+  "parar",
+  "pares",
+  "passe",
+  "patas",
   "pátio",
-  "pavio",
+  "pedal",
+  "pedir",
+  "pegar",
+  "peito",
+  "pelos",
+  "penas",
+  "pente",
+  "peras",
+  "pesos",
+  "piano",
+  "picos",
   "pilar",
-  "pista",
-  "poder",
-  "porão",
+  "pipas",
+  "pisar",
+  "pisos",
+  "placa",
+  "plena",
+  "pleno",
+  "podem",
+  "poema",
+  "polpa",
+  "pomar",
+  "patos",
   "posto",
+  "potes",
   "pouco",
+  "prata",
   "primo",
+  "pulga",
+  "pulos",
   "puxar",
   "quero",
-  "raiva",
-  "ramal",
+  "quilo",
+  "raios",
+  "ramos",
+  "rampa",
+  "setas",
+  "reais",
+  "redes",
   "regar",
+  "régua",
   "reino",
+  "rotas",
+  "remar",
   "renda",
   "rente",
-  "resto",
+  "repor",
+  "retos",
+  "rever",
+  "rimar",
+  "rodas",
+  "rolar",
+  "rosas",
   "rosto",
   "sábio",
   "salão",
+  "salas",
   "salsa",
-  "santo",
+  "samba",
+  "sauna",
   "secar",
+  "seiva",
   "selar",
+  "selos",
   "sério",
-  "sesta",
-  "sótão",
-  "suave",
+  "série",
+  "sexta",
+  "sinos",
+  "sítio",
+  "sobra",
+  "sobre",
+  "solar",
+  "solas",
+  "solos",
+  "somar",
+  "unhas",
+  "sopas",
+  "sorri",
   "subir",
-  "suíço",
-  "tecla",
-  "tênis",
-  "tenso",
-  "tinta",
-  "tocar",
-  "torre",
-  "total",
-  "trama",
+  "tubos",
+  "tacos",
+  "talco",
+  "tampa",
+  "tanto",
+  "tecer",
+  "telha",
+  "temas",
+  "tomar",
   "trave",
   "tribo",
+  "troca",
+  "turma",
   "único",
   "unido",
-  "urgir",
-  "vazio",
-  "velho",
-  "vença",
-  "vento",
+  "valer",
   "verbo",
+  "virar",
+  "viver",
   "votar",
+  "xampu",
   "zebra",
+  "zelar",
 ];
 
 const normalizeLetters = (value) => String(value)
@@ -344,6 +462,12 @@ const createEntries = (words) => {
 };
 
 const ANSWER_ENTRIES = createEntries(TARGET_WORDS);
+const ANSWER_ENTRY_BY_NORMALIZED = new Map(ANSWER_ENTRIES.map((entry) => [entry.normalized, entry]));
+const THEMED_ANSWER_GROUPS = TARGET_WORD_GROUPS
+  .map((group) => group
+    .map((word) => ANSWER_ENTRY_BY_NORMALIZED.get(normalizeLetters(word)))
+    .filter(Boolean))
+  .filter((group) => group.length >= 2);
 const DICTIONARY_ENTRIES = createEntries([...TARGET_WORDS, ...EXTRA_WORDS]);
 const DICTIONARY = new Map(DICTIONARY_ENTRIES.map((entry) => [entry.normalized, entry]));
 
@@ -376,6 +500,9 @@ const state = {
   ended: false,
   won: false,
   roundLabel: "Dia",
+  dayKey: "",
+  dailyAttemptRecorded: false,
+  dailyAttemptPending: false,
   shakeTimer: undefined,
   currentGuess: "",
 };
@@ -400,34 +527,52 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  const playerName = await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(DAILY_GAME_ID, config.mode);
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: "Jogo de Palavras",
+    levelName: config.title,
+  });
+};
+
+const previewDailyAttempt = async () => {
+  const usage = ReabilityDaily.getUsage(DAILY_GAME_ID, config.mode);
   updateDailyStatus();
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: "Jogo de Palavras",
-      levelName: config.title,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return null;
   }
 
-  return { ...attempt, playerName };
+  const playerName = await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus();
+  return { ...usage, used: usage.used + 1, playerName };
+};
+
+const recordDailyAttempt = async () => {
+  if (state.dailyAttemptRecorded) return true;
+  if (state.dailyAttemptPending) return false;
+
+  state.dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(DAILY_GAME_ID, config.mode);
+  state.dailyAttemptPending = false;
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    showLimitState();
+    return false;
+  }
+
+  state.dailyAttemptRecorded = true;
+  return true;
 };
 
 const clearGoalResult = () => {
   resultSummary.parentElement.querySelector(".goal-result")?.remove();
 };
 
-const localDayStamp = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-};
+const dailyDayKey = (attempt = {}) => attempt.day || ReabilityDaily.todayKey();
 
 const hashString = (value) => {
   let hash = 2166136261;
@@ -505,6 +650,7 @@ const RELATED_WORD_RULES = {
     shortlistSize: 18,
     attempts: 36,
     minStrongPairs: 1,
+    themePoolAttempts: 10,
   },
   quarteto: {
     minShared: 2,
@@ -514,6 +660,7 @@ const RELATED_WORD_RULES = {
     shortlistSize: 24,
     attempts: 72,
     minStrongPairs: 3,
+    themePoolAttempts: 12,
   },
 };
 
@@ -567,9 +714,35 @@ const scoreGroup = (group, rules) => {
   return score + countCrossBoardLetters(group) * 6;
 };
 
-const scoreCandidateForGroup = (candidate, group, rules) => {
+const scoreThemedGroup = (group, rules) => {
+  const strictScore = scoreGroup(group, rules);
+
+  if (Number.isFinite(strictScore)) return strictScore + 160;
+
+  let score = 80;
+  let strongPairs = 0;
+
+  for (let leftIndex = 0; leftIndex < group.length; leftIndex += 1) {
+    for (let rightIndex = leftIndex + 1; rightIndex < group.length; rightIndex += 1) {
+      const relation = getPairRelation(group[leftIndex], group[rightIndex]);
+
+      score += relation.shared * 12;
+      score += relation.displacedShared * 10;
+      score -= relation.samePosition * 4;
+
+      if (relation.shared >= rules.strongShared) strongPairs += 1;
+      if (relation.samePosition === 0) score += 3;
+    }
+  }
+
+  if (strongPairs >= rules.minStrongPairs) score += 20;
+
+  return score + countCrossBoardLetters(group) * 5;
+};
+
+const scoreCandidateForGroup = (candidate, group, rules, scoreFn = scoreGroup) => {
   const nextGroup = [...group, candidate];
-  return scoreGroup(nextGroup, rules);
+  return scoreFn(nextGroup, rules);
 };
 
 const pickRankedCandidate = (rankedCandidates, random, shortlistSize) => {
@@ -605,15 +778,18 @@ const chooseRandomTargets = (random) => {
   return chosen;
 };
 
-const buildRelatedGroup = (random, rules) => {
-  const pool = [...ANSWER_ENTRIES];
+const buildRelatedGroup = (random, rules, entries = ANSWER_ENTRIES, scoreFn = scoreGroup) => {
+  const pool = [...entries];
+
+  if (pool.length === 0) return [];
+
   const group = [pool.splice(Math.floor(random() * pool.length), 1)[0]];
 
   while (group.length < config.boardCount && pool.length > 0) {
     const rankedCandidates = pool
       .map((entry) => ({
         entry,
-        score: scoreCandidateForGroup(entry, group, rules),
+        score: scoreCandidateForGroup(entry, group, rules, scoreFn),
       }))
       .filter((candidate) => Number.isFinite(candidate.score))
       .sort((left, right) => right.score - left.score);
@@ -629,7 +805,50 @@ const buildRelatedGroup = (random, rules) => {
   return group;
 };
 
+const chooseThemedTargets = (seed, rules) => {
+  const themedPools = THEMED_ANSWER_GROUPS
+    .filter((group) => group.length >= config.boardCount);
+
+  if (themedPools.length === 0) return [];
+
+  const random = createRandom(seed ^ 0x85ebca6b);
+  const poolsToTry = shuffleEntries(themedPools, random)
+    .slice(0, Math.min(themedPools.length, rules.themePoolAttempts || themedPools.length));
+  const attemptsPerPool = Math.max(
+    2,
+    Math.ceil(rules.attempts / Math.max(poolsToTry.length * 3, 1)),
+  );
+  let bestGroup = [];
+  let bestScore = Number.NEGATIVE_INFINITY;
+
+  poolsToTry.forEach((pool) => {
+    for (let attempt = 0; attempt < attemptsPerPool; attempt += 1) {
+      const group = buildRelatedGroup(random, rules, pool, scoreThemedGroup);
+      const score = group.length === config.boardCount
+        ? scoreThemedGroup(group, rules) + random() * 0.001
+        : Number.NEGATIVE_INFINITY;
+
+      if (score > bestScore) {
+        bestGroup = group;
+        bestScore = score;
+      }
+    }
+  });
+
+  if (bestGroup.length === config.boardCount) {
+    return shuffleEntries(bestGroup, createRandom(seed ^ 0x9e3779b9));
+  }
+
+  return [];
+};
+
 const chooseRelatedTargets = (seed, rules) => {
+  const themedGroup = chooseThemedTargets(seed, rules);
+
+  if (themedGroup.length === config.boardCount) {
+    return themedGroup;
+  }
+
   const random = createRandom(seed);
   let bestGroup = [];
   let bestScore = Number.NEGATIVE_INFINITY;
@@ -658,7 +877,7 @@ const dailySeed = (attempt = {}) => {
   const playerKey = normalizeLetters(playerName) || "VISITANTE";
   const attemptKey = Number(attempt.used || 1);
 
-  return hashString(`${localDayStamp()}:${config.mode}:${playerKey}:${attemptKey}`);
+  return hashString(`${dailyDayKey(attempt)}:${config.mode}:${playerKey}:${attemptKey}`);
 };
 
 const chooseTargets = (seed) => {
@@ -913,7 +1132,7 @@ const render = (animateRowIndex = -1) => {
   shareButton.disabled = !state.ended;
 };
 
-const startGame = (seed, roundLabel = "Dia") => {
+const startGame = (seed, roundLabel = "Dia", dayKey = ReabilityDaily.todayKey()) => {
   closeDialog();
   clearGoalResult();
   window.clearTimeout(state.shakeTimer);
@@ -926,6 +1145,9 @@ const startGame = (seed, roundLabel = "Dia") => {
   state.ended = false;
   state.won = false;
   state.roundLabel = roundLabel;
+  state.dayKey = dayKey;
+  state.dailyAttemptRecorded = false;
+  state.dailyAttemptPending = false;
   state.currentGuess = "";
 
   initBoardsDOM();
@@ -949,6 +1171,9 @@ const showLimitState = () => {
   state.ended = true;
   state.won = false;
   state.roundLabel = "Limite";
+  state.dayKey = ReabilityDaily.todayKey();
+  state.dailyAttemptRecorded = false;
+  state.dailyAttemptPending = false;
   state.currentGuess = "";
 
   clearGoalResult();
@@ -958,24 +1183,26 @@ const showLimitState = () => {
 };
 
 const startRandomGame = async () => {
-  if (!(await requestDailyAttempt())) {
-    showLimitState();
-    return;
-  }
-
-  const seed = hashString(`${Date.now()}:${Math.random()}:${config.mode}`);
-  startGame(seed, "Livre");
-};
-
-const startDailyGame = async () => {
-  const attempt = await requestDailyAttempt();
+  const attempt = await previewDailyAttempt();
 
   if (!attempt) {
     showLimitState();
     return;
   }
 
-  startGame(dailySeed(attempt), "Dia");
+  const seed = hashString(`${Date.now()}:${Math.random()}:${config.mode}`);
+  startGame(seed, "Livre", dailyDayKey(attempt));
+};
+
+const startDailyGame = async () => {
+  const attempt = await previewDailyAttempt();
+
+  if (!attempt) {
+    showLimitState();
+    return;
+  }
+
+  startGame(dailySeed(attempt), "Dia", dailyDayKey(attempt));
 };
 
 const endGame = (won) => {
@@ -1014,7 +1241,7 @@ const handleInvalidGuess = (message) => {
   shakeBoards();
 };
 
-const submitGuess = () => {
+const submitGuess = async () => {
   if (state.ended) return;
 
   const normalized = sanitizeInput(state.currentGuess);
@@ -1028,6 +1255,8 @@ const submitGuess = () => {
     handleInvalidGuess("Palavra fora da lista deste jogo.");
     return;
   }
+
+  if (!(await recordDailyAttempt())) return;
 
   const entry = DICTIONARY.get(normalized);
   const attemptNumber = state.attempt + 1;
@@ -1150,7 +1379,7 @@ const renderKeyboard = () => {
 
 const createShareText = () => {
   const result = state.won ? state.attempt : "X";
-  const heading = `${config.title} ${result}/${config.maxAttempts} - ${localDayStamp()}`;
+  const heading = `${config.title} ${result}/${config.maxAttempts} - ${state.dayKey || ReabilityDaily.todayKey()}`;
   const boardLines = state.boards.map((board) => {
     const rows = board.rows
       .filter(Boolean)

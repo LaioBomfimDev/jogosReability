@@ -1,5 +1,5 @@
 const GAME_ID = "memoria-visual";
-const GAME_TITLE = "Memória em Movimento";
+const GAME_TITLE = "Memória Visual";
 
 const cardSymbols = [
   { symbol: "🧠", label: "Cérebro" },
@@ -59,6 +59,8 @@ let matches = 0;
 let moves = 0;
 let startedAt;
 let timerInterval;
+let dailyAttemptRecorded = false;
+let dailyAttemptPending = false;
 
 const activeLevel = () => LEVELS[activeLevelKey];
 
@@ -100,19 +102,43 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeLevelKey);
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: activeLevel().name,
+  });
+};
+
+const ensureDailyAllowance = async () => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, activeLevelKey);
   updateDailyStatus();
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: activeLevel().name,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus();
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (dailyAttemptRecorded) return true;
+  if (dailyAttemptPending) return false;
+
+  dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeLevelKey);
+  dailyAttemptPending = false;
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    return false;
+  }
+
+  dailyAttemptRecorded = true;
   return true;
 };
 
@@ -207,7 +233,7 @@ const resolveTurn = () => {
   }, 700);
 };
 
-const handleCardClick = (event) => {
+const handleCardClick = async (event) => {
   const selectedCard = event.currentTarget;
 
   if (
@@ -217,6 +243,8 @@ const handleCardClick = (event) => {
   ) {
     return;
   }
+
+  if (!(await recordDailyAttempt())) return;
 
   startTimer();
   selectedCard.classList.add("is-open");
@@ -262,6 +290,8 @@ const startGame = () => {
   matches = 0;
   moves = 0;
   startedAt = undefined;
+  dailyAttemptRecorded = false;
+  dailyAttemptPending = false;
   timerElement.textContent = "00:00";
   totalMatchesElement.textContent = activeLevel().pairCount;
   selectedLevelElement.textContent = `${activeLevel().name} · ${activeLevel().pairCount} pares`;
@@ -278,11 +308,11 @@ const startGame = () => {
 const selectLevel = async (event) => {
   activeLevelKey = event.currentTarget.dataset.level;
 
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const restartGame = async () => {
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const showLevelSelection = () => {
@@ -295,11 +325,11 @@ const showLevelSelection = () => {
 };
 
 const shareChallenge = async () => {
-  const shareText = `Consegue encontrar todos os pares no nível ${activeLevel().name} do desafio Memória em Movimento?`;
+  const shareText = `Consegue encontrar todos os pares no nível ${activeLevel().name} do desafio Memória Visual?`;
 
   try {
     if (navigator.share) {
-      await navigator.share({ title: "Memória em Movimento", text: shareText });
+      await navigator.share({ title: "Memória Visual", text: shareText });
       shareFeedback.textContent = "Desafio compartilhado.";
       return;
     }

@@ -1,4 +1,4 @@
-# Memória em Movimento
+# Memória Visual
 
 Jogo de memória estático e responsivo para uma clínica de reabilitação neurológica.
 

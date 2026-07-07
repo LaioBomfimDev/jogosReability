@@ -33,6 +33,8 @@ let secretNumber;
 let attempts;
 let hasFinished;
 let guessHistory;
+let dailyAttemptRecorded = false;
+let dailyAttemptPending = false;
 
 const createSecretNumber = () => Math.floor(Math.random() * activeLevel.limit) + 1;
 
@@ -54,19 +56,43 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeLevel.key);
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: activeLevel.name,
+  });
+};
+
+const ensureDailyAllowance = async () => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, activeLevel.key);
   updateDailyStatus();
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: activeLevel.name,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus();
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (dailyAttemptRecorded) return true;
+  if (dailyAttemptPending) return false;
+
+  dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeLevel.key);
+  dailyAttemptPending = false;
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    return false;
+  }
+
+  dailyAttemptRecorded = true;
   return true;
 };
 
@@ -99,6 +125,8 @@ const resetGame = () => {
   attempts = 0;
   hasFinished = false;
   guessHistory = [];
+  dailyAttemptRecorded = false;
+  dailyAttemptPending = false;
   form.reset();
   guessInput.min = "1";
   guessInput.max = activeLevel.limit;
@@ -121,7 +149,7 @@ const selectLevel = async (event) => {
     limit: Number(button.dataset.limit),
   };
 
-  if (!(await requestDailyAttempt())) return;
+  if (!(await ensureDailyAllowance())) return;
 
   selectedLevel.textContent = `${activeLevel.name} · 1 a ${activeLevel.limit}`;
   difficultyScreen.hidden = true;
@@ -139,10 +167,10 @@ const showDifficultyScreen = () => {
 };
 
 const startNewGame = async () => {
-  if (await requestDailyAttempt()) resetGame();
+  if (await ensureDailyAllowance()) resetGame();
 };
 
-form.addEventListener("submit", (event) => {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   if (hasFinished || !activeLevel) return;
@@ -153,6 +181,8 @@ form.addEventListener("submit", (event) => {
     feedback.textContent = `Digite um número inteiro de 1 a ${activeLevel.limit}.`;
     return;
   }
+
+  if (!(await recordDailyAttempt())) return;
 
   attempts += 1;
   const outcome =

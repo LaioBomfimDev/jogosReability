@@ -133,6 +133,8 @@ let score = 0;
 let mistakes = 0;
 let selected = false;
 let roundComplete = false;
+let dailyAttemptRecorded = false;
+let dailyAttemptPending = false;
 
 const activeLevel = () => LEVELS[activeLevelKey];
 
@@ -161,19 +163,43 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeLevelKey);
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: activeLevel().name,
+  });
+};
+
+const ensureDailyAllowance = async () => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, activeLevelKey);
   updateDailyStatus();
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: activeLevel().name,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus();
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (dailyAttemptRecorded) return true;
+  if (dailyAttemptPending) return false;
+
+  dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeLevelKey);
+  dailyAttemptPending = false;
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    return false;
+  }
+
+  dailyAttemptRecorded = true;
   return true;
 };
 
@@ -230,7 +256,7 @@ const selectLooseCard = () => {
   feedback.textContent = selected ? "Agora escolha uma das imagens." : "";
 };
 
-const resolveChoice = (target) => {
+const resolveChoice = async (target) => {
   if (roundComplete) return;
 
   if (!selected) {
@@ -238,6 +264,8 @@ const resolveChoice = (target) => {
     feedback.textContent = "Primeiro selecione a carta solta; depois escolha uma imagem.";
     return;
   }
+
+  if (!(await recordDailyAttempt())) return;
 
   if (!target.dataset.correct) {
     mistakes += 1;
@@ -341,6 +369,8 @@ const startGame = () => {
   currentRound = 0;
   score = 0;
   mistakes = 0;
+  dailyAttemptRecorded = false;
+  dailyAttemptPending = false;
   roundQueue = shuffle(rounds).slice(0, activeLevel().roundCount);
   if (victoryDialog.open) victoryDialog.close();
   startScreen.hidden = true;
@@ -353,11 +383,11 @@ const startGame = () => {
 const selectLevel = async (event) => {
   activeLevelKey = event.currentTarget.dataset.level;
 
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const restartGame = async () => {
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const showLevelSelection = () => {

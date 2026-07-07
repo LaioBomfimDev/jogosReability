@@ -24,11 +24,9 @@ body {
 .welcome-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.78fr);
-  gap: clamp(22px, 4vw, 48px);
-  align-items: center;
+  place-items: center;
   overflow: hidden;
-  padding: clamp(30px, 6vw, 64px) clamp(26px, 6vw, 64px) clamp(28px, 5vw, 52px);
+  padding: clamp(34px, 6vw, 70px) clamp(26px, 6vw, 64px) clamp(30px, 5vw, 56px);
   isolation: isolate;
   background: linear-gradient(135deg, var(--surface), #f4eedf);
 }
@@ -53,22 +51,8 @@ body {
 }
 
 .welcome-hero__copy {
-  max-width: 620px;
+  max-width: 720px;
   justify-self: center;
-}
-
-.welcome-hero__image {
-  display: flex;
-  min-width: 0;
-  justify-content: center;
-}
-
-.welcome-hero__image img {
-  display: block;
-  width: min(100%, 420px);
-  height: auto;
-  border-radius: clamp(22px, 3vw, 34px);
-  box-shadow: 0 22px 50px rgba(14, 32, 48, 0.18);
 }
 
 .brand-signature {
@@ -344,14 +328,6 @@ h1 {
   .welcome {
     width: min(100%, 930px);
   }
-
-  .welcome-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .welcome-hero__image img {
-    width: min(100%, 360px);
-  }
 }
 
 @media (max-width: 520px) {
@@ -365,13 +341,7 @@ h1 {
   }
 
   .welcome-hero {
-    gap: 24px;
     padding: 30px 20px;
-  }
-
-  .welcome-hero__image img {
-    width: min(100%, 300px);
-    border-radius: 22px;
   }
 
   .brand-signature {
