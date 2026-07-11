@@ -4,7 +4,8 @@
   "description": "Jogos educativos da clínica de reabilitação neurológica Reability",
   "type": "module",
   "scripts": {
-    "dev": "node static-server.mjs"
+    "dev": "node static-server.mjs",
+    "validate:termo": "node tools/validate-termo-words.mjs --write"
   },
   "keywords": [
     "rehabilitation",

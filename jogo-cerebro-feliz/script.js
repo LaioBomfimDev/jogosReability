@@ -41,6 +41,8 @@ let isPlaying = false;
 let isTransitioning = false;
 let timerInterval;
 let moveTimeout;
+let dailyAttemptRecorded = false;
+let dailyAttemptPending = false;
 
 const currentLevelKey = () => activeDifficulty?.key || "easy";
 
@@ -60,19 +62,43 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeDifficulty.key);
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: activeDifficulty.name,
+  });
+};
+
+const ensureDailyAllowance = async () => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, activeDifficulty.key);
   updateDailyStatus();
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: activeDifficulty.name,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus();
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (dailyAttemptRecorded) return true;
+  if (dailyAttemptPending) return false;
+
+  dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeDifficulty.key);
+  dailyAttemptPending = false;
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    return false;
+  }
+
+  dailyAttemptRecorded = true;
   return true;
 };
 
@@ -167,10 +193,11 @@ const finishGame = (wasStopped = false) => {
   resultDialog.showModal();
 };
 
-function handleCellClick(event) {
+async function handleCellClick(event) {
   const clickedIndex = Number(event.currentTarget.dataset.index);
 
   if (!isPlaying || isTransitioning || clickedIndex !== activeCellIndex) return;
+  if (!(await recordDailyAttempt())) return;
 
   isTransitioning = true;
   window.clearTimeout(moveTimeout);
@@ -206,6 +233,8 @@ const startGame = () => {
   previousBrainIndex = -1;
   isPlaying = true;
   isTransitioning = false;
+  dailyAttemptRecorded = false;
+  dailyAttemptPending = false;
   document.body.classList.add("game-in-progress");
   gameCard.classList.add("is-playing");
   startScreen.hidden = true;
@@ -235,7 +264,7 @@ const selectDifficulty = async (event) => {
     delay: Number(button.dataset.delay),
     label: delayInSeconds === 1 ? "1 segundo" : `${delayInSeconds.toString().replace(".", ",")} segundos`,
   };
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const showLevelSelection = () => {
@@ -248,7 +277,7 @@ const showLevelSelection = () => {
 };
 
 const playAgain = async () => {
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 difficultyButtons.forEach((button) => button.addEventListener("click", selectDifficulty));

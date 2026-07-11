@@ -86,6 +86,8 @@ const state = {
   hits: { perfect: 0, good: 0, miss: 0 },
   notes: [],
   laneGlow: [0, 0, 0, 0],
+  dailyAttemptRecorded: false,
+  dailyAttemptPending: false,
 };
 
 const activeLevel = () => LEVELS[state.levelKey];
@@ -123,19 +125,43 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, state.levelKey);
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: activeLevel().name,
+  });
+};
+
+const ensureDailyAllowance = async () => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, state.levelKey);
   updateDailyStatus();
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: activeLevel().name,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus();
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (state.dailyAttemptRecorded) return true;
+  if (state.dailyAttemptPending) return false;
+
+  state.dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, state.levelKey);
+  state.dailyAttemptPending = false;
+  updateDailyStatus();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    return false;
+  }
+
+  state.dailyAttemptRecorded = true;
   return true;
 };
 
@@ -239,6 +265,8 @@ const resetGameState = () => {
   state.notes = createNotes(activeLevel());
   state.startedAt = performance.now();
   state.pauseStartedAt = undefined;
+  state.dailyAttemptRecorded = false;
+  state.dailyAttemptPending = false;
 };
 
 const roundedRect = (ctx, x, y, width, height, radius) => {
@@ -414,8 +442,9 @@ const registerMiss = (lane) => {
   updateStatus();
 };
 
-const handleLane = (lane) => {
+const handleLane = async (lane) => {
   if (!state.active || state.paused) return;
+  if (!(await recordDailyAttempt())) return;
 
   state.laneGlow[lane] = 1;
   const nearest = state.notes
@@ -517,13 +546,13 @@ const startGame = async () => {
 const selectLevel = async (event) => {
   state.levelKey = event.currentTarget.dataset.level;
   await ensureAudio();
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const restartGame = async () => {
   if (resultDialog.open) resultDialog.close();
   await ensureAudio();
-  if (await requestDailyAttempt()) startGame();
+  if (await ensureDailyAllowance()) startGame();
 };
 
 const stopActiveGame = () => {

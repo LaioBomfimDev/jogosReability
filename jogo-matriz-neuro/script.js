@@ -79,6 +79,8 @@ let isAnswerLocked = false;
 let isGameFinished = false;
 let timerInterval;
 let matrixCells = [];
+let dailyAttemptRecorded = false;
+let dailyAttemptPending = false;
 
 const currentModeKey = () => activeMode?.key || "leve";
 
@@ -98,19 +100,43 @@ const updateDailyStatus = (modeKey = currentModeKey()) => {
   });
 };
 
-const requestDailyAttempt = async (modeKey) => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, modeKey);
+const showDailyLimit = (modeKey = currentModeKey()) => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: modes[modeKey].name,
+  });
+};
+
+const ensureDailyAllowance = async (modeKey) => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, modeKey);
   updateDailyStatus(modeKey);
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: modes[modeKey].name,
-    });
+  if (usage.remaining === 0) {
+    showDailyLimit(modeKey);
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateDailyStatus(modeKey);
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (dailyAttemptRecorded) return true;
+  if (dailyAttemptPending) return false;
+
+  dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, activeMode.key);
+  dailyAttemptPending = false;
+  updateDailyStatus(activeMode.key);
+
+  if (!attempt.ok) {
+    showDailyLimit(activeMode.key);
+    return false;
+  }
+
+  dailyAttemptRecorded = true;
   return true;
 };
 
@@ -413,8 +439,9 @@ const revealMissingPiece = () => {
   missingCell.innerHTML = `${renderToken(currentPuzzle.answer)}${cue ? `<span class="cell-cue" aria-hidden="true">${cue}</span>` : ""}`;
 };
 
-function handleAnswer(event) {
+async function handleAnswer(event) {
   if (isAnswerLocked || isGameFinished) return;
+  if (!(await recordDailyAttempt())) return;
 
   isAnswerLocked = true;
   const selectedButton = event.currentTarget;
@@ -493,6 +520,8 @@ const startGame = (modeKey) => {
   streak = 0;
   secondsLeft = activeMode.duration;
   isGameFinished = false;
+  dailyAttemptRecorded = false;
+  dailyAttemptPending = false;
   selectedModeElement.textContent = `${activeMode.name} · ${activeMode.puzzles} matrizes`;
   startScreen.hidden = true;
   gameInterface.hidden = false;
@@ -505,7 +534,7 @@ const startGame = (modeKey) => {
 };
 
 const beginGame = async (modeKey) => {
-  if (await requestDailyAttempt(modeKey)) startGame(modeKey);
+  if (await ensureDailyAllowance(modeKey)) startGame(modeKey);
 };
 
 const returnToModeSelection = () => {

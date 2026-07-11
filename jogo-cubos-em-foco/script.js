@@ -92,6 +92,8 @@ const state = {
   timer: undefined,
   pieces: [],
   drag: undefined,
+  dailyAttemptRecorded: false,
+  dailyAttemptPending: false,
 };
 
 const activeLevel = () => LEVELS[state.levelKey];
@@ -104,19 +106,43 @@ const updateDailyStatus = () => {
   });
 };
 
-const requestDailyAttempt = async () => {
-  await ReabilityDaily.ensurePlayerName();
-  const attempt = ReabilityDaily.recordAttempt(GAME_ID, state.levelKey);
-  updateDailyStatus();
+const showDailyLimit = () => {
+  ReabilityDaily.showLimitDialog({
+    gameTitle: GAME_TITLE,
+    levelName: activeLevel().name,
+  });
+};
 
-  if (!attempt.ok) {
-    ReabilityDaily.showLimitDialog({
-      gameTitle: GAME_TITLE,
-      levelName: activeLevel().name,
-    });
+const ensureDailyAllowance = async () => {
+  const usage = ReabilityDaily.getUsage(GAME_ID, state.levelKey);
+  updateLevelControls();
+
+  if (usage.remaining === 0) {
+    showDailyLimit();
     return false;
   }
 
+  await ReabilityDaily.ensurePlayerName();
+  updateLevelControls();
+  return true;
+};
+
+const recordDailyAttempt = async () => {
+  if (state.dailyAttemptRecorded) return true;
+  if (state.dailyAttemptPending) return false;
+
+  state.dailyAttemptPending = true;
+  await ReabilityDaily.ensurePlayerName();
+  const attempt = ReabilityDaily.recordAttempt(GAME_ID, state.levelKey);
+  state.dailyAttemptPending = false;
+  updateLevelControls();
+
+  if (!attempt.ok) {
+    showDailyLimit();
+    return false;
+  }
+
+  state.dailyAttemptRecorded = true;
   return true;
 };
 
@@ -316,7 +342,7 @@ const evaluateBoard = () => {
   if (currentCorrectSlots.size === activeLevel().layout.length) endGame(true);
 };
 
-const rotatePiece = (index) => {
+const rotatePiece = async (index) => {
   if (!state.active) return;
 
   const piece = state.pieces[index];
@@ -325,6 +351,8 @@ const rotatePiece = (index) => {
     setMessage("Faces inteiras não precisam girar — arraste-as para a posição certa.");
     return;
   }
+
+  if (!(await recordDailyAttempt())) return;
 
   piece.rotation = (piece.rotation + 90) % 360;
   evaluateBoard();
@@ -376,14 +404,14 @@ function handlePointerMove(event) {
   if (state.drag.dragging) updateGhostPosition(event);
 }
 
-function handlePointerUp(event) {
+async function handlePointerUp(event) {
   if (!state.drag || state.drag.pointerId !== event.pointerId) return;
 
   const { dragging, index: sourceIndex } = state.drag;
 
   if (!dragging) {
     stopDrag();
-    rotatePiece(sourceIndex);
+    await rotatePiece(sourceIndex);
     return;
   }
 
@@ -392,6 +420,8 @@ function handlePointerUp(event) {
   stopDrag();
 
   if (Number.isInteger(targetIndex) && targetIndex !== sourceIndex) {
+    if (!(await recordDailyAttempt())) return;
+
     [state.pieces[sourceIndex], state.pieces[targetIndex]] = [
       state.pieces[targetIndex],
       state.pieces[sourceIndex],
@@ -403,11 +433,11 @@ function handlePointerUp(event) {
   setMessage("Arraste uma face sobre outra posição para trocá-las.");
 }
 
-function handleKeyboardRotation(event) {
+async function handleKeyboardRotation(event) {
   if (event.key !== "Enter" && event.key !== " ") return;
 
   event.preventDefault();
-  rotatePiece(Number(event.currentTarget.dataset.index));
+  await rotatePiece(Number(event.currentTarget.dataset.index));
 }
 
 const endGame = (isVictory) => {
@@ -449,6 +479,8 @@ const prepareGame = (startImmediately = false) => {
   state.pieces = createScrambledPieces();
   state.correctSlots = getCorrectSlots();
   state.startedAt = startImmediately ? performance.now() : undefined;
+  state.dailyAttemptRecorded = false;
+  state.dailyAttemptPending = false;
   renderTarget();
   updateStatus();
   updateClock();
@@ -476,7 +508,7 @@ const selectLevel = (event) => {
 };
 
 const startDailyGame = async () => {
-  if (await requestDailyAttempt()) prepareGame(true);
+  if (await ensureDailyAllowance()) prepareGame(true);
 };
 
 startButton.addEventListener("click", startDailyGame);
