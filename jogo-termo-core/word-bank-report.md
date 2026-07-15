@@ -1,8 +1,8 @@
 # Validacao do banco de palavras do Termo
 
 Fonte: `jogo-termo-core/script.js`
-Gerado em: 11/07/2026, 17:09 (America/Sao_Paulo)
-Previa: 14 dia(s), 3 tentativa(s) por modo, jogador simulado "visitante", inicio 2026-07-11.
+Gerado em: 15/07/2026, 11:42 (America/Sao_Paulo)
+Previa: 14 dia(s), 3 tentativa(s) por modo, jogador simulado "visitante", inicio 2026-07-15.
 
 ## Resumo
 
@@ -27,18 +27,6 @@ Nenhum problema bloqueante encontrado.
 
 | Data | Tentativa | Unico | Dueto | Quarteto |
 | --- | ---: | --- | --- | --- |
-| 2026-07-11 | 1 | VISTA | AVIÃO, NAVIO (relacionada) | TURNO, TARDE, NOITE, ANTES (tema) |
-| 2026-07-11 | 2 | HOTEL | LINHA, PLANO (relacionada) | HOTEL, CAMPO, PRAÇA, PALCO (tema) |
-| 2026-07-11 | 3 | AFETO | VALOR, TOTAL (relacionada) | CONTA, TOTAL, VALOR, IGUAL (tema) |
-| 2026-07-12 | 1 | IGUAL | AVIÃO, NAVIO (relacionada) | ANTES, TARDE, TURNO, NOITE (tema) |
-| 2026-07-12 | 2 | PEDRA | ÁUDIO, DADOS (relacionada) | ANTES, NOITE, TARDE, TURNO (tema) |
-| 2026-07-12 | 3 | LIVRO | CUBOS, BLOCO (relacionada) | HOTEL, CAMPO, PALCO, PRAÇA (tema) |
-| 2026-07-13 | 1 | CASAL | PLANO, LINHA (relacionada) | ANTES, TURNO, NOITE, TARDE (tema) |
-| 2026-07-13 | 2 | ATIVO | TOTAL, VALOR (relacionada) | FONTE, FORMA, TRAÇO, MARCA (tema) |
-| 2026-07-13 | 3 | NUVEM | NAVIO, AVIÃO (relacionada) | PRATO, FRUTA, GARFO, ARROZ (tema) |
-| 2026-07-14 | 1 | VERSO | ANTES, TARDE (relacionada) | PRATO, GARFO, ARROZ, FRUTA (tema) |
-| 2026-07-14 | 2 | ARROZ | CUBOS, BLOCO (relacionada) | CUBOS, PEÇAS, BLOCO, GRADE (tema) |
-| 2026-07-14 | 3 | NORTE | LIMÃO, AMORA (relacionada) | NOITE, ANTES, TARDE, TURNO (tema) |
 | 2026-07-15 | 1 | SABOR | NUVEM, VENTO (relacionada) | TARDE, NOITE, TURNO, ANTES (tema) |
 | 2026-07-15 | 2 | CUBOS | FRUTA, GARFO (relacionada) | VALOR, IGUAL, CONTA, TOTAL (tema) |
 | 2026-07-15 | 3 | APOIO | GARFO, FRUTA (relacionada) | FORMA, MARCA, TRAÇO, FONTE (tema) |
@@ -69,6 +57,18 @@ Nenhum problema bloqueante encontrado.
 | 2026-07-24 | 1 | SABOR | PRAÇA, CAMPO (relacionada) | ORDEM, RAZÃO, IDEIA, SENSO (tema) |
 | 2026-07-24 | 2 | ANTES | VENTO, NUVEM (relacionada) | ANTES, TARDE, NOITE, TURNO (tema) |
 | 2026-07-24 | 3 | RITMO | NUVEM, VENTO (relacionada) | CHUVA, NUVEM, VENTO, TEMPO (tema) |
+| 2026-07-25 | 1 | BRISA | GARFO, FRUTA (relacionada) | PRATO, ARROZ, GARFO, FRUTA (tema) |
+| 2026-07-25 | 2 | PERTO | FRUTO, HORTA (relacionada) | FRUTA, ARROZ, GARFO, PRATO (tema) |
+| 2026-07-25 | 3 | ARROZ | VENTO, NUVEM (relacionada) | PRAÇA, HOTEL, CAMPO, PALCO (tema) |
+| 2026-07-26 | 1 | DADOS | AMORA, LIMÃO (relacionada) | PRATO, FRUTA, ARROZ, GARFO (tema) |
+| 2026-07-26 | 2 | PRATO | CUBOS, BLOCO (relacionada) | PALCO, PRAÇA, CAMPO, HOTEL (tema) |
+| 2026-07-26 | 3 | NÍVEL | NOITE, ANTES (relacionada) | TURNO, NOITE, TARDE, ANTES (tema) |
+| 2026-07-27 | 1 | LAGOA | AMORA, LIMÃO (relacionada) | HOTEL, PALCO, PRAÇA, CAMPO (tema) |
+| 2026-07-27 | 2 | NORTE | AMORA, LIMÃO (relacionada) | NOITE, TARDE, TURNO, ANTES (tema) |
+| 2026-07-27 | 3 | FAZER | NOITE, ANTES (relacionada) | PRATO, ARROZ, FRUTA, GARFO (tema) |
+| 2026-07-28 | 1 | HOTEL | VERDE, VIDRO (relacionada) | CAMPO, PRAÇA, HOTEL, PALCO (tema) |
+| 2026-07-28 | 2 | LIMPO | ANTES, TARDE (relacionada) | PRAIA, BARCO, AREIA, PEIXE (tema) |
+| 2026-07-28 | 3 | CAIXA | LAGOA, LOCAL (relacionada) | FRUTA, ARROZ, PRATO, GARFO (tema) |
 
 ## Respostas diarias
 
