@@ -3,8 +3,8 @@ const GAME_TITLE = "Ritmo em Foco";
 const CANVAS_WIDTH = 420;
 const CANVAS_HEIGHT = 600;
 const HIT_LINE_Y = 500;
-const PERFECT_WINDOW = 95;
-const GOOD_WINDOW = 170;
+const PERFECT_WINDOW = 110;
+const GOOD_WINDOW = 220;
 const AUDIO_RESUME_TIMEOUT = 350;
 const LANE_KEYS = ["d", "f", "j", "k"];
 const LANE_LABELS = ["D", "F", "J", "K"];
@@ -442,14 +442,14 @@ const registerMiss = (lane) => {
   updateStatus();
 };
 
-const handleLane = async (lane) => {
+const handleLane = (lane) => {
   if (!state.active || state.paused) return;
-  if (!(await recordDailyAttempt())) return;
 
   state.laneGlow[lane] = 1;
+  const currentElapsed = performance.now() - state.startedAt;
   const nearest = state.notes
     .filter((note) => note.lane === lane && !note.hit && !note.missed)
-    .map((note) => ({ note, distance: Math.abs(note.time - state.elapsed) }))
+    .map((note) => ({ note, distance: Math.abs(note.time - currentElapsed) }))
     .sort((first, second) => first.distance - second.distance)[0];
 
   if (!nearest || nearest.distance > GOOD_WINDOW) {
@@ -530,6 +530,14 @@ const startGame = async () => {
   await ensureAudio();
   window.cancelAnimationFrame(state.animationFrame);
   if (resultDialog.open) resultDialog.close();
+
+  // Registra a tentativa diária antes de configurar o estado e iniciar o tempo da partida
+  const registered = await recordDailyAttempt();
+  if (!registered) {
+    showLevelSelection();
+    return;
+  }
+
   resetResultGoal();
   resetGameState();
   levelScreen.hidden = true;
