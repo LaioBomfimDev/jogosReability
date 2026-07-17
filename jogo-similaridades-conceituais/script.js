@@ -6,18 +6,21 @@ const LEVELS = {
     name: "Fácil",
     roundCount: 4,
     targetCount: 3,
+    timeLimit: null,
     goals: { goodMistakes: 2, standoutMistakes: 0 },
   },
   medium: {
     name: "Médio",
     roundCount: 6,
-    targetCount: 4,
+    targetCount: 5,
+    timeLimit: 25,
     goals: { goodMistakes: 3, standoutMistakes: 1 },
   },
   hard: {
     name: "Difícil",
     roundCount: 8,
-    targetCount: 4,
+    targetCount: 6,
+    timeLimit: 15,
     goals: { goodMistakes: 4, standoutMistakes: 2 },
   },
 };
@@ -103,6 +106,126 @@ const rounds = [
     ],
     connection: "Linha e agulha costumam trabalhar juntas para costurar.",
   },
+  {
+    loose: { emoji: "🔨", label: "Martelo" },
+    targets: [
+      { emoji: "📌", label: "Prego", correct: true },
+      { emoji: "🪵", label: "Tábua" },
+      { emoji: "🧱", label: "Tijolo" },
+      { emoji: "🔧", label: "Chave inglesa" },
+    ],
+    connection: "O martelo é usado para fixar o prego.",
+  },
+  {
+    loose: { emoji: "👟", label: "Sapato" },
+    targets: [
+      { emoji: "🧦", label: "Meia", correct: true },
+      { emoji: "👒", label: "Chapéu" },
+      { emoji: "👖", label: "Calça" },
+      { emoji: "🧤", label: "Luva" },
+    ],
+    connection: "Usamos a meia antes de calçar o sapato para proteger os pés.",
+  },
+  {
+    loose: { emoji: "🐝", label: "Abelha" },
+    targets: [
+      { emoji: "🌸", label: "Flor", correct: true },
+      { emoji: "🍯", label: "Mel" },
+      { emoji: "🍃", label: "Folha" },
+      { emoji: "🕸️", label: "Teia" },
+    ],
+    connection: "A abelha visita a flor para colher o pólen.",
+  },
+  {
+    loose: { emoji: "✏️", label: "Lápis" },
+    targets: [
+      { emoji: "🧼", label: "Borracha", correct: true },
+      { emoji: "📏", label: "Régua" },
+      { emoji: "📎", label: "Clipes" },
+      { emoji: "✒️", label: "Caneta" },
+    ],
+    connection: "A borracha é usada para apagar o que escrevemos com o lápis.",
+  },
+  {
+    loose: { emoji: "☀️", label: "Sol" },
+    targets: [
+      { emoji: "🕶️", label: "Óculos de sol", correct: true },
+      { emoji: "☂️", label: "Guarda-chuva" },
+      { emoji: "🧢", label: "Boné" },
+      { emoji: "🧥", label: "Casaco" },
+    ],
+    connection: "Os óculos de sol protegem nossos olhos da luz forte do sol.",
+  },
+  {
+    loose: { emoji: "🐶", label: "Cachorro" },
+    targets: [
+      { emoji: "🦴", label: "Osso", correct: true },
+      { emoji: "🎗️", label: "Coleira" },
+      { emoji: "🏠", label: "Casinha" },
+      { emoji: "⚽", label: "Bola" },
+    ],
+    connection: "O osso é um alimento e brinquedo muito apreciado pelos cachorros.",
+  },
+  {
+    loose: { emoji: "🐦", label: "Pássaro" },
+    targets: [
+      { emoji: "🪹", label: "Ninho", correct: true },
+      { emoji: "🕸️", label: "Gaiola" },
+      { emoji: "🪶", label: "Pena" },
+      { emoji: "🌿", label: "Galho" },
+    ],
+    connection: "O ninho é a casa que o pássaro constrói para seus filhotes.",
+  },
+  {
+    loose: { emoji: "🪴", label: "Planta" },
+    targets: [
+      { emoji: "🚿", label: "Regador", correct: true },
+      { emoji: "🏺", label: "Vaso" },
+      { emoji: "🌱", label: "Semente" },
+      { emoji: "⛏️", label: "Pá" },
+    ],
+    connection: "Usamos o regador para fornecer a água que ajuda a planta a crescer.",
+  },
+  {
+    loose: { emoji: "💻", label: "Computador" },
+    targets: [
+      { emoji: "🖱️", label: "Mouse", correct: true },
+      { emoji: "⌨️", label: "Teclado" },
+      { emoji: "🎧", label: "Fone" },
+      { emoji: "🔌", label: "Cabo" },
+    ],
+    connection: "O mouse é usado para navegar na tela do computador.",
+  },
+  {
+    loose: { emoji: "🍴", label: "Garfo" },
+    targets: [
+      { emoji: "🍽️", label: "Prato", correct: true },
+      { emoji: "🥄", label: "Colher" },
+      { emoji: "🔪", label: "Faca" },
+      { emoji: "🥤", label: "Copo" },
+    ],
+    connection: "O garfo e o prato são utensílios usados durante as refeições.",
+  },
+  {
+    loose: { emoji: "👓", label: "Óculos" },
+    targets: [
+      { emoji: "📖", label: "Livro", correct: true },
+      { emoji: "🔎", label: "Lupa" },
+      { emoji: "✏️", label: "Lápis" },
+      { emoji: "👁️", label: "Olho" },
+    ],
+    connection: "Os óculos ajudam a ler o livro com mais clareza.",
+  },
+  {
+    loose: { emoji: "🐱", label: "Gato" },
+    targets: [
+      { emoji: "🧶", label: "Novelo de Lã", correct: true },
+      { emoji: "🐟", label: "Peixe" },
+      { emoji: "🐭", label: "Rato" },
+      { emoji: "🥛", label: "Leite" },
+    ],
+    connection: "Os gatos adoram brincar com novelos de lã.",
+  },
 ];
 
 const startScreen = document.querySelector("#start-screen");
@@ -117,6 +240,7 @@ const roundNumber = document.querySelector("#round-number");
 const totalRounds = document.querySelector("#total-rounds");
 const scoreElement = document.querySelector("#score");
 const mistakesElement = document.querySelector("#mistakes");
+const timerElement = document.querySelector("#timer");
 const instruction = document.querySelector("#instruction");
 const feedback = document.querySelector("#feedback");
 const restartButton = document.querySelector("#restart-button");
@@ -135,6 +259,64 @@ let selected = false;
 let roundComplete = false;
 let dailyAttemptRecorded = false;
 let dailyAttemptPending = false;
+let timerInterval = null;
+let secondsLeft = 0;
+
+const stopRoundTimer = () => {
+  if (timerInterval) {
+    window.clearInterval(timerInterval);
+    timerInterval = null;
+  }
+};
+
+const handleTimeOut = () => {
+  if (roundComplete) return;
+
+  roundComplete = true;
+  mistakes += 1;
+  updateStatus();
+  looseCard.disabled = true;
+  targetGrid.querySelectorAll("button").forEach((card) => {
+    card.disabled = true;
+  });
+  deselectLooseCard();
+  instruction.textContent = "Tempo esgotado!";
+  
+  const correctOption = roundQueue[currentRound].targets.find((t) => t.correct);
+  feedback.textContent = `A resposta correta era: ${correctOption.label}. ${roundQueue[currentRound].connection}`;
+
+  nextButton.textContent = currentRound === roundQueue.length - 1 ? "Ver resultado" : "Próxima conexão";
+  nextButton.hidden = false;
+  nextButton.focus();
+};
+
+const startRoundTimer = () => {
+  stopRoundTimer();
+  const limit = activeLevel().timeLimit;
+  if (!limit) {
+    timerElement.textContent = "Livre";
+    timerElement.style.color = "";
+    return;
+  }
+
+  secondsLeft = limit;
+  timerElement.textContent = `${secondsLeft}s`;
+  timerElement.style.color = "";
+
+  timerInterval = window.setInterval(() => {
+    secondsLeft -= 1;
+    timerElement.textContent = `${secondsLeft}s`;
+
+    if (secondsLeft <= 5) {
+      timerElement.style.color = "#b35a4b";
+    }
+
+    if (secondsLeft <= 0) {
+      stopRoundTimer();
+      handleTimeOut();
+    }
+  }, 1000);
+};
 
 const activeLevel = () => LEVELS[activeLevelKey];
 
@@ -277,6 +459,7 @@ const resolveChoice = async (target) => {
   }
 
   roundComplete = true;
+  stopRoundTimer();
   score += 1;
   updateStatus();
   looseCard.classList.add("is-connected");
@@ -303,10 +486,33 @@ const handleDrop = (event) => {
 
 const activeTargets = (round) => {
   const correctTarget = round.targets.find((target) => target.correct);
-  const distractors = shuffle(round.targets.filter((target) => !target.correct)).slice(
-    0,
-    activeLevel().targetCount - 1,
-  );
+  let distractors = shuffle(round.targets.filter((target) => !target.correct));
+
+  const neededDistractors = activeLevel().targetCount - 1;
+  if (distractors.length < neededDistractors) {
+    // Coletar distratores de outras rodadas para completar o número necessário
+    const otherRounds = rounds.filter((r) => r.loose.label !== round.loose.label);
+    const poolOfExtraDistractors = [];
+    otherRounds.forEach((r) => {
+      r.targets.forEach((t) => {
+        // Adiciona apenas se não for o item correto da rodada atual e se o rótulo for único
+        if (!t.correct && t.label !== correctTarget.label && !distractors.some((d) => d.label === t.label)) {
+          poolOfExtraDistractors.push(t);
+        }
+      });
+    });
+    // Embaralha o pool extra e pega o que falta
+    const extraDistractors = shuffle(poolOfExtraDistractors);
+    for (const extra of extraDistractors) {
+      if (distractors.length >= neededDistractors) break;
+      if (!distractors.some((d) => d.label === extra.label)) {
+        distractors.push(extra);
+      }
+    }
+  } else {
+    // Se já temos o suficiente ou mais, apenas corta
+    distractors = distractors.slice(0, neededDistractors);
+  }
 
   return shuffle([correctTarget, ...distractors]);
 };
@@ -344,9 +550,12 @@ const renderRound = () => {
     card.addEventListener("animationend", () => card.classList.remove("is-incorrect"));
     targetGrid.append(card);
   });
+
+  startRoundTimer();
 };
 
 const finishGame = () => {
+  stopRoundTimer();
   victorySummary.textContent = `Você encontrou ${score} de ${roundQueue.length} conexões no nível ${activeLevel().name}, com ${mistakes} erro${mistakes === 1 ? "" : "s"}.`;
   ReabilityDaily.goals.showGoalResult(victorySummary, rateConnectionGoal());
   victoryDialog.showModal();
@@ -366,6 +575,7 @@ const goToNextRound = () => {
 };
 
 const startGame = () => {
+  stopRoundTimer();
   currentRound = 0;
   score = 0;
   mistakes = 0;
@@ -391,6 +601,7 @@ const restartGame = async () => {
 };
 
 const showLevelSelection = () => {
+  stopRoundTimer();
   if (victoryDialog.open) victoryDialog.close();
   gameArea.hidden = true;
   startScreen.hidden = false;

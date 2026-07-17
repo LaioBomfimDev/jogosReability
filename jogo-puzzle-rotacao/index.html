@@ -33,68 +33,70 @@
           Observe o objetivo, reposicione os fragmentos e ajuste cada giro até a imagem voltar a fazer sentido.
         </p>
 
-        <section class="objective-panel" aria-labelledby="objective-title">
-          <div class="objective-copy">
-            <p class="section-label">Objetivo</p>
-            <h2 id="objective-title">Monte este painel</h2>
-            <p>O desenho final fica sempre no topo para comparação rápida durante a partida.</p>
-          </div>
-          <div id="target-grid" class="target-grid" role="img" aria-label="Objetivo do puzzle"></div>
-        </section>
-
-        <section class="challenge-panel" aria-labelledby="challenge-title">
-          <div class="challenge-header">
-            <div>
-              <p class="section-label">Sua grade</p>
-              <h2 id="challenge-title">Gire e reposicione as peças</h2>
+        <div class="game-workspace">
+          <section class="objective-panel" aria-labelledby="objective-title">
+            <div class="objective-copy">
+              <p class="section-label">Objetivo</p>
+              <h2 id="objective-title">Monte este painel</h2>
+              <p>O desenho final fica sempre no topo para comparação rápida durante a partida.</p>
             </div>
-            <div class="level-picker" role="group" aria-label="Escolha o nível do desafio">
-              <button class="level-option" type="button" data-level="calmo" aria-pressed="false">
-                Calmo <small>3×3 · 90 s</small>
-              </button>
-              <button class="level-option" type="button" data-level="ritmo" aria-pressed="true">
-                Ritmo <small>4×4 · 120 s</small>
-              </button>
-              <button class="level-option" type="button" data-level="foco" aria-pressed="false">
-                Foco <small>5×5 · 150 s</small>
-              </button>
+            <div id="target-grid" class="target-grid" role="img" aria-label="Objetivo do puzzle"></div>
+          </section>
+
+          <section class="challenge-panel" aria-labelledby="challenge-title">
+            <div class="challenge-header">
+              <div>
+                <p class="section-label">Sua grade</p>
+                <h2 id="challenge-title">Gire e reposicione as peças</h2>
+              </div>
+              <div class="level-picker" role="group" aria-label="Escolha o nível do desafio">
+                <button class="level-option" type="button" data-level="calmo" aria-pressed="false">
+                  Calmo <small>3×3 · 90 s</small>
+                </button>
+                <button class="level-option" type="button" data-level="ritmo" aria-pressed="true">
+                  Ritmo <small>4×4 · 120 s</small>
+                </button>
+                <button class="level-option" type="button" data-level="foco" aria-pressed="false">
+                  Foco <small>5×5 · 150 s</small>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <p id="daily-status" class="daily-status" aria-live="polite"></p>
+            <p id="daily-status" class="daily-status" aria-live="polite"></p>
 
-          <div class="game-status" aria-live="polite" aria-atomic="true">
-            <p>Pontos <strong id="score">0</strong></p>
-            <p>Combo <strong id="combo">x1</strong></p>
-            <p>Corretas <strong id="correct-count">0</strong>/<span id="total-pieces">16</span></p>
-          </div>
-
-          <div class="time-panel">
-            <div class="time-heading">
-              <span>Tempo</span>
-              <strong id="time-left">02:00</strong>
+            <div class="game-status" aria-live="polite" aria-atomic="true">
+              <p>Pontos <strong id="score">0</strong></p>
+              <p>Combo <strong id="combo">x1</strong></p>
+              <p>Corretas <strong id="correct-count">0</strong>/<span id="total-pieces">16</span></p>
             </div>
-            <div class="time-track" aria-label="Tempo restante">
-              <span id="time-bar" class="time-bar"></span>
+
+            <div class="time-panel">
+              <div class="time-heading">
+                <span>Tempo</span>
+                <strong id="time-left">02:00</strong>
+              </div>
+              <div class="time-track" aria-label="Tempo restante">
+                <span id="time-bar" class="time-bar"></span>
+              </div>
             </div>
-          </div>
 
-          <p id="game-message" class="game-message" aria-live="polite">
-            Escolha o nível e inicie para liberar os movimentos.
-          </p>
+            <p id="game-message" class="game-message" aria-live="polite">
+              Escolha o nível e inicie para liberar os movimentos.
+            </p>
 
-          <p class="instructions">
-            <span aria-hidden="true">↻</span> Toque para girar 90°.
-            <span aria-hidden="true">↔</span> Arraste para trocar de posição.
-          </p>
+            <p class="instructions">
+              <span aria-hidden="true">↻</span> Toque para girar 90°.
+              <span aria-hidden="true">↔</span> Arraste para trocar de posição.
+            </p>
 
-          <div id="puzzle-grid" class="puzzle-grid" role="group" aria-label="Peças embaralhadas do puzzle"></div>
+            <div id="puzzle-grid" class="puzzle-grid" role="group" aria-label="Peças embaralhadas do puzzle"></div>
 
-          <div class="game-actions">
-            <button id="start-button" class="button button-primary" type="button">Iniciar desafio</button>
-            <button id="restart-button" class="button button-secondary" type="button">Novo embaralhamento</button>
-          </div>
-        </section>
+            <div class="game-actions">
+              <button id="start-button" class="button button-primary" type="button">Iniciar desafio</button>
+              <button id="restart-button" class="button button-secondary" type="button">Novo embaralhamento</button>
+            </div>
+          </section>
+        </div>
       </section>
     </main>
 

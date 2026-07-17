@@ -109,15 +109,23 @@ h2 {
   border-radius: var(--radius);
 }
 
-.objective-panel {
+.game-workspace {
   display: grid;
-  grid-template-columns: minmax(220px, 0.72fr) minmax(280px, 1fr);
-  gap: clamp(18px, 3vw, 30px);
-  align-items: center;
-  margin-bottom: 16px;
-  padding: clamp(18px, 3vw, 26px);
-  overflow: hidden;
+  grid-template-columns: minmax(245px, 0.62fr) minmax(470px, 1.38fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.objective-panel {
+  position: sticky;
+  top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  padding: 22px;
   background: linear-gradient(115deg, var(--navy) 0%, #18415b 58%, #29656c 100%);
+  margin-bottom: 0;
 }
 
 .objective-panel .section-label {
@@ -494,19 +502,43 @@ h2 {
   line-height: 1.55;
 }
 
-@media (max-width: 800px) {
-  .objective-panel {
+@media (max-width: 880px) {
+  .game-workspace {
     grid-template-columns: 1fr;
-    text-align: center;
+  }
+
+  .objective-panel {
+    position: sticky;
+    top: 8px;
+    z-index: 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 10px 22px rgba(6, 27, 49, 0.2);
+    margin-bottom: 16px;
+  }
+
+  .objective-copy {
+    min-width: 0;
+    text-align: left;
+  }
+
+  .objective-copy h2 {
+    margin-bottom: 0;
+    font-size: clamp(1.25rem, 4vw, 1.6rem);
   }
 
   .objective-copy p:not(.section-label) {
-    max-width: 520px;
-    margin: 0 auto;
+    display: none;
   }
 
   .target-grid {
-    width: min(100%, 300px);
+    width: 150px;
+    flex: 0 0 150px;
+    padding: 7px;
+    box-shadow: none;
   }
 
   .challenge-header {
