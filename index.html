@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
+    <script src="./theme.js" defer></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
@@ -115,31 +122,6 @@
             </div>
           </article>
 
-          <article class="game-option game-option--concepts">
-            <div class="game-visual" aria-hidden="true">
-              <img
-                src="./assets/games/home/conexoes-de-ideias-768.jpg"
-                srcset="
-                  ./assets/games/home/conexoes-de-ideias-480.jpg 480w,
-                  ./assets/games/home/conexoes-de-ideias-768.jpg 768w,
-                  ./assets/games/home/conexoes-de-ideias-960.jpg 960w
-                "
-                sizes="(max-width: 520px) calc((100vw - 66px) / 2), (max-width: 760px) calc(100vw - 60px), 520px"
-                alt=""
-                width="960"
-                height="540"
-                decoding="async"
-                loading="lazy"
-              />
-            </div>
-            <div class="game-option__content">
-              <p class="game-kicker">Jogo 04 · 3 níveis</p>
-              <h3>Conexões de Ideias</h3>
-              <p>Descubra relações entre imagens.</p>
-              <a class="button" href="./jogo-similaridades-conceituais/index.html">Jogar agora</a>
-            </div>
-          </article>
-
           <article class="game-option game-option--cubos">
             <div class="game-visual" aria-hidden="true">
               <img
@@ -163,7 +145,7 @@
               </div>
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 05 · 3 níveis</p>
+              <p class="game-kicker">Jogo 04 · 3 níveis</p>
               <h3>Cubos em Foco</h3>
               <p>Escolha entre grades 2×2, 3×3 e 4×4 com tempos progressivos.</p>
               <a class="button" href="./jogo-cubos-em-foco/index.html">Escolher nível</a>
@@ -188,7 +170,7 @@
               />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 06 · 3 ritmos</p>
+              <p class="game-kicker">Jogo 05 · 3 ritmos</p>
               <h3>Matriz em Movimento</h3>
               <p>Complete a sequência visual.</p>
               <a class="button" href="./jogo-matriz-neuro/index.html">Jogar agora</a>
@@ -200,7 +182,7 @@
               <img src="./assets/games/puzzle-rotacao.svg" alt="" width="1280" height="720" decoding="async" loading="lazy" />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 07 · 3 níveis</p>
+              <p class="game-kicker">Jogo 06 · 3 níveis</p>
               <h3>Puzzle de Rotação</h3>
               <p>Gire e reposicione fragmentos.</p>
               <a class="button" href="./jogo-puzzle-rotacao/index.html">Jogar agora</a>
@@ -212,7 +194,7 @@
               <img src="./assets/games/palavras-em-jogo.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 08 · Palavras</p>
+              <p class="game-kicker">Jogo 07 · Palavras</p>
               <h3>Termooo</h3>
               <p>Descubra palavras secretas de cinco letras nos modos Único, Dueto ou Quarteto.</p>
               <a class="button" href="./jogo-termo-unico/index.html">Jogar agora</a>
@@ -224,7 +206,7 @@
               <img src="./assets/games/ritmo-em-foco.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
             </div>
             <div class="game-option__content">
-              <p class="game-kicker">Jogo 09 · 3 ritmos</p>
+              <p class="game-kicker">Jogo 08 · 3 ritmos</p>
               <h3>Ritmo em Foco</h3>
               <p>Toque no momento certo e acompanhe quatro pistas de atenção.</p>
               <a class="button" href="./jogo-ritmo-neuro/index.html">Jogar agora</a>

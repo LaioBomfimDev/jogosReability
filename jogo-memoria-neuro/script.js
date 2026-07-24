@@ -163,7 +163,7 @@ const rateMemoryGoal = (elapsedSeconds) => {
 
   return {
     tier: "training",
-    label: "Meta do dia",
+    label: "Meta de treino",
     message: `Boa meta: até ${goals.goodMoves} tentativas e ${goals.goodTime}s. Destaque: até ${goals.standoutMoves} tentativas e ${goals.standoutTime}s.`,
   };
 };

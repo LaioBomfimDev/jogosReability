@@ -169,10 +169,6 @@ h2 {
   color: #dbe4eb;
 }
 
-.difficulty-option.is-daily-locked {
-  opacity: 0.58;
-}
-
 .play-screen[hidden],
 .level-screen[hidden] {
   display: none;

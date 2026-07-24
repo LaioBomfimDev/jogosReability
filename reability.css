@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap');
-
 :root {
   --navy: #061b31;
   --navy-2: #0b243a;
@@ -22,6 +20,116 @@
   --soft: 0 12px 28px rgba(6, 27, 49, 0.08);
   --serif: Georgia, "Times New Roman", serif;
   --sans: Inter, Arial, Helvetica, sans-serif;
+
+  /* Variáveis de Tema Semântico - Claro */
+  --bg-page: var(--paper);
+  --bg-page-gradient: linear-gradient(130deg, var(--paper) 0%, #ede5d5 52%, #fbfaf3 100%);
+  --bg-card: var(--surface);
+  --bg-card-gradient: linear-gradient(135deg, var(--surface), #f7f1e4);
+  --bg-welcome: linear-gradient(135deg, var(--surface), #f4eedf);
+  --bg-options: linear-gradient(135deg, #fbf8eb 0%, #f0e5c0 100%);
+
+  --text-main: var(--ink);
+  --text-title: var(--navy);
+  --text-muted: #3e4142;
+  --text-muted-2: #59564d;
+  --text-muted-3: #686357;
+  --border-color: var(--line);
+  --border-line: var(--line);
+
+  /* Inputs */
+  --bg-input: var(--white);
+  --color-input: var(--ink);
+
+  /* Cards de jogo específicos na Home */
+  --bg-option-card: rgba(255, 254, 248, 0.96);
+  --border-option-card: #d7ca99;
+
+  /* Cubos */
+  --bg-option-card-cubos: linear-gradient(135deg, #fffdf6 0%, #fff6cf 48%, #edf4f2 100%);
+  --border-option-card-cubos: #aa963d;
+
+  /* Lógica */
+  --bg-option-card-logic: linear-gradient(135deg, #fffdf6 0%, #edf7f0 54%, #fff1bd 100%);
+  --border-option-card-logic: #8fae9e;
+
+  /* Palavras */
+  --bg-option-card-words: linear-gradient(135deg, #fffdf6 0%, #edf8f1 52%, #fff3c4 100%);
+  --border-option-card-words: #9bb8ad;
+
+  /* Ritmo */
+  --bg-option-card-rhythm: linear-gradient(135deg, #fffdf6 0%, #edf4ee 48%, #f5edc8 100%);
+  --border-option-card-rhythm: #9bb8ad;
+
+  /* Jogo do Cérebro Feliz / Opções de dificuldade comuns */
+  --bg-difficulty-option: rgba(255, 253, 246, 0.88);
+  --bg-difficulty-option-2: linear-gradient(135deg, var(--gold-soft), #fffaf0);
+
+  /* Termooo */
+  --bg-word-game: rgba(255, 253, 246, 0.76);
+  --tile-empty: #f9fbf8;
+  --tile-border: #cdd8d2;
+  --tile-keyboard: #e0e6e2;
+  --tile-keyboard-text: var(--navy);
+
+  /* Diálogos */
+  --bg-dialog-backdrop: rgba(3, 12, 22, 0.8);
+}
+
+html[data-theme="dark"] {
+  /* Variáveis de Tema Semântico - Escuro */
+  --bg-page: #0b131e;
+  --bg-page-gradient: linear-gradient(130deg, #070e17 0%, #0c1624 52%, #0b131e 100%);
+  --bg-card: #121e2d;
+  --bg-card-gradient: linear-gradient(135deg, #121e2d, #0c1520);
+  --bg-welcome: linear-gradient(135deg, #121e2d, #09101a);
+  --bg-options: linear-gradient(135deg, #09101a 0%, #050a10 100%);
+
+  --text-main: #e1e7ed;
+  --text-title: #ffffff;
+  --text-muted: #9bb0c4;
+  --text-muted-2: #8da1b5;
+  --text-muted-3: #7b8e9f;
+  --border-color: #253e56;
+  --border-line: #253e56;
+
+  /* Inputs */
+  --bg-input: #1b2a3c;
+  --color-input: #ffffff;
+
+  /* Cards de jogo específicos na Home */
+  --bg-option-card: #172535;
+  --border-option-card: #2f4963;
+
+  /* Cubos */
+  --bg-option-card-cubos: linear-gradient(135deg, #18283a 0%, #22374e 48%, #142131 100%);
+  --border-option-card-cubos: #827233;
+
+  /* Lógica */
+  --bg-option-card-logic: linear-gradient(135deg, #18283a 0%, #152c23 54%, #18283a 100%);
+  --border-option-card-logic: #466755;
+
+  /* Palavras */
+  --bg-option-card-words: linear-gradient(135deg, #18283a 0%, #162f25 52%, #18283a 100%);
+  --border-option-card-words: #466755;
+
+  /* Ritmo */
+  --bg-option-card-rhythm: linear-gradient(135deg, #18283a 0%, #162a23 48%, #1f271a 100%);
+  --border-option-card-rhythm: #466755;
+
+  /* Jogo do Cérebro Feliz / Opções de dificuldade comuns */
+  --bg-difficulty-option: #1c2b3d;
+  --bg-difficulty-option-2: linear-gradient(135deg, #3f3920, #223040);
+
+  /* Termooo */
+  --bg-word-game: #172535;
+  --tile-empty: #223447;
+  --tile-border: #354e68;
+  --tile-keyboard: #2b3d51;
+  --tile-keyboard-text: #ffffff;
+
+  /* Diálogos */
+  --bg-dialog-backdrop: rgba(0, 0, 0, 0.85);
 }
 
 * {
@@ -29,14 +137,14 @@
 }
 
 html {
-  background: var(--paper);
+  background: var(--bg-page);
   -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  color: var(--ink);
-  background: linear-gradient(130deg, var(--paper) 0%, #ede5d5 52%, #fbfaf3 100%);
+  color: var(--text-main);
+  background: var(--bg-page-gradient);
   font-family: var(--serif);
   line-height: 1.5;
 }
@@ -171,74 +279,6 @@ input:focus-visible {
   display: none;
 }
 
-.difficulty-option.is-daily-locked,
-.level-option.is-daily-locked,
-.mode-link.is-daily-locked {
-  opacity: 0.58;
-}
-
-.player-dialog,
-.daily-limit-dialog {
-  width: min(calc(100% - 32px), 480px);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  color: var(--ink);
-  background: var(--surface);
-  box-shadow: var(--shadow);
-}
-
-.player-dialog::backdrop,
-.daily-limit-dialog::backdrop {
-  background: rgba(3, 12, 22, 0.8);
-}
-
-.player-dialog__content,
-.daily-limit-dialog__content {
-  display: grid;
-  gap: 12px;
-  padding: clamp(26px, 6vw, 38px);
-  text-align: center;
-}
-
-.player-dialog h2,
-.daily-limit-dialog h2 {
-  margin: 0;
-  color: var(--navy);
-  font: 800 clamp(1.8rem, 5vw, 2.35rem) / 1.08 var(--serif);
-}
-
-.player-dialog p:not(.eyebrow),
-.daily-limit-dialog p:not(.eyebrow) {
-  margin: 0;
-  color: #3e4142;
-  line-height: 1.55;
-}
-
-.player-dialog label {
-  margin-top: 4px;
-  color: var(--gold-dark);
-  font: 900 0.72rem var(--sans);
-  letter-spacing: 0.12em;
-  text-align: left;
-  text-transform: uppercase;
-}
-
-.player-dialog input {
-  min-height: 52px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  color: var(--ink);
-  background: var(--white);
-  font: 800 1.05rem var(--sans);
-}
-
-.player-dialog__error {
-  min-height: 1.25rem;
-  color: #9a3f31 !important;
-  font: 800 0.86rem/1.35 var(--sans);
-}
-
 .goal-result {
   margin: -10px 0 22px;
   padding: 12px 14px;
@@ -298,11 +338,235 @@ input:focus-visible {
     margin: 0 !important;
     display: flex !important;
     flex-direction: column !important;
-    background: linear-gradient(135deg, var(--surface), #f7f1e4) !important;
+    background: var(--bg-card-gradient) !important;
   }
 
   body .game-navigation {
     margin-bottom: clamp(10px, 2vh, 20px) !important;
     flex-shrink: 0 !important;
   }
+}
+
+/* ==========================================
+   TEMA CLARO E ESCURO - CONFIGURAÇÕES EXTRAS
+   ========================================== */
+
+/* Botão de Alternar Tema */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  background: var(--bg-card);
+  color: var(--text-title);
+  cursor: pointer;
+  box-shadow: var(--soft);
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+.theme-toggle-btn:hover {
+  transform: scale(1.08);
+  border-color: var(--gold);
+}
+.theme-toggle-btn svg {
+  fill: currentColor;
+}
+.theme-toggle-btn--floating {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 100;
+}
+/* Adaptação mobile da Home */
+@media (max-width: 520px) {
+  .theme-toggle-btn--floating {
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+  }
+}
+
+/* Regras de Sobreposição Dinâmicas para Modo Escuro nos Jogos */
+html[data-theme="dark"] body {
+  color: var(--text-main) !important;
+  background: var(--bg-page-gradient) !important;
+}
+
+html[data-theme="dark"] .game-card {
+  background: var(--bg-card-gradient) !important;
+  border-color: var(--border-color) !important;
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] .brand-lock,
+html[data-theme="dark"] .back-link,
+html[data-theme="dark"] .selected-level,
+html[data-theme="dark"] .game-status strong,
+html[data-theme="dark"] .result-stats strong,
+html[data-theme="dark"] .guess-history__title,
+html[data-theme="dark"] .time-heading strong,
+html[data-theme="dark"] .attempts strong,
+html[data-theme="dark"] .button-secondary,
+html[data-theme="dark"] .button-tertiary {
+  color: var(--text-title) !important;
+}
+
+/* Modais/Diálogos no Modo Escuro */
+html[data-theme="dark"] .health-notice-dialog,
+html[data-theme="dark"] .result-dialog {
+  border-color: var(--border-color) !important;
+  background: var(--bg-card) !important;
+}
+
+html[data-theme="dark"] .health-notice-dialog p:not(.eyebrow) {
+  color: var(--text-muted) !important;
+}
+
+/* Elementos Comuns e Textos Secundários */
+html[data-theme="dark"] .intro,
+html[data-theme="dark"] .difficulty-option small,
+html[data-theme="dark"] .game-status p,
+html[data-theme="dark"] .result-stats p,
+html[data-theme="dark"] .guess-history__empty,
+html[data-theme="dark"] .attempts,
+html[data-theme="dark"] .time-heading,
+html[data-theme="dark"] .notice,
+html[data-theme="dark"] .game-message {
+  color: var(--text-muted) !important;
+}
+
+html[data-theme="dark"] .difficulty-option {
+  border-color: var(--border-color) !important;
+  color: var(--text-title) !important;
+  background: var(--bg-difficulty-option) !important;
+}
+
+html[data-theme="dark"] .difficulty-option:hover {
+  border-color: var(--gold) !important;
+}
+
+html[data-theme="dark"] .difficulty-option:nth-child(2) {
+  background: var(--bg-difficulty-option-2) !important;
+  border-color: #7b6f38 !important;
+}
+
+html[data-theme="dark"] .difficulty-option:nth-child(3) {
+  background: linear-gradient(145deg, var(--navy), var(--navy-3)) !important;
+  color: #ffffff !important;
+}
+
+/* Sobrescritas para Lógica Numérica */
+html[data-theme="dark"] .guess-history {
+  border-color: #274332 !important;
+  background: linear-gradient(135deg, rgba(18, 30, 45, 0.9), rgba(15, 34, 25, 0.86)) !important;
+}
+
+html[data-theme="dark"] .guess-history__item {
+  background: var(--bg-input) !important;
+  color: var(--text-title) !important;
+}
+
+html[data-theme="dark"] .guess-history__item--higher {
+  border-color: #274a2b !important;
+  color: #a3e2b2 !important;
+  background: #0f2b15 !important;
+}
+
+html[data-theme="dark"] .guess-history__item--lower {
+  border-color: #5c2c1a !important;
+  color: #fca78d !important;
+  background: #3c160c !important;
+}
+
+html[data-theme="dark"] .guess-history__item--correct {
+  border-color: #4d8f64 !important;
+  color: #ffffff !important;
+  background: #1e3c27 !important;
+}
+
+html[data-theme="dark"] .guess-form input {
+  border-color: var(--border-color) !important;
+  color: var(--color-input) !important;
+  background: var(--bg-input) !important;
+}
+
+/* Sobrescritas para Memória Visual */
+html[data-theme="dark"] .card-back {
+  background: var(--bg-card) !important;
+  color: var(--text-title) !important;
+  box-shadow: inset 0 0 0 1px var(--border-color) !important;
+}
+
+/* Sobrescritas para Matriz em Movimento */
+html[data-theme="dark"] .mechanic-preview p {
+  border-color: var(--border-color) !important;
+  color: var(--text-title) !important;
+  background: rgba(168, 149, 76, 0.2) !important;
+}
+
+/* Sobrescritas para Termooo */
+html[data-theme="dark"] .word-game {
+  background: var(--bg-word-game) !important;
+  border-color: var(--border-color) !important;
+}
+html[data-theme="dark"] .mode-link {
+  background: var(--bg-input) !important;
+  color: var(--text-title) !important;
+  border-color: var(--border-color) !important;
+}
+html[data-theme="dark"] .mode-link.is-active {
+  background: var(--gold-2) !important;
+  color: #071523 !important;
+  border-color: var(--gold) !important;
+}
+html[data-theme="dark"] .key {
+  background: var(--tile-keyboard) !important;
+  color: var(--tile-keyboard-text) !important;
+}
+html[data-theme="dark"] .tile[data-state="empty"] {
+  background: var(--tile-empty) !important;
+  border-color: var(--tile-border) !important;
+}
+
+/* Sobrescritas para Ritmo em Foco */
+html[data-theme="dark"] .rhythm-panel {
+  background: linear-gradient(145deg, #172535, #152c23) !important;
+  border-color: var(--border-color) !important;
+}
+html[data-theme="dark"] .key-row span {
+  border-color: var(--border-color) !important;
+  color: var(--text-title) !important;
+  background: var(--bg-card) !important;
+  box-shadow: inset 0 -5px 0 rgba(168, 149, 76, 0.2) !important;
+}
+html[data-theme="dark"] .time-track {
+  background: #1b2a3c !important;
+}
+
+/* Sobrescritas para Cubos em Foco e Puzzle de Rotação */
+html[data-theme="dark"] .challenge,
+html[data-theme="dark"] .challenge-panel {
+  background: var(--bg-word-game) !important;
+  border-color: var(--border-color) !important;
+}
+html[data-theme="dark"] .level-picker {
+  background: var(--bg-input) !important;
+  border-color: var(--border-color) !important;
+}
+html[data-theme="dark"] .level-option {
+  color: var(--text-muted) !important;
+}
+html[data-theme="dark"] .level-option:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+}
+html[data-theme="dark"] .level-option.is-selected {
+  color: #ffffff !important;
+  background: var(--navy-2) !important;
 }

@@ -1,6 +1,13 @@
 <!doctype html>
 <html lang="pt-BR">
   <head>
+    <script>
+      (function() {
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+      })();
+    </script>
+    <script src="../theme.js" defer></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
@@ -46,7 +53,7 @@
             <div class="game-stats" aria-live="polite">
               <p>Tentativas <strong id="attempt-count">0/7</strong></p>
               <p>Resolvidas <strong id="solved-count">0/2</strong></p>
-              <p>Rodada <strong id="round-label">Dia</strong></p>
+              <p>Rodada <strong id="round-label">Livre</strong></p>
             </div>
             <label class="contrast-toggle">
               <input id="contrast-toggle" type="checkbox" />

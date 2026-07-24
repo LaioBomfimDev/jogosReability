@@ -872,14 +872,6 @@ const chooseRelatedTargets = (seed, rules) => {
   return chooseRandomTargets(createRandom(seed));
 };
 
-const dailySeed = (attempt = {}) => {
-  const playerName = attempt.playerName || ReabilityDaily.getProfile?.().name || "visitante";
-  const playerKey = normalizeLetters(playerName) || "VISITANTE";
-  const attemptKey = Number(attempt.used || 1);
-
-  return hashString(`${dailyDayKey(attempt)}:${config.mode}:${playerKey}:${attemptKey}`);
-};
-
 const chooseTargets = (seed) => {
   const rules = RELATED_WORD_RULES[config.mode];
 
@@ -1179,7 +1171,7 @@ const showLimitState = () => {
   clearGoalResult();
   initBoardsDOM();
   render();
-  setMessage("Limite diário atingido para este modo. O contador reinicia amanhã.");
+  setMessage("Não foi possível iniciar uma nova rodada. Tente novamente.");
 };
 
 const startRandomGame = async () => {
@@ -1192,17 +1184,6 @@ const startRandomGame = async () => {
 
   const seed = hashString(`${Date.now()}:${Math.random()}:${config.mode}`);
   startGame(seed, "Livre", dailyDayKey(attempt));
-};
-
-const startDailyGame = async () => {
-  const attempt = await previewDailyAttempt();
-
-  if (!attempt) {
-    showLimitState();
-    return;
-  }
-
-  startGame(dailySeed(attempt), "Dia", dailyDayKey(attempt));
 };
 
 const endGame = (won) => {
@@ -1227,7 +1208,7 @@ const endGame = (won) => {
     resultSummary.textContent = `As respostas eram: ${answers}. Tente uma nova rodada para continuar treinando.`;
     ReabilityDaily.goals.showGoalResult(resultSummary, {
       tier: "training",
-      label: "Meta do dia",
+      label: "Meta de treino",
       message: `Boa meta: até ${WORD_GOALS[config.mode].goodLabel}. Destaque: até ${WORD_GOALS[config.mode].standoutLabel}.`,
     });
     setMessage(`Respostas: ${answers}.`);
@@ -1508,4 +1489,4 @@ if (dialogShareButton) dialogShareButton.addEventListener("click", copyResult);
 if (playAgainButton) playAgainButton.addEventListener("click", startRandomGame);
 
 updateDailyStatus();
-startDailyGame();
+startRandomGame();
