@@ -5,3 +5,6 @@ codigo-fonte-autorizado/
 .agents/
 .codex/
 server-*.log
+
+.vercel
+.env*
