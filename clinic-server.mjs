@@ -9,6 +9,12 @@ const id = value => /^[a-f0-9-]{36}$/.test(value) ? value : fail(400, 'Identific
 const age = value => Number.isInteger(value) && value >= 0 && value <= 120 ? value : fail(400, 'Informe uma idade entre 0 e 120 anos.');
 const digest = token => createHash('sha256').update(token).digest('hex');
 const games = new Set(['memoria-visual', 'logica-numerica', 'cerebro-feliz', 'cubos-em-foco', 'matriz-neuro', 'matriz-em-movimento', 'puzzle-rotacao', 'ritmo-neuro', 'ritmo-em-foco', 'termo', 'termooo', 'jogo-de-palavras', 'atencao-cores', 'rastreio-foco']);
+const soleAccount = {
+  id: '6f0fcb5b-b4bf-4e86-987f-55832c00d3e8',
+  name: 'Denise Neves',
+  username: 'deniseneves',
+  password: 'd12ede38e50b865e4de7c59de5980e54:00b1e3fc4f94e89d25153803b1626b2be1cf685eddb25f9612e6d6f5cae9957f6773fb0fb5f7e7472b9a6270e8ed4e3b9f5a852fa78d2f43cf9d0a5eb0300922',
+};
 
 export function createClinicAPI(dataDirectory) {
   mkdirSync(dataDirectory, { recursive: true });
@@ -22,6 +28,8 @@ export function createClinicAPI(dataDirectory) {
     CREATE INDEX IF NOT EXISTS matches_owner ON matches(professional_id, started_at);
     CREATE INDEX IF NOT EXISTS events_match ON events(match_id);
   `);
+  db.prepare('INSERT OR IGNORE INTO professionals VALUES (?,?,?,?)').run(soleAccount.id, soleAccount.name, soleAccount.username, soleAccount.password);
+  db.prepare('UPDATE professionals SET name=?,password=? WHERE email=?').run(soleAccount.name, soleAccount.password, soleAccount.username);
   const authAttempts = new Map();
   const send = (res, status, data, headers = {}) => {
     res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...headers });
@@ -35,7 +43,7 @@ export function createClinicAPI(dataDirectory) {
   };
   const authorize = req => {
     const token = /(?:^|;\s*)reability_session=([^;]+)/.exec(req.headers.cookie || '')?.[1];
-    const account = token && db.prepare('SELECT p.id,p.name,p.email FROM logins l JOIN professionals p ON p.id=l.professional_id WHERE l.token=? AND l.expires>?').get(digest(token), Date.now());
+    const account = token && db.prepare('SELECT p.id,p.name,p.email AS username FROM logins l JOIN professionals p ON p.id=l.professional_id WHERE l.token=? AND l.expires>? AND p.email=?').get(digest(token), Date.now(), soleAccount.username);
     if (!account) fail(401, 'Entre na sua conta para continuar.');
     return account;
   };
@@ -46,7 +54,8 @@ export function createClinicAPI(dataDirectory) {
       if (!['GET', 'POST'].includes(req.method)) fail(405, 'Método não permitido.');
       if (req.method === 'POST' && req.headers.origin && new URL(req.headers.origin).host !== req.headers.host) fail(403, 'Origem não permitida.');
       const route = url.pathname;
-      if (req.method === 'POST' && ['/api/login', '/api/register'].includes(route)) {
+      if (req.method === 'POST' && route === '/api/register') fail(404, 'Cadastro de contas não está disponível.');
+      if (req.method === 'POST' && route === '/api/login') {
         const address = req.socket.remoteAddress;
         const now = Date.now();
         if (authAttempts.size > 1000) for (const [key, value] of authAttempts) if (value.until < now) authAttempts.delete(key);
@@ -54,24 +63,12 @@ export function createClinicAPI(dataDirectory) {
         if (!rate || rate.until < now) { rate = { count: 0, until: now + 600000 }; authAttempts.set(address, rate); }
         if (++rate.count > 30) fail(429, 'Muitas tentativas. Aguarde alguns minutos.');
         const body = await readBody(req);
-        const email = str(body.email, 254).toLowerCase();
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fail(400, 'Informe um e-mail válido.');
+        const username = str(body.username, 40).toLowerCase();
         const password = str(body.password, 200);
-        let account;
-        if (route === '/api/register') {
-          if (password.length < 8) fail(400, 'Use uma senha de pelo menos 8 caracteres.');
-          const name = str(body.name);
-          const salt = randomBytes(16).toString('hex');
-          const hash = scryptSync(password, salt, 64).toString('hex');
-          account = { id: randomUUID(), name, email };
-          if (db.prepare('SELECT id FROM professionals WHERE email=?').get(email)) fail(409, 'Este e-mail já possui uma conta.');
-          db.prepare('INSERT INTO professionals VALUES (?,?,?,?)').run(account.id, name, email, `${salt}:${hash}`);
-        } else {
-          const row = db.prepare('SELECT * FROM professionals WHERE email=?').get(email);
-          const [salt, hash] = (row?.password || `${'0'.repeat(32)}:${'0'.repeat(128)}`).split(':');
-          if (!timingSafeEqual(scryptSync(password, salt, 64), Buffer.from(hash, 'hex')) || !row) fail(401, 'E-mail ou senha incorretos.');
-          account = { id: row.id, name: row.name, email: row.email };
-        }
+        const row = username === soleAccount.username ? db.prepare('SELECT * FROM professionals WHERE email=?').get(username) : undefined;
+        const [salt, hash] = (row?.password || `${'0'.repeat(32)}:${'0'.repeat(128)}`).split(':');
+        if (!timingSafeEqual(scryptSync(password, salt, 64), Buffer.from(hash, 'hex')) || !row) fail(401, 'Usuário ou senha incorretos.');
+        const account = { id: row.id, name: row.name, username: row.email };
         const token = randomBytes(32).toString('hex');
         db.prepare('DELETE FROM logins WHERE expires<=?').run(now);
         db.prepare('INSERT INTO logins VALUES (?,?,?)').run(digest(token), account.id, now + 43200000);

@@ -10,17 +10,17 @@ Requer Node.js 22.13 ou superior (testado com Node 24). Não há dependências e
 npm start
 ```
 
-Abra http://127.0.0.1:4173, escolha **Entrar → Criar conta profissional** e cadastre sua conta. Escolha um jogo; antes de acessar a partida, selecione um paciente existente ou informe nome e idade. A idade é confirmada em cada entrada e preservada em cada partida, sem modificar registros antigos. Pacientes com nomes iguais podem ter cadastros separados, identificados por código.
+Abra http://127.0.0.1:4173 e entre com o usuário único configurado para a profissional. Não há cadastro público de contas. Escolha um jogo; antes de acessar a partida, selecione um paciente existente ou informe nome e idade. A idade é confirmada em cada entrada e preservada em cada partida, sem modificar registros antigos. Pacientes com nomes iguais podem ter cadastros separados, identificados por código.
 
 No **Histórico**, filtre por paciente, jogo e datas; abra **Ver rodadas** ou exporte partidas e respostas em CSV (UTF-8, separado por ponto e vírgula, compatível com Excel). As datas do filtro usam o fuso do navegador; o CSV preserva a data ISO.
 
 ## Dados e autenticação
 
 - Banco SQLite persistente em `.data/clinic.sqlite`; nunca versionado nem servido como arquivo público. `REABILITY_DATA_DIR` permite escolher outro diretório.
-- Senhas com scrypt e salt individual, sessão de 12 horas em cookie HttpOnly/SameSite, autorização de todas as consultas e gravações por profissional. Não existe senha padrão.
+- Conta profissional única, senha armazenada como hash scrypt, sessão de 12 horas em cookie HttpOnly/SameSite e autorização de todas as consultas e gravações.
 - Cada partida preserva paciente, idade, jogo, nível, início, rodadas e encerramento. Respostas são gravadas ao longo da partida; reiniciar ou sair marca a anterior como interrompida. Fechamentos abruptos podem permanecer **Em aberto**, com as respostas já recebidas preservadas.
 - Fila local por profissional reenvia registros quando há conexão; IDs únicos evitam duplicações. O status **Registros salvos** confirma recebimento pelo servidor. Não limpe os dados do navegador enquanto houver salvamento pendente. Uma falha de armazenamento local é avisada e impede sair com registros pendentes.
-- O histórico pertence à conta da profissional. Não há compartilhamento de pacientes entre contas nem recuperação de senha nesta primeira versão.
+- Não há cadastro público nem recuperação de senha nesta primeira versão.
 
 ## Hospedagem e backups
 
