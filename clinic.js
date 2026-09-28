@@ -11,10 +11,17 @@
   const outboxSuffix = crypto.randomUUID();
   let memoryQueue = [];
   const api = async (url, data) => {
-    const response = await fetch(url, { credentials:'same-origin', cache:'no-store', ...(data === undefined ? {} : { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) }) });
-    const body = await response.json().catch(() => ({ error:'Servidor indisponível. Inicie o servidor Reability e tente novamente.' }));
-    if (!response.ok) throw Object.assign(new Error(body.error || 'Não foi possível concluir.'), { status:response.status });
-    return body;
+    const options = { credentials:'same-origin', cache:'no-store', ...(data === undefined ? {} : { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) }) };
+    try {
+      const response = await fetch(url, options);
+      if ([404,405,501].includes(response.status) && window.ReabilityLocalAPI) return window.ReabilityLocalAPI.request(url, data, options.method || 'GET');
+      const body = await response.json().catch(() => ({ error:'Não foi possível acessar os registros.' }));
+      if (!response.ok) throw Object.assign(new Error(body.error || 'Não foi possível concluir.'), { status:response.status });
+      return body;
+    } catch (error) {
+      if (!error.status && window.ReabilityLocalAPI) return window.ReabilityLocalAPI.request(url, data, options.method || 'GET');
+      throw error;
+    }
   };
   const safeReturn = value => /^\/(?!\/)[a-zA-Z0-9/_-]*(?:\.html)?$/.test(value || '') ? value : '/index.html';
   const login = () => location.assign(`/login.html?return=${encodeURIComponent(location.pathname)}`);
@@ -51,7 +58,7 @@
             memoryQueue = memoryQueue.filter(e => !ids.has(e.id));
           }
         }
-        status(storageFailed ? 'Salvo no servidor · mantenha a conexão ativa' : 'Registros salvos');
+        status(storageFailed ? 'Registro salvo · mantenha esta página aberta' : 'Registros salvos');
         return true;
       } catch (error) {
         status(`${error.status === 401 ? 'Sessão expirada. Entre novamente.' : 'Salvamento pendente. Tentaremos novamente.'}${storageFailed ? ' Não feche esta página.' : ''}`, true);
