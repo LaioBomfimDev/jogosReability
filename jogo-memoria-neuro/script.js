@@ -59,6 +59,7 @@ let matches = 0;
 let moves = 0;
 let startedAt;
 let timerInterval;
+let turnTimeout;
 let dailyAttemptRecorded = false;
 let dailyAttemptPending = false;
 
@@ -198,6 +199,7 @@ const resetTurn = () => {
 };
 
 const finishGame = () => {
+  ReabilityClinic.finish({ moves, matches, errors: moves - matches });
   stopTimer();
   const elapsedMilliseconds = startedAt ? Date.now() - startedAt : 0;
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
@@ -209,6 +211,7 @@ const finishGame = () => {
 
 const resolveTurn = () => {
   const isMatch = firstCard.dataset.symbol === secondCard.dataset.symbol;
+  ReabilityClinic.round({ correct: isMatch, selected: [firstCard.dataset.symbol, secondCard.dataset.symbol], moves });
 
   if (isMatch) {
     firstCard.classList.add("is-matched");
@@ -220,13 +223,13 @@ const resolveTurn = () => {
     resetTurn();
 
     if (matches === activeLevel().pairCount) {
-      window.setTimeout(finishGame, 300);
+      turnTimeout = window.setTimeout(finishGame, 300);
     }
 
     return;
   }
 
-  window.setTimeout(() => {
+  turnTimeout = window.setTimeout(() => {
     firstCard.classList.remove("is-open");
     secondCard.classList.remove("is-open");
     resetTurn();
@@ -280,6 +283,8 @@ const createCard = ({ symbol, label }, index) => {
 };
 
 const startGame = () => {
+  window.clearTimeout(turnTimeout);
+  ReabilityClinic.start(GAME_ID, activeLevelKey);
   stopTimer();
   board.replaceChildren();
   if (victoryDialog.open) victoryDialog.close();
@@ -316,6 +321,8 @@ const restartGame = async () => {
 };
 
 const showLevelSelection = () => {
+  window.clearTimeout(turnTimeout);
+  ReabilityClinic.finish({ moves, matches }, "interrupted");
   stopTimer();
   if (victoryDialog.open) victoryDialog.close();
   gameArea.hidden = true;

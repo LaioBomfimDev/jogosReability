@@ -1,0 +1,32 @@
+.attention-shell { max-width:960px; margin:auto; padding:34px 24px 70px; }
+.attention-shell h1 { font-size:clamp(34px,6vw,54px); margin:8px 0; line-height:1.15; }
+.attention-lead { font:17px/1.7 Arial,sans-serif; color:#50606a; max-width:630px; }
+.attention-panel { border:1px solid #d7d0be; border-radius:24px; padding:28px; background:#fffdf6; margin-top:28px; box-shadow:0 10px 35px #061b310a; }
+.attention-levels { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:24px 0; }
+.attention-choice { text-align:left; border:1px solid #c9cabb; background:#f6f4eb; border-radius:16px; padding:23px; color:#061b31; cursor:pointer; }
+.attention-choice strong { display:block; font:26px Georgia,serif; margin:6px 0 12px; }
+.attention-choice span { font:15px/1.6 Arial,sans-serif; }
+.attention-choice:hover { border-color:#857536; background:#f1ecd8; }
+.attention-stats { display:flex; flex-wrap:wrap; gap:18px; justify-content:space-between; font:15px Arial,sans-serif; padding-bottom:18px; border-bottom:1px solid #e5e1d5; }
+.attention-rule { text-align:center; font:700 20px Arial,sans-serif; margin:24px 0 10px; }
+.attention-rule.is-switch { color:#825611; }
+.attention-stage { height:240px; display:grid; place-items:center; border-radius:20px; background:#f0f2ef; margin:20px 0; }
+.attention-symbol { width:110px; height:110px; background:#1461c9; border-radius:50%; }
+.attention-symbol[data-color=green] { background:#148151; }
+.attention-symbol[data-shape=triangle] { border-radius:0; clip-path:polygon(50% 0,100% 100%,0 100%); }
+.attention-responses { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.attention-responses button { font:700 20px/1.5 Arial,sans-serif; border:2px solid #becbcf; padding:20px; border-radius:16px; color:#061b31; background:white; cursor:pointer; }
+.attention-responses button:first-child { border-color:#1461c9; }
+.attention-responses button:last-child { border-color:#148151; }
+.attention-responses button:disabled { opacity:.55; cursor:default; }
+.attention-feedback { min-height:2em; text-align:center; font:17px/1.6 Arial,sans-serif; }
+.attention-help { color:#59646b; font:14px/1.6 Arial,sans-serif; }
+.attention-arena { position:relative; height:420px; border:2px solid #cbd2cb; border-radius:16px; background:linear-gradient(150deg,#f0f4f2,#e5ebe8); margin:20px 0; overflow:hidden; }
+.tracking-square { position:absolute; left:0; top:0; width:34px; height:34px; min-width:0; border:2px solid #376b67; border-radius:7px; padding:0; background:#4d8c86; opacity:1; }
+.tracking-square:disabled { opacity:1; }
+.tracking-square.is-target { background:#e5a33d; border-color:#996222; }
+.tracking-square.is-answer { outline:4px solid #061b31; outline-offset:3px; }
+.tracking-square:not(:disabled) { cursor:pointer; }
+.tracking-square:focus-visible { outline:4px solid #1461c9; outline-offset:3px; }
+.attention-summary { font:20px/1.8 Arial,sans-serif; }
+@media(max-width:600px) { .attention-shell { padding:24px 14px; }.attention-panel { padding:18px; }.attention-levels { grid-template-columns:1fr; }.attention-stage { height:200px; }.attention-responses button { font-size:17px;padding:16px 8px; }.attention-arena { height:360px; } }

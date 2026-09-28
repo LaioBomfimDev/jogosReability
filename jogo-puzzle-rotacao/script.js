@@ -341,6 +341,7 @@ const evaluateBoard = () => {
   const newMatches = [...currentCorrectSlots].filter((index) => !previousCorrectSlots.has(index));
   const lostMatches = [...previousCorrectSlots].filter((index) => !currentCorrectSlots.has(index));
 
+  ReabilityClinic.round({ action: "move", newMatches: newMatches.length, lostMatches: lostMatches.length, correctSlots: currentCorrectSlots.size });
   state.correctSlots = currentCorrectSlots;
 
   if (lostMatches.length) {
@@ -473,6 +474,7 @@ const endGame = (isVictory) => {
     resultSummary.textContent = `Você encaixou ${state.correctSlots.size} de ${activeLevel().gridSize ** 2} peças e fez ${state.score} pontos no nível ${activeLevel().name}.`;
   }
 
+  ReabilityClinic.finish({ score: state.score, correctSlots: state.correctSlots.size, maxCombo: state.maxCombo, won: isVictory }, isVictory ? "completed" : "timeout");
   ReabilityDaily.goals.showGoalResult(
     resultSummary,
     ReabilityDaily.goals.rateHigher(state.score, activeLevel().goals),
@@ -481,6 +483,7 @@ const endGame = (isVictory) => {
 };
 
 const prepareGame = (startImmediately = false) => {
+  if (startImmediately) ReabilityClinic.start(GAME_ID, state.levelKey);
   clearTimer();
   stopDrag();
   if (resultDialog.open) resultDialog.close();

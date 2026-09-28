@@ -8,3 +8,6 @@ server-*.log
 
 .vercel
 .env*
+.data/
+node_modules/
+test-results/

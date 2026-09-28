@@ -418,7 +418,8 @@ const drawCanvas = () => {
   context.textBaseline = "alphabetic";
 };
 
-const registerHit = (lane, isPerfect) => {
+const registerHit = (lane, isPerfect, timingErrorMs) => {
+  ReabilityClinic.round({ correct: true, lane, perfect: isPerfect, timingErrorMs, responseMs: null, elapsedMs: Math.round(state.elapsed) });
   const basePoints = isPerfect ? 120 : 70;
   const comboBonus = Math.floor(state.combo / 5) * 18;
 
@@ -433,6 +434,7 @@ const registerHit = (lane, isPerfect) => {
 };
 
 const registerMiss = (lane) => {
+  ReabilityClinic.round({ correct: false, outcome: "omission", lane, responseMs: null, elapsedMs: Math.round(state.elapsed) });
   state.combo = 0;
   state.lives = Math.max(0, state.lives - 1);
   state.hits.miss += 1;
@@ -453,6 +455,7 @@ const handleLane = (lane) => {
     .sort((first, second) => first.distance - second.distance)[0];
 
   if (!nearest || nearest.distance > GOOD_WINDOW) {
+    ReabilityClinic.round({ correct: false, outcome: "early_or_late", lane, responseMs: null, elapsedMs: Math.round(currentElapsed) });
     state.combo = 0;
     setMessage("Espere o pulso encostar na linha dourada.");
     updateStatus();
@@ -460,7 +463,7 @@ const handleLane = (lane) => {
   }
 
   nearest.note.hit = true;
-  registerHit(lane, nearest.distance <= PERFECT_WINDOW);
+  registerHit(lane, nearest.distance <= PERFECT_WINDOW, Math.round(currentElapsed - nearest.note.time));
 };
 
 const finishGame = (completed) => {
@@ -475,6 +478,7 @@ const finishGame = (completed) => {
   const hits = state.hits.perfect + state.hits.good;
   const misses = state.hits.miss;
   const accuracy = getAccuracy();
+  ReabilityClinic.finish({ score: state.score, hits: state.hits, maxCombo: state.maxCombo, won: completed });
 
   resultEyebrow.textContent = completed ? "Ritmo concluído" : "Rodada encerrada";
   resultSummary.textContent = completed
@@ -539,6 +543,7 @@ const startGame = async () => {
   }
 
   resetResultGoal();
+  ReabilityClinic.start(GAME_ID, state.levelKey);
   resetGameState();
   levelScreen.hidden = true;
   playScreen.hidden = false;
@@ -564,6 +569,7 @@ const restartGame = async () => {
 };
 
 const stopActiveGame = () => {
+  ReabilityClinic.finish({ score: state.score, hits: state.hits }, "interrupted");
   state.active = false;
   state.paused = false;
   window.cancelAnimationFrame(state.animationFrame);

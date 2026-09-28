@@ -414,6 +414,7 @@ const buildAnswers = () => {
 };
 
 const showCurrentPuzzle = () => {
+  ReabilityClinic.mark();
   currentPuzzle = puzzleQueue[currentRound];
   isAnswerLocked = false;
   modifierNameElement.textContent = `Mecânica ativa · ${currentPuzzle.modifier}`;
@@ -447,6 +448,7 @@ async function handleAnswer(event) {
   const selectedButton = event.currentTarget;
   const selectedKey = selectedButton.dataset.key;
   const isCorrect = selectedKey === tokenKey(currentPuzzle.answer);
+  ReabilityClinic.round({ correct: isCorrect, selected: selectedKey, answer: tokenKey(currentPuzzle.answer), modifier: currentPuzzle.modifier });
 
   answerOptions.querySelectorAll("button").forEach((button) => {
     button.disabled = true;
@@ -480,6 +482,7 @@ const stopTimer = () => window.clearInterval(timerInterval);
 const finishGame = (timeExpired = false) => {
   if (isGameFinished) return;
 
+  ReabilityClinic.finish({ score, correctAnswers }, timeExpired ? "timeout" : "completed");
   isGameFinished = true;
   isAnswerLocked = true;
   stopTimer();
@@ -512,6 +515,7 @@ const startTimer = () => {
 };
 
 const startGame = (modeKey) => {
+  ReabilityClinic.start(GAME_ID, modeKey);
   activeMode = { key: modeKey, ...modes[modeKey] };
   puzzleQueue = createPuzzleQueue(activeMode.puzzles);
   currentRound = 0;
@@ -538,6 +542,7 @@ const beginGame = async (modeKey) => {
 };
 
 const returnToModeSelection = () => {
+  ReabilityClinic.finish({ score, correctAnswers }, "interrupted");
   stopTimer();
   isGameFinished = true;
   document.body.classList.remove("game-in-progress");

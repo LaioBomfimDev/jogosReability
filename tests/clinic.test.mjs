@@ -1,0 +1,63 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createServer } from 'node:http';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import path from 'node:path';
+import { randomUUID } from 'node:crypto';
+import { createClinicAPI } from '../clinic-server.mjs';
+
+test('authentication, ownership, round persistence and idempotent retries', async t => {
+  const directory=mkdtempSync(path.join(tmpdir(),'reability-test-'));
+  let clinic=createClinicAPI(directory);
+  const server=createServer((req,res)=>clinic.handle(req,res));
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+  const base=`http://127.0.0.1:${server.address().port}`;
+  t.after(async()=>{
+    await new Promise(resolve=>server.close(resolve));clinic.db.close();
+    const resolved=path.resolve(directory);
+    assert.ok(resolved.startsWith(path.resolve(tmpdir())+path.sep));
+    assert.ok(path.basename(resolved).startsWith('reability-test-'));
+    rmSync(resolved,{recursive:true,force:true});
+  });
+  const req=async(route,data,cookie,extra={})=>{
+    const response=await fetch(base+route,{method:data===undefined?'GET':'POST',headers:{...(data===undefined?{}:{'Content-Type':'application/json'}),...(cookie?{cookie}:{}),...extra},...(data===undefined?{}:{body:JSON.stringify(data)})});
+    return {status:response.status,body:await response.json(),cookie:response.headers.get('set-cookie')?.split(';')[0],headers:response.headers};
+  };
+  assert.equal((await req('/api/history')).status,401);
+  const register=await req('/api/register',{name:'Teste A',email:'a@example.test',password:'senha-teste-123'});
+  assert.equal(register.status,200);assert.match(register.headers.get('set-cookie'),/HttpOnly; SameSite=Strict/);
+  const a=register.cookie;
+  assert.equal((await req('/api/login',{email:'a@example.test',password:'errada'})).status,401);
+  assert.equal((await req('/api/login',{email:'a@example.test',password:'senha-teste-123'})).status,200);
+  const b=(await req('/api/register',{name:'Teste B',email:'b@example.test',password:'senha-teste-123'})).cookie;
+  assert.equal((await req('/api/patients',{name:'Paciente',age:-1},a)).status,400);
+  assert.equal((await req('/api/patients',{name:'Paciente',age:30},a,{Origin:'https://example.test'})).status,403);
+  const patientResponse=await req('/api/patients',{name:'Paciente de teste',age:30},a);
+  assert.equal(patientResponse.status,201);
+  const patient=patientResponse.body;
+  assert.deepEqual((await req('/api/patients',undefined,b)).body,[]);
+  const matchId=randomUUID();
+  const event=(kind,data)=>({id:randomUUID(),matchId,kind,data,at:new Date().toISOString()});
+  const start=event('start',{patientId:patient.id,age:31,game:'atencao-cores',level:'simple'});
+  assert.equal((await req('/api/events',{events:[start]},b)).status,404);
+  const round=event('round',{round:1,correct:true,responseMs:345,response:'left',expected:'left'});
+  const finish=event('finish',{status:'completed',score:1});
+  assert.equal((await req('/api/events',{events:[start,round,finish]},a)).status,200);
+  assert.equal((await req('/api/events',{events:[start,round,finish]},a)).status,200);
+  let history=(await req('/api/history',undefined,a)).body;
+  assert.equal(history.length,1);assert.equal(history[0].rounds,1);assert.equal(history[0].patient_age,31);assert.equal(history[0].summary.score,1);
+  assert.equal((await req('/api/matches/'+matchId,undefined,b)).status,404);
+  assert.deepEqual((await req('/api/history',undefined,b)).body,[]);
+  assert.equal((await req('/api/events',{events:[round]},b)).status,403);
+  assert.equal((await req('/api/events',{events:[event('round',{round:2})]},a)).status,409);
+  const detail=(await req('/api/matches/'+matchId,undefined,a)).body;
+  assert.equal(detail.events.length,3);assert.equal(detail.events[1].data.responseMs,345);
+  // A fresh server/database connection must retain the account and all results.
+  clinic.db.close();clinic=createClinicAPI(directory);
+  history=(await req('/api/history',undefined,a)).body;assert.equal(history[0].rounds,1);
+  const stored=clinic.db.prepare('SELECT password FROM professionals LIMIT 1').get().password;
+  assert.ok(!stored.includes('senha-teste'));
+  assert.equal((await req('/api/logout',{},a)).status,200);
+  assert.equal((await req('/api/me',undefined,a)).status,401);
+});

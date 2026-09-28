@@ -15,6 +15,7 @@
     <link rel="manifest" href="./site.webmanifest" />
     <link rel="stylesheet" href="./reability.css" />
     <link rel="stylesheet" href="./home.css" />
+    <link rel="stylesheet" href="/clinic.css" />
   </head>
   <body>
     <main class="page-shell">
@@ -30,16 +31,34 @@
               decoding="async"
             />
             <p class="eyebrow">Cuidado, ciência e humanidade</p>
-            <h1 id="page-title">Jogue, reflita e aprenda</h1>
+            <h1 id="page-title">Um novo olhar para cada sessão</h1>
             <p class="intro">
-              Chegou pelo Instagram? Escolha um jogo, ajuste o nível e entenda,
-              na prática, por que memória, atenção e raciocínio fazem parte do nosso cotidiano.
+              Escolha um jogo, identifique o paciente e acompanhe cada rodada.
+              Os registros ficam disponíveis no histórico da profissional.
             </p>
           </div>
         </header>
 
         <h2 class="sr-only">Escolha um jogo</h2>
         <div class="game-options" aria-label="Jogos disponíveis">
+          <article class="game-option">
+            <div class="game-visual attention-cover attention-cover--colors" aria-hidden="true"><span>●</span><span>▲</span></div>
+            <div class="game-option__content">
+              <p class="game-kicker">Novo · Simples e difícil</p>
+              <h3>Cores e Regras</h3>
+              <p>Responda à cor que apareceu ou experimente alternar entre cores e formas.</p>
+              <a class="button" href="./jogo-atencao-cores/index.html">Escolher versão</a>
+            </div>
+          </article>
+          <article class="game-option">
+            <div class="game-visual attention-cover attention-cover--tracking" aria-hidden="true"><span>■</span><span>■</span><span>■</span><span>■</span></div>
+            <div class="game-option__content">
+              <p class="game-kicker">Novo · 10 a 15 quadrados</p>
+              <h3>Siga o Foco</h3>
+              <p>Acompanhe o quadrado destacado e encontre-o quando todos pararem.</p>
+              <a class="button" href="./jogo-rastreio-foco/index.html">Jogar agora</a>
+            </div>
+          </article>
           <article class="game-option">
             <div class="game-visual" aria-hidden="true">
               <img
@@ -213,6 +232,7 @@
         </p>
       </section>
     </main>
+    <script src="/clinic.js" defer></script>
     <script src="./disclaimer.js" defer></script>
   </body>
 </html>

@@ -148,6 +148,7 @@ const moveBrain = (placeAtCenter = false) => {
     } while (nextIndex === previousBrainIndex && cellCount > 1);
   }
 
+  ReabilityClinic.mark();
   activeCellIndex = nextIndex;
   previousBrainIndex = nextIndex;
   const activeCell = cells[activeCellIndex];
@@ -167,6 +168,7 @@ const scheduleNextMove = () => {
   moveTimeout = window.setTimeout(() => {
     if (!isPlaying || isTransitioning) return;
 
+    ReabilityClinic.round({ correct: false, outcome: "omission", target: activeCellIndex });
     moveBrain();
     scheduleNextMove();
   }, activeDifficulty.delay);
@@ -175,6 +177,7 @@ const scheduleNextMove = () => {
 const finishGame = (wasStopped = false) => {
   if (!isPlaying) return;
 
+  ReabilityClinic.finish({ score }, wasStopped ? "interrupted" : "completed");
   isPlaying = false;
   isTransitioning = false;
   stopTimers();
@@ -196,12 +199,14 @@ const finishGame = (wasStopped = false) => {
 async function handleCellClick(event) {
   const clickedIndex = Number(event.currentTarget.dataset.index);
 
-  if (!isPlaying || isTransitioning || clickedIndex !== activeCellIndex) return;
+  if (!isPlaying || isTransitioning) return;
+  if (clickedIndex !== activeCellIndex) { ReabilityClinic.round({ correct: false, chosen: clickedIndex, target: activeCellIndex }); return; }
   if (!(await recordDailyAttempt())) return;
 
   isTransitioning = true;
   window.clearTimeout(moveTimeout);
   const hitCell = event.currentTarget;
+  ReabilityClinic.round({ correct: true, chosen: clickedIndex, target: activeCellIndex });
   score += 1;
   updateStatus();
   activeCellIndex = -1;
@@ -224,6 +229,7 @@ async function handleCellClick(event) {
 }
 
 const startGame = () => {
+  ReabilityClinic.start(GAME_ID, activeDifficulty.key);
   stopTimers();
   resultDialog.close();
   clearGoalResult();

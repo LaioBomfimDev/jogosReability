@@ -399,3 +399,9 @@ h1 {
     font-size: 0.65rem;
   }
 }
+.attention-cover { min-height:200px; display:flex; align-items:center; justify-content:center; gap:30px; background:linear-gradient(140deg,#e5eeed,#f5edda); font:90px Arial,sans-serif; }
+.attention-cover--colors span:first-child { color:#1461c9; }
+.attention-cover--colors span:last-child { color:#148151; }
+.attention-cover--tracking { color:#4d8c86; font-size:65px; gap:18px; }
+.attention-cover--tracking span:nth-child(2) { color:#d89b38; transform:translateY(-20px); }
+.attention-cover--tracking span:nth-child(3) { transform:translateY(30px); }

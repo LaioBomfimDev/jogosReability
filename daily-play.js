@@ -14,7 +14,7 @@
     return `${byType.year}-${byType.month}-${byType.day}`;
   };
 
-  const getProfile = () => ({});
+  const getProfile = () => window.ReabilityClinic.getPatient() || {};
 
   const getUsage = () => ({
     used: 0,
@@ -25,7 +25,10 @@
 
   const recordAttempt = () => ({ ok: true, ...getUsage() });
 
-  const ensurePlayerName = () => Promise.resolve("visitante");
+  const ensurePlayerName = async () => {
+    await window.ReabilityClinic.ready;
+    return window.ReabilityClinic.getPatient().name;
+  };
 
   const showLimitDialog = () => {};
 

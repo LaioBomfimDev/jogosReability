@@ -121,6 +121,7 @@ const renderGuessHistory = () => {
 };
 
 const resetGame = () => {
+  ReabilityClinic.start(GAME_ID, activeLevel.key);
   secretNumber = createSecretNumber();
   attempts = 0;
   hasFinished = false;
@@ -158,6 +159,7 @@ const selectLevel = async (event) => {
 };
 
 const showDifficultyScreen = () => {
+  ReabilityClinic.finish({ attempts }, "interrupted");
   gameArea.hidden = true;
   difficultyScreen.hidden = false;
   feedback.textContent = "";
@@ -188,10 +190,12 @@ form.addEventListener("submit", async (event) => {
   const outcome =
     guess === secretNumber ? "correct" : guess < secretNumber ? "higher" : "lower";
   guessHistory.push({ guess, outcome });
+  ReabilityClinic.round({ guess, outcome, correct: guess === secretNumber });
   renderGuessHistory();
 
   if (guess === secretNumber) {
     hasFinished = true;
+    ReabilityClinic.finish({ attempts, errors: attempts - 1, won: true });
     instruction.textContent = "Desafio concluído!";
     feedback.textContent = `Você encontrou o número ${secretNumber} em ${attempts} ${attempts === 1 ? "tentativa" : "tentativas"}.`;
     ReabilityDaily.goals.showGoalResult(

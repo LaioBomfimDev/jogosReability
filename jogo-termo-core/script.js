@@ -1125,6 +1125,8 @@ const render = (animateRowIndex = -1) => {
 };
 
 const startGame = (seed, roundLabel = "Dia", dayKey = ReabilityDaily.todayKey()) => {
+  window.clearTimeout(state.resultTimer);
+  ReabilityClinic.start(DAILY_GAME_ID, config.mode);
   closeDialog();
   clearGoalResult();
   window.clearTimeout(state.shakeTimer);
@@ -1187,6 +1189,7 @@ const startRandomGame = async () => {
 };
 
 const endGame = (won) => {
+  ReabilityClinic.finish({ won, attempts: state.attempt, solved: solvedCount() });
   state.ended = true;
   state.won = won;
   render();
@@ -1260,22 +1263,25 @@ const submitGuess = async () => {
     if (solved) board.solvedAt = attemptNumber;
   });
 
+  ReabilityClinic.round({ guess: entry.display, correct: state.boards.some(board => board.solvedAt === attemptNumber), solved: solvedCount() });
   state.guesses.push(entry);
   const prevAttempt = state.attempt;
   state.attempt = attemptNumber;
   state.currentGuess = "";
 
   if (solvedCount() === config.boardCount) {
+    state.ended = true;
     render(prevAttempt);
-    setTimeout(() => {
+    state.resultTimer = setTimeout(() => {
       endGame(true);
     }, config.boardCount * 150 + 500);
     return;
   }
 
   if (state.attempt >= config.maxAttempts) {
+    state.ended = true;
     render(prevAttempt);
-    setTimeout(() => {
+    state.resultTimer = setTimeout(() => {
       endGame(false);
     }, config.boardCount * 150 + 500);
     return;
