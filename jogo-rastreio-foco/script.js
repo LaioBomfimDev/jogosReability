@@ -1,20 +1,20 @@
 (() => {
-  const $=id=>document.getElementById(id), size=34;
+  const $=id=>document.getElementById(id), size=46;
   let items=[],target=0,phase='idle',frame,round=0,correct=0,count=10,started,previous,trackingMs,freezeAt,run=0;
   const paint=()=>items.forEach(p=>p.el.style.transform=`translate(${p.x}px,${p.y}px)`);
   const position=(width,height)=>{
-    const maxX=width-size,maxY=height-size,gap=size+7;
+    const maxX=width-size,maxY=height-size,gap=size+8;
     for(let attempt=0;attempt<180;attempt++) {
       const point={x:6+Math.random()*Math.max(0,maxX-12),y:6+Math.random()*Math.max(0,maxY-12)};
       if(items.every(p=>Math.abs(p.x-point.x)>=gap||Math.abs(p.y-point.y)>=gap))return point;
     }
-    const cols=Math.max(1,Math.floor(width/52)),i=items.length;
-    return {x:6+(i%cols)*Math.max(1,(maxX-12)/Math.max(1,cols-1)),y:6+Math.floor(i/cols)*52};
+    const cell=size+8,cols=Math.max(1,Math.floor(width/cell)),i=items.length;
+    return {x:6+(i%cols)*Math.max(1,(maxX-12)/Math.max(1,cols-1)),y:6+Math.floor(i/cols)*cell};
   };
   const wander=p=>{
-    const speed=Math.max(55,Math.min(100,Math.hypot(p.vx,p.vy)*(.86+Math.random()*.28)));
-    const angle=Math.atan2(p.vy,p.vx)+(Math.random()-.5)*1.7;
-    p.vx=Math.cos(angle)*speed;p.vy=Math.sin(angle)*speed;p.turnIn=420+Math.random()*620;
+    const speed=75+Math.random()*60;
+    const angle=Math.atan2(p.vy,p.vx)+(Math.random()-.5)*Math.PI*1.7;
+    p.vx=Math.cos(angle)*speed;p.vy=Math.sin(angle)*speed;p.turnIn=170+Math.random()*330;
   };
   function next() {
     if(round>=10){finish();return;}
@@ -28,8 +28,8 @@
       const el=document.createElement('button');el.type='button';el.className='tracking-square';el.disabled=true;el.setAttribute('aria-label',`Quadrado ${i+1}`);if(i===target)el.classList.add('is-target');el.onclick=()=>answer(i);$('arena').append(el);
       const point=position(width,height);
       // Spread headings around the full circle, with jitter, so motion is mixed from the first frame.
-      const angle=headingOffset+(i+Math.random())*Math.PI*2/count,speed=60+Math.random()*35;
-      items.push({el,...point,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,turnIn:350+Math.random()*650});
+      const angle=headingOffset+(i+Math.random())*Math.PI*2/count,speed=75+Math.random()*55;
+      items.push({el,...point,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,turnIn:140+Math.random()*340});
     }
     started=previous=performance.now();trackingMs=5500+Math.random()*2500;paint();frame=requestAnimationFrame(tick);
   }

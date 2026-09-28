@@ -22,7 +22,7 @@
 .attention-feedback { min-height:2em; text-align:center; font:17px/1.6 Arial,sans-serif; }
 .attention-help { color:#59646b; font:14px/1.6 Arial,sans-serif; }
 .attention-arena { position:relative; height:420px; border:2px solid #cbd2cb; border-radius:16px; background:linear-gradient(150deg,#f0f4f2,#e5ebe8); margin:20px 0; overflow:hidden; }
-.tracking-square { position:absolute; left:0; top:0; width:34px; height:34px; min-width:0; border:2px solid #376b67; border-radius:7px; padding:0; background:#4d8c86; opacity:1; }
+.tracking-square { position:absolute; left:0; top:0; width:46px; height:46px; min-width:0; border:3px solid #376b67; border-radius:9px; padding:0; background:#4d8c86; opacity:1; }
 .tracking-square:disabled { opacity:1; }
 .tracking-square.is-target { background:#e5a33d; border-color:#996222; }
 .tracking-square.is-answer { outline:4px solid #061b31; outline-offset:3px; }
