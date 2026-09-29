@@ -24,7 +24,9 @@
     $('select-all').checked=visible.length>0&&selectedVisible===visible.length;
     $('select-all').indeterminate=selectedVisible>0&&selectedVisible<visible.length;
     $('export-selected').disabled=selectedIds.size===0;
+    $('delete-selected').disabled=selectedIds.size===0;
     $('export-selected').textContent=selectedIds.size?`Exportar selecionadas (${selectedIds.size})`:'Exportar selecionadas (CSV)';
+    $('delete-selected').textContent=selectedIds.size?`Apagar selecionadas (${selectedIds.size})`:'Apagar selecionadas';
     $('selection-status').textContent=selectedIds.size===0?'Selecione as partidas que deseja exportar.':`${selectedIds.size} ${selectedIds.size===1?'partida selecionada':'partidas selecionadas'}.`;
     document.querySelectorAll('.history-day-check').forEach(checkbox=>{
       const matches=visible.filter(r=>localDay(r.started_at)===checkbox.dataset.day), count=matches.filter(r=>selectedIds.has(r.id)).length;
@@ -124,10 +126,22 @@
       download(table,`reability-rodadas-${matches.length}-${matches.length===1?'partida':'partidas'}-${localDay(new Date())}.csv`);
     } catch(e) {$('history-error').textContent=e.message;} finally {button.disabled=false;}
   }
+  async function deleteSelected() {
+    const matches=rows.filter(r=>selectedIds.has(r.id));
+    if(!matches.length)return;
+    const amount=`${matches.length} ${matches.length===1?'partida':'partidas'}`;
+    if(!window.confirm(`Apagar permanentemente ${amount} e todas as rodadas vinculadas? Esta ação não pode ser desfeita.`))return;
+    const button=$('delete-selected');button.disabled=true;$('export-selected').disabled=true;$('history-error').textContent='';
+    try {
+      await ReabilityClinic.api('/api/matches/delete',{ids:matches.map(r=>r.id)});
+      selectedIds.clear();await load();$('selection-status').textContent=`${amount.charAt(0).toUpperCase()+amount.slice(1)} ${matches.length===1?'apagada':'apagadas'} com sucesso.`;
+    } catch(e) {$('history-error').textContent=e.message;updateSelection();}
+  }
   ['patient-filter','game-filter','from','to'].forEach(id=>$(id).onchange=render);
   $('refresh').onclick=load;
   $('select-all').onchange=()=>{for(const r of selected())if($('select-all').checked)selectedIds.add(r.id);else selectedIds.delete(r.id);render();};
   $('export-selected').onclick=()=>exportRounds(rows.filter(r=>selectedIds.has(r.id)),$('export-selected'));
+  $('delete-selected').onclick=deleteSelected;
   [$('close-details'),...document.querySelectorAll('.js-close-details')].forEach(button=>button.onclick=()=>$('details').close());
   $('details').onclick=event=>{if(event.target===$('details'))$('details').close();};
   load();

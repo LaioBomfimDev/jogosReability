@@ -31,7 +31,10 @@
     <section class="clinic-card clinic-table-card">
       <div class="history-selection" aria-live="polite">
         <span id="selection-status">Selecione as partidas que deseja exportar.</span>
-        <button class="clinic-button secondary" id="export-selected" disabled>Exportar selecionadas (CSV)</button>
+        <div class="history-selection-actions">
+          <button class="clinic-button history-export-selected" id="export-selected" disabled>Exportar selecionadas (CSV)</button>
+          <button class="clinic-button history-delete-selected" id="delete-selected" disabled>Apagar selecionadas</button>
+        </div>
       </div>
       <div class="clinic-table-wrap">
         <table class="clinic-table">

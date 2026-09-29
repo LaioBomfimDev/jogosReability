@@ -125,6 +125,22 @@ export function createClinicAPI(dataDirectory) {
         const rows = db.prepare(`SELECT m.*, (SELECT count(*) FROM events e WHERE e.match_id=m.id AND e.kind='round') AS rounds FROM matches m WHERE professional_id=? ORDER BY started_at DESC`).all(account.id);
         return send(res, 200, rows.map(row => ({ ...row, summary: JSON.parse(row.summary) })));
       }
+      if (route === '/api/matches/delete' && req.method === 'POST') {
+        const body = await readBody(req);
+        if (!Array.isArray(body.ids) || body.ids.length < 1 || body.ids.length > 100) fail(400, 'Seleção inválida.');
+        const ids = [...new Set(body.ids.map(value => id(value)))];
+        db.exec('BEGIN IMMEDIATE');
+        try {
+          for (const matchId of ids) {
+            const match = db.prepare('SELECT id FROM matches WHERE id=? AND professional_id=?').get(matchId, account.id);
+            if (!match) fail(404, 'Partida não encontrada.');
+            db.prepare('DELETE FROM events WHERE match_id=?').run(matchId);
+            db.prepare('DELETE FROM matches WHERE id=? AND professional_id=?').run(matchId, account.id);
+          }
+          db.exec('COMMIT');
+        } catch (error) { db.exec('ROLLBACK'); throw error; }
+        return send(res, 200, { ok: true, deleted: ids.length });
+      }
       if (route.startsWith('/api/matches/') && req.method === 'GET') {
         const match = db.prepare('SELECT * FROM matches WHERE id=? AND professional_id=?').get(id(route.split('/').at(-1)), account.id);
         if (!match) fail(404, 'Partida não encontrada.');

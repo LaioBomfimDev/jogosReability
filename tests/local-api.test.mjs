@@ -33,4 +33,8 @@ test('static fallback authenticates the sole account and keeps patient history',
   assert.equal(history[0].rounds, 1);
   const details = await api.request(`/api/matches/${matchId}`, undefined, 'GET');
   assert.equal(details.events.length, 3);
+  const deleted = await api.request('/api/matches/delete', { ids:[matchId] }, 'POST');
+  assert.equal(deleted.deleted, 1);
+  assert.equal((await api.request('/api/history', undefined, 'GET')).length, 0);
+  await assert.rejects(api.request(`/api/matches/${matchId}`, undefined, 'GET'), /não encontrada/);
 });

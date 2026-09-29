@@ -69,6 +69,13 @@
       write(data); return { ok:true };
     }
     if (route === '/api/history' && method === 'GET') return [...data.matches].sort((a,b)=>b.started_at.localeCompare(a.started_at)).map(match=>({ ...match, rounds:data.events.filter(event=>event.match_id===match.id&&event.kind==='round').length }));
+    if (route === '/api/matches/delete' && method === 'POST') {
+      if (!Array.isArray(body?.ids) || body.ids.length < 1 || body.ids.length > 100 || body.ids.some(matchId=>!validId(matchId))) fail(400, 'Seleção inválida.');
+      const ids=[...new Set(body.ids)];
+      if (ids.some(matchId=>!data.matches.some(match=>match.id===matchId))) fail(404, 'Partida não encontrada.');
+      data.events=data.events.filter(event=>!ids.includes(event.match_id));data.matches=data.matches.filter(match=>!ids.includes(match.id));write(data);
+      return { ok:true, deleted:ids.length };
+    }
     if (route.startsWith('/api/matches/') && method === 'GET') {
       const match = data.matches.find(item=>item.id===route.split('/').at(-1));
       if (!match) fail(404, 'Partida não encontrada.');

@@ -30,7 +30,12 @@
 .clinic-table-card .clinic-table-wrap { padding:0 18px 12px; }
 .history-selection { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 20px; border-bottom:1px solid #e5e1d5; background:#f7f4ea; font:14px/1.5 Arial,sans-serif; }
 .history-selection span { color:#4b5963; }
-.history-selection .clinic-button { flex:0 0 auto; padding:10px 15px; }
+.history-selection-actions { display:flex; flex:0 0 auto; flex-wrap:wrap; justify-content:flex-end; gap:9px; }
+.history-selection .clinic-button { flex:0 0 auto; padding:11px 17px; }
+.history-selection .history-export-selected { color:#fffdf6; background:#061b31; box-shadow:0 6px 14px rgba(6,27,49,.18); }
+.history-selection .history-export-selected:hover:not(:disabled) { background:#123b5e; transform:translateY(-1px); }
+.history-selection .history-delete-selected { border:1px solid #b9443d; color:#9c2f2a; background:#fff5f3; }
+.history-selection .history-delete-selected:hover:not(:disabled) { color:#fff; background:#a9342e; }
 .history-check { width:42px; padding-left:8px !important; padding-right:6px !important; text-align:center; }
 .history-check input { width:18px; height:18px; margin:0; accent-color:#061b31; cursor:pointer; }
 .history-date-group td { padding:0 !important; border:0; background:#edf3f6; }
@@ -141,6 +146,7 @@
   .clinic-table-card { padding:0; }
   .clinic-table-card .clinic-table-wrap { padding:0 10px 10px; }
   .history-selection { align-items:stretch; flex-direction:column; padding:14px; }
+  .history-selection-actions { display:grid; grid-template-columns:1fr; }
   .history-selection .clinic-button { width:100%; }
   .clinic-bar { padding:10px 14px; }
   .clinic-detail { width:100%; max-width:none; max-height:100dvh; height:100dvh; margin:0; border:0; border-radius:0; }

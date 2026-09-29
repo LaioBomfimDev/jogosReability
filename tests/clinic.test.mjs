@@ -59,6 +59,10 @@ test('authentication, ownership, round persistence and idempotent retries', asyn
   history=(await req('/api/history',undefined,a)).body;assert.equal(history[0].rounds,1);
   const stored=clinic.db.prepare('SELECT password FROM professionals WHERE email=?').get('deniseneves').password;
   assert.ok(!stored.includes('reability2026'));
+  assert.equal((await req('/api/matches/delete',{ids:[matchId]},b)).status,401);
+  const deleted=await req('/api/matches/delete',{ids:[matchId]},a);assert.equal(deleted.status,200);assert.equal(deleted.body.deleted,1);
+  assert.equal((await req('/api/history',undefined,a)).body.length,0);
+  assert.equal((await req('/api/matches/'+matchId,undefined,a)).status,404);
   assert.equal((await req('/api/logout',{},a)).status,200);
   assert.equal((await req('/api/me',undefined,a)).status,401);
 });
