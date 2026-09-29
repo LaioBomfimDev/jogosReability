@@ -74,3 +74,16 @@ test('tracking: difficulty choices are 10, 15 and 20; highest level creates 20 t
   assert.equal(h.get('arena').children.length,20);
   assert.deepEqual(h.events.find(event=>event.type==='start').args,['rastreio-foco','20']);
 });
+
+test('tracking: professional can choose the number of rounds',async()=>{
+  const html=readFileSync(new URL('../jogo-rastreio-foco/index.html',import.meta.url),'utf8');
+  assert.match(html,/<input id="rounds" type="number" min="1" max="30"[^>]*value="10"/);
+  const h=harness('../jogo-rastreio-foco/script.js');h.get('rounds').value='3';await h.startTrack();
+  for(let round=0;round<3;round++) {
+    assert.equal(h.get('progress').textContent,`Rodada ${round+1} de 3`);
+    for(let frame=0;frame<10;frame++)h.frame(1000);
+    h.get('arena').children[0].onclick();h.get('next').onclick();
+  }
+  const finish=h.events.find(event=>event.type==='finish');
+  assert.equal(finish.status,'completed');assert.equal(finish.data.totalRounds,3);
+});
