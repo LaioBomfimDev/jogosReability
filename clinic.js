@@ -122,7 +122,7 @@
     const error=dialog.querySelector('.clinic-error');
     let patients;
     try { patients=await api('/api/patients'); } catch(e) { error.textContent=e.message; fields.existing.disabled=true; patients=[]; }
-    for (const p of patients) { const option=document.createElement('option'); option.value=p.id; option.textContent=`${p.name} · ${p.age} anos · ${p.id.slice(0,8)}`; fields.existing.append(option); }
+    for (const p of patients) { const option=document.createElement('option'); option.value=p.id; option.textContent=`${p.name} · ${p.age} anos`; fields.existing.append(option); }
     fields.existing.onchange=()=>{
       const selected=patients.find(p=>p.id===fields.existing.value);
       fields.name.value=selected?.name || ''; fields.name.readOnly=!!selected; fields.age.value=selected?.age ?? '';
