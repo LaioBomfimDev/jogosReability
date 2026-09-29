@@ -12,17 +12,47 @@
   const values={left:'Esquerda',right:'Direita',blue:'Azul',green:'Verde',circle:'Círculo',triangle:'Triângulo',color:'Cor',shape:'Forma',omission:'Sem resposta',error:'Erro',correct:'Acerto',move:'Movimento',early_or_late:'Fora da janela de resposta'};
   const readable=value=>typeof value==='boolean'?(value?'Sim':'Não'):value===null?'—':typeof value==='object'?JSON.stringify(value):(values[value]||String(value));
   const describe=data=>Object.entries(data).map(([k,v])=>`${k==='correct'&&typeof v==='boolean'?'Acertou':metricNames[k]||k}: ${k==='status'?(statuses[v]||v):readable(v)}`).join('\n');
+  const duration=value=>{const seconds=Math.round(Number(value)/100)/10;if(!Number.isFinite(seconds))return readable(value);return seconds<60?`${seconds.toLocaleString('pt-BR')} s`:`${Math.floor(seconds/60)} min ${Math.round(seconds%60)} s`;};
+  const summaryTone=key=>key==='correct'?'success':key==='errors'?'danger':key==='omissions'?'warning':key==='status'?'status':'';
+  const resultTone=data=>data.outcome==='omission'?'warning':data.correct===true?'success':data.correct===false?'danger':'';
+  const appendText=(parent,tag,text,className)=>{const element=document.createElement(tag);element.textContent=text;if(className)element.className=className;parent.append(element);return element;};
   async function details(id) {
     try {
       const m=await ReabilityClinic.api('/api/matches/'+id);
-      $('detail-title').textContent=`${m.patient_name}, ${m.patient_age} anos · ${names[m.game]||m.game} · ${date(m.started_at)}`;
-      const summary=document.createElement('pre');summary.textContent=describe(m.summary);$('detail-summary').replaceChildren(summary);
-      $('detail-rows').replaceChildren();
-      for(const e of m.events.filter(e=>e.kind==='round')) {
-        const tr=document.createElement('tr');cell(tr,e.data.round);cell(tr,result(e.data));cell(tr,e.data.responseMs==null?'—':`${e.data.responseMs} ms`);
-        const pre=document.createElement('pre');pre.textContent=describe(e.data);cell(tr,'').append(pre);$('detail-rows').append(tr);
+      const patient=document.createElement('span');appendText(patient,'strong',m.patient_name);patient.append(`, ${m.patient_age} anos`);
+      const game=document.createElement('span');game.textContent=names[m.game]||m.game;
+      const started=document.createElement('span');started.textContent=date(m.started_at);
+      $('detail-title').replaceChildren(patient,game,started);
+      const summary=document.createDocumentFragment();
+      const priority=['score','correct','errors','omissions','durationMs','rounds','status'];
+      const entries=Object.entries(m.summary||{}).sort(([a],[b])=>{const ai=priority.indexOf(a),bi=priority.indexOf(b);return (ai<0?priority.length:ai)-(bi<0?priority.length:bi);});
+      for(const [key,value] of entries) {
+        const metric=document.createElement('div');metric.className='detail-metric';metric.dataset.tone=summaryTone(key);
+        appendText(metric,'span',metricNames[key]||key);
+        appendText(metric,'strong',key==='durationMs'?duration(value):key==='status'?(statuses[value]||value):readable(value));
+        summary.append(metric);
       }
-      $('details').showModal();
+      $('detail-summary').replaceChildren(summary);
+      const rounds=m.events.filter(e=>e.kind==='round');
+      $('detail-round-count').textContent=`${rounds.length} ${rounds.length===1?'rodada':'rodadas'}`;
+      const roundList=document.createDocumentFragment();
+      rounds.forEach((e,index)=>{
+        const row=document.createElement('article');row.className='detail-round';row.dataset.result=resultTone(e.data);
+        appendText(row,'div',String(e.data.round??index+1).padStart(2,'0'),'detail-round-number');
+        appendText(row,'span',result(e.data),'detail-result');
+        appendText(row,'div',e.data.responseMs==null?'Sem registro':`${Number(e.data.responseMs).toLocaleString('pt-BR')} ms`,'detail-round-time');
+        const data=document.createElement('dl');data.className='detail-data';
+        for(const [key,value] of Object.entries(e.data).filter(([key])=>!['round','correct','outcome','responseMs'].includes(key))) {
+          const item=document.createElement('div');appendText(item,'dt',metricNames[key]||key);appendText(item,'dd',readable(value));data.append(item);
+        }
+        row.append(data);roundList.append(row);
+      });
+      if(!rounds.length) appendText(roundList,'p','Nenhuma rodada foi registrada nesta partida.','detail-empty');
+      $('detail-rows').replaceChildren(roundList);
+      $('details').scrollTop=0;
+      if(!$('details').open) {
+        $('details').showModal();
+      }
     } catch(e) {$('history-error').textContent=e.message;}
   }
   function render() {
@@ -64,6 +94,8 @@
     } catch(e) {$('history-error').textContent=e.message;} finally {button.disabled=false;}
   }
   ['patient-filter','game-filter','from','to'].forEach(id=>$(id).onchange=render);
-  $('refresh').onclick=load;$('export').onclick=()=>exportData(false);$('export-rounds').onclick=()=>exportData(true);$('close-details').onclick=()=>$('details').close();
+  $('refresh').onclick=load;$('export').onclick=()=>exportData(false);$('export-rounds').onclick=()=>exportData(true);
+  [$('close-details'),...document.querySelectorAll('.js-close-details')].forEach(button=>button.onclick=()=>$('details').close());
+  $('details').onclick=event=>{if(event.target===$('details'))$('details').close();};
   load();
 })();
