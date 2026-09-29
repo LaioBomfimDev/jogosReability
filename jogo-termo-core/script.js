@@ -1124,7 +1124,8 @@ const render = (animateRowIndex = -1) => {
   shareButton.disabled = !state.ended;
 };
 
-const startGame = (seed, roundLabel = "Dia", dayKey = ReabilityDaily.todayKey()) => {
+const startGame = async (seed, roundLabel = "Dia", dayKey = ReabilityDaily.todayKey()) => {
+  await ReabilityClinic.confirmReady();
   window.clearTimeout(state.resultTimer);
   ReabilityClinic.start(DAILY_GAME_ID, config.mode);
   closeDialog();
@@ -1185,7 +1186,7 @@ const startRandomGame = async () => {
   }
 
   const seed = hashString(`${Date.now()}:${Math.random()}:${config.mode}`);
-  startGame(seed, "Livre", dailyDayKey(attempt));
+  await startGame(seed, "Livre", dailyDayKey(attempt));
 };
 
 const endGame = (won) => {

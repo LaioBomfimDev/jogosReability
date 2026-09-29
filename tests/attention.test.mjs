@@ -11,7 +11,7 @@ function harness(file) {
   const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
   const choices=['colors','shapes','hard'].map(mode=>({...element(),dataset:{mode}}));
   const document={hidden:false,getElementById:get,querySelectorAll:()=>choices,createElement:element,addEventListener:(name,fn)=>handlers[name]=fn};
-  const clinic={ready:Promise.resolve(),start:(...args)=>events.push({type:'start',args}),round:data=>events.push({type:'round',data}),finish:(data,status)=>events.push({type:'finish',data,status}),mark(){}};
+  const clinic={ready:Promise.resolve(),confirmReady:async()=>events.push({type:'ready'}),start:(...args)=>events.push({type:'start',args}),round:data=>events.push({type:'round',data}),finish:(data,status)=>events.push({type:'finish',data,status}),mark(){}};
   const context=vm.createContext({document,ReabilityClinic:clinic,performance:{now:()=>now},Math:seededMath,setTimeout:(fn,delay)=>{const id=++serial;timers.set(id,{fn,at:now+delay});return id;},clearTimeout:id=>timers.delete(id),requestAnimationFrame:fn=>{const id=++serial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)});
   vm.runInContext(readFileSync(new URL(file,import.meta.url),'utf8'),context);
   return {get,events,choices,document,handlers,
@@ -24,6 +24,7 @@ function harness(file) {
 
 for(const mode of ['colors','shapes','hard'])test(`colors: ${mode} has 12 correct rounds, stable mappings and no duplicate clicks`,async()=>{
   const h=harness('../jogo-atencao-cores/script.js');await h.startColor(mode);const rules=[];
+  assert.deepEqual(h.events.slice(0,2).map(event=>event.type),['ready','start']);
   for(let i=0;i<12;i++) {
     h.timer();
     const shape=h.get('symbol').dataset.shape,color=h.get('symbol').dataset.color,byColor=h.get('rule').textContent.includes('COR');rules.push(byColor?'color':'shape');
@@ -47,6 +48,7 @@ test('colors: omissions have no reaction time; ending cancels pending stimuli',a
 
 test('tracking: 15 moving targets freeze, accept one answer and finish ten rounds',async()=>{
   const h=harness('../jogo-rastreio-foco/script.js');h.get('count').value='15';await h.startTrack();
+  assert.deepEqual(h.events.slice(0,2).map(event=>event.type),['ready','start']);
   for(let round=0;round<10;round++) {
     assert.equal(h.get('arena').children.length,15);assert.ok(h.get('arena').children.every(e=>e.disabled));
     const starts=h.get('arena').children.map(e=>e.style.transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\)/).slice(1).map(Number));
@@ -73,6 +75,11 @@ test('tracking: difficulty choices are 10, 15 and 20; highest level creates 20 t
   const h=harness('../jogo-rastreio-foco/script.js');h.get('count').value='20';await h.startTrack();
   assert.equal(h.get('arena').children.length,20);
   assert.deepEqual(h.events.find(event=>event.type==='start').args,['rastreio-foco','20']);
+});
+
+test('every game waits for player confirmation before starting',()=>{
+  const scripts=['jogo-memoria-neuro/script.js','jogo-numero-neuro/script.js','jogo-cerebro-feliz/script.js','jogo-cubos-em-foco/script.js','jogo-matriz-neuro/script.js','jogo-puzzle-rotacao/script.js','jogo-ritmo-neuro/script.js','jogo-termo-core/script.js','jogo-atencao-cores/script.js','jogo-rastreio-foco/script.js'];
+  for(const script of scripts)assert.match(readFileSync(new URL(`../${script}`,import.meta.url),'utf8'),/await ReabilityClinic\.confirmReady\(\)/,script);
 });
 
 test('tracking: professional can choose the number of rounds',async()=>{

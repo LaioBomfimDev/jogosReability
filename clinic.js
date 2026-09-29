@@ -111,6 +111,16 @@
     }
     document.body.prepend(bar);
   };
+  const confirmReady = async () => {
+    await ready;
+    const main=document.querySelector('main');main?.setAttribute('inert','');
+    const dialog=document.createElement('dialog');dialog.className='clinic-dialog clinic-ready-dialog';
+    dialog.innerHTML='<div class="clinic-ready-icon" aria-hidden="true">✓</div><p class="clinic-kicker">Tudo preparado</p><h2>Pronto para começar?</h2><p class="clinic-ready-game"></p><p>Quando estiver confortável e com o tablet em mãos, toque no botão abaixo. O jogo e o tempo só começam depois desse toque.</p><button class="clinic-button clinic-ready-button" type="button">Estou pronto — começar o jogo</button>';
+    dialog.querySelector('.clinic-ready-game').textContent=patient?`${patient.name} · ${title}`:title;
+    document.body.append(dialog);dialog.showModal();dialog.addEventListener('cancel',event=>event.preventDefault());
+    await new Promise(resolve=>dialog.querySelector('button').onclick=resolve);
+    dialog.close();dialog.remove();main?.removeAttribute('inert');
+  };
   const choosePatient = async () => {
     document.querySelector('main')?.setAttribute('inert','');
     const dialog = document.createElement('dialog'); dialog.className='clinic-dialog';
@@ -155,5 +165,5 @@
   window.addEventListener('pageshow',event=>{ if(event.persisted) location.reload(); });
   // Avoid game keyboard shortcuts consuming input in the patient dialog.
   document.addEventListener('keydown',event=>{ if (event.target.closest('.clinic-dialog')) event.stopPropagation(); },true);
-  window.ReabilityClinic={api,ready,start,round,mark,finish,flush,safeReturn,getPatient:()=>patient};
+  window.ReabilityClinic={api,ready,confirmReady,start,round,mark,finish,flush,safeReturn,getPatient:()=>patient};
 })();

@@ -53,6 +53,7 @@
   }
   async function start(value) {
     const token=++run;await ReabilityClinic.ready;if(token!==run)return;
+    await ReabilityClinic.confirmReady();if(token!==run)return;
     clear();mode=value;round=correct=errors=omissions=0;rule=lastRule=null;
     ReabilityClinic.start('atencao-cores',mode);
     const labels={colors:'Cores',shapes:'Formas',hard:'Difícil'};

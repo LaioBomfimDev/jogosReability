@@ -514,7 +514,8 @@ const startTimer = () => {
   }, 1000);
 };
 
-const startGame = (modeKey) => {
+const startGame = async (modeKey) => {
+  await ReabilityClinic.confirmReady();
   ReabilityClinic.start(GAME_ID, modeKey);
   activeMode = { key: modeKey, ...modes[modeKey] };
   puzzleQueue = createPuzzleQueue(activeMode.puzzles);
@@ -538,7 +539,7 @@ const startGame = (modeKey) => {
 };
 
 const beginGame = async (modeKey) => {
-  if (await ensureDailyAllowance(modeKey)) startGame(modeKey);
+  if (await ensureDailyAllowance(modeKey)) await startGame(modeKey);
 };
 
 const returnToModeSelection = () => {

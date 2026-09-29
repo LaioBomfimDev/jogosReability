@@ -282,7 +282,8 @@ const createCard = ({ symbol, label }, index) => {
   return card;
 };
 
-const startGame = () => {
+const startGame = async () => {
+  await ReabilityClinic.confirmReady();
   window.clearTimeout(turnTimeout);
   ReabilityClinic.start(GAME_ID, activeLevelKey);
   stopTimer();
@@ -313,11 +314,11 @@ const startGame = () => {
 const selectLevel = async (event) => {
   activeLevelKey = event.currentTarget.dataset.level;
 
-  if (await ensureDailyAllowance()) startGame();
+  if (await ensureDailyAllowance()) await startGame();
 };
 
 const restartGame = async () => {
-  if (await ensureDailyAllowance()) startGame();
+  if (await ensureDailyAllowance()) await startGame();
 };
 
 const showLevelSelection = () => {

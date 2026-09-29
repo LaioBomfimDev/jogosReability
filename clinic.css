@@ -6,6 +6,13 @@
 .clinic-dialog { width:min(520px,calc(100% - 28px)); max-height:90dvh; overflow:auto; border:1px solid #d7d0be; border-radius:22px; padding:28px; color:#061b31; background:#fffdf6; box-shadow:0 24px 80px #061b3140; font-family:Arial,sans-serif; }
 .clinic-dialog::backdrop { background:#061b31bd; backdrop-filter:blur(4px); }
 .clinic-dialog h2 { font:32px/1.15 Georgia,serif; margin:12px 0; }
+.clinic-ready-dialog { width:min(600px,calc(100% - 28px)); padding:clamp(28px,5vw,48px); text-align:center; }
+.clinic-ready-dialog .clinic-kicker { margin:12px 0 8px; }
+.clinic-ready-dialog h2 { margin:0 0 14px; font-size:clamp(32px,6vw,46px); }
+.clinic-ready-dialog>p:not(.clinic-kicker) { max-width:470px; margin:10px auto; color:#4b5963; font:16px/1.65 Arial,sans-serif; }
+.clinic-ready-dialog .clinic-ready-game { color:#061b31; font-weight:700; }
+.clinic-ready-icon { width:70px; height:70px; display:grid; place-items:center; margin:0 auto; border-radius:50%; color:#fffdf6; background:#376b67; box-shadow:0 10px 24px rgba(55,107,103,.25); font:700 34px/1 Arial,sans-serif; }
+.clinic-ready-button { width:100%; min-height:62px; margin-top:24px; font-size:17px; box-shadow:0 10px 24px rgba(6,27,49,.2); }
 .clinic-form { display:grid; gap:16px; }
 .clinic-form label { display:grid; gap:6px; font:15px/1.5 Arial,sans-serif; text-transform:none; letter-spacing:normal; }
 .clinic-form input,.clinic-form select,.clinic-filter { width:100%; padding:12px; border:1px solid #b6b8b5; border-radius:10px; background:white; color:#061b31; font:16px Arial,sans-serif; min-width:0; }

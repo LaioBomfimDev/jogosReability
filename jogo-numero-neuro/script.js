@@ -120,7 +120,8 @@ const renderGuessHistory = () => {
   });
 };
 
-const resetGame = () => {
+const resetGame = async () => {
+  await ReabilityClinic.confirmReady();
   ReabilityClinic.start(GAME_ID, activeLevel.key);
   secretNumber = createSecretNumber();
   attempts = 0;
@@ -155,7 +156,7 @@ const selectLevel = async (event) => {
   selectedLevel.textContent = `${activeLevel.name} · 1 a ${activeLevel.limit}`;
   difficultyScreen.hidden = true;
   gameArea.hidden = false;
-  resetGame();
+  await resetGame();
 };
 
 const showDifficultyScreen = () => {
@@ -169,7 +170,7 @@ const showDifficultyScreen = () => {
 };
 
 const startNewGame = async () => {
-  if (await ensureDailyAllowance()) resetGame();
+  if (await ensureDailyAllowance()) await resetGame();
 };
 
 form.addEventListener("submit", async (event) => {

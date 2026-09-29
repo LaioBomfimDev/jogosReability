@@ -531,6 +531,7 @@ const tick = () => {
 };
 
 const startGame = async () => {
+  await ReabilityClinic.confirmReady();
   await ensureAudio();
   window.cancelAnimationFrame(state.animationFrame);
   if (resultDialog.open) resultDialog.close();
@@ -559,13 +560,13 @@ const startGame = async () => {
 const selectLevel = async (event) => {
   state.levelKey = event.currentTarget.dataset.level;
   await ensureAudio();
-  if (await ensureDailyAllowance()) startGame();
+  if (await ensureDailyAllowance()) await startGame();
 };
 
 const restartGame = async () => {
   if (resultDialog.open) resultDialog.close();
   await ensureAudio();
-  if (await ensureDailyAllowance()) startGame();
+  if (await ensureDailyAllowance()) await startGame();
 };
 
 const stopActiveGame = () => {

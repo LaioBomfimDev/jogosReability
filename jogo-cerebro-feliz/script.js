@@ -228,7 +228,8 @@ async function handleCellClick(event) {
   }, 110);
 }
 
-const startGame = () => {
+const startGame = async () => {
+  await ReabilityClinic.confirmReady();
   ReabilityClinic.start(GAME_ID, activeDifficulty.key);
   stopTimers();
   resultDialog.close();
@@ -270,7 +271,7 @@ const selectDifficulty = async (event) => {
     delay: Number(button.dataset.delay),
     label: delayInSeconds === 1 ? "1 segundo" : `${delayInSeconds.toString().replace(".", ",")} segundos`,
   };
-  if (await ensureDailyAllowance()) startGame();
+  if (await ensureDailyAllowance()) await startGame();
 };
 
 const showLevelSelection = () => {
@@ -283,7 +284,7 @@ const showLevelSelection = () => {
 };
 
 const playAgain = async () => {
-  if (await ensureDailyAllowance()) startGame();
+  if (await ensureDailyAllowance()) await startGame();
 };
 
 difficultyButtons.forEach((button) => button.addEventListener("click", selectDifficulty));

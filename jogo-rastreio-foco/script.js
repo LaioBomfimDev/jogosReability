@@ -106,6 +106,7 @@
   }
   async function start(e) {
     e?.preventDefault();const token=++run;await ReabilityClinic.ready;if(token!==run)return;
+    await ReabilityClinic.confirmReady();if(token!==run)return;
     cancelAnimationFrame(frame);count=Number($('count').value);roundLimit=Math.max(1,Math.min(30,Math.round(Number($('rounds').value)||10)));$('rounds').value=String(roundLimit);round=correct=0;
     ReabilityClinic.start('rastreio-foco',String(count));$('setup').hidden=true;$('result').hidden=true;$('play').hidden=false;next();
   }
