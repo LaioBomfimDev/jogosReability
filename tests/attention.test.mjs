@@ -9,7 +9,7 @@ function harness(file) {
   const timers=new Map(),frames=new Map();
   const element=()=>({hidden:false,disabled:false,textContent:'',dataset:{},style:{},value:'10',clientWidth:280,clientHeight:360,children:[],classList:{add(){},remove(){},toggle(){}},setAttribute(){},focus(){},append(e){this.children.push(e);},replaceChildren(){this.children=[];}});
   const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
-  const choices=['simple','hard'].map(mode=>({...element(),dataset:{mode}}));
+  const choices=['colors','shapes','hard'].map(mode=>({...element(),dataset:{mode}}));
   const document={hidden:false,getElementById:get,querySelectorAll:()=>choices,createElement:element,addEventListener:(name,fn)=>handlers[name]=fn};
   const clinic={ready:Promise.resolve(),start:(...args)=>events.push({type:'start',args}),round:data=>events.push({type:'round',data}),finish:(data,status)=>events.push({type:'finish',data,status}),mark(){}};
   const context=vm.createContext({document,ReabilityClinic:clinic,performance:{now:()=>now},Math:seededMath,setTimeout:(fn,delay)=>{const id=++serial;timers.set(id,{fn,at:now+delay});return id;},clearTimeout:id=>timers.delete(id),requestAnimationFrame:fn=>{const id=++serial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)});
@@ -22,7 +22,7 @@ function harness(file) {
   };
 }
 
-for(const mode of ['simple','hard'])test(`colors: ${mode} has 12 correct rounds, stable mappings and no duplicate clicks`,async()=>{
+for(const mode of ['colors','shapes','hard'])test(`colors: ${mode} has 12 correct rounds, stable mappings and no duplicate clicks`,async()=>{
   const h=harness('../jogo-atencao-cores/script.js');await h.startColor(mode);const rules=[];
   for(let i=0;i<12;i++) {
     h.timer();
@@ -32,12 +32,15 @@ for(const mode of ['simple','hard'])test(`colors: ${mode} has 12 correct rounds,
     assert.equal(h.events.filter(e=>e.type==='round').length,i+1);h.timer();
   }
   const finish=h.events.find(e=>e.type==='finish');assert.equal(finish.data.correct,12);assert.equal(finish.data.errors,0);assert.equal(finish.status,'completed');
-  assert.deepEqual(rules,mode==='simple'?Array(12).fill('color'):['color','color','color','shape','shape','shape','color','color','color','shape','shape','shape']);
-  assert.equal(h.events.filter(e=>e.type==='round'&&e.data.switched).length,mode==='simple'?0:3);
+  const fixedRule=mode==='shapes'?'shape':'color';
+  assert.deepEqual(rules,mode==='hard'?['color','color','color','shape','shape','shape','color','color','color','shape','shape','shape']:Array(12).fill(fixedRule));
+  assert.equal(h.events.filter(e=>e.type==='round'&&e.data.switched).length,mode==='hard'?3:0);
+  if(mode==='colors')assert.ok(h.events.filter(e=>e.type==='round').every(e=>e.data.shape==='circle'));
+  if(mode==='shapes')assert.ok(h.events.filter(e=>e.type==='round').every(e=>e.data.color==='blue'));
 });
 
 test('colors: omissions have no reaction time; ending cancels pending stimuli',async()=>{
-  const h=harness('../jogo-atencao-cores/script.js');await h.startColor('simple');h.timer();h.timer();h.timer();
+  const h=harness('../jogo-atencao-cores/script.js');await h.startColor('colors');h.timer();h.timer();h.timer();
   const round=h.events.find(e=>e.type==='round');assert.equal(round.data.outcome,'omission');assert.equal(round.data.responseMs,null);
   h.get('stop').onclick();assert.equal(h.events.at(-1).status,'interrupted');
 });

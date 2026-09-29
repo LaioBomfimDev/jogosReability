@@ -1,1 +1,78 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cores e Regras · Reability</title><link rel="stylesheet" href="/reability.css"><link rel="stylesheet" href="/clinic.css"><link rel="stylesheet" href="/attention-games.css"></head><body><main class="attention-shell"><p class="clinic-kicker">Atenção · Resposta visual</p><h1>Cores e Regras</h1><p class="attention-lead">Observe o que aparece e escolha o botão correspondente. Um estímulo de cada vez, no seu ritmo.</p><section id="setup" class="attention-panel"><h2>Escolha a versão</h2><div class="attention-levels"><button class="attention-choice" data-mode="simple"><span>Regra fixa</span><strong>Simples</strong><span>Azul: botão esquerdo. Verde: botão direito. Responda à cor que apareceu.</span></button><button class="attention-choice" data-mode="hard"><span>Troca de regras</span><strong>Difícil</strong><span>Alterne entre responder pela cor e pela forma. A regra atual fica sempre visível.</span></button></div><p class="attention-help">12 rodadas · estímulo visível por 0,7 segundo · até 4 segundos para responder. Use os botões ou as setas ← e →.</p></section><section id="play" class="attention-panel" hidden><div class="attention-stats"><span id="mode-label"></span><span id="progress"></span><span id="score"></span></div><p id="rule" class="attention-rule"></p><div class="attention-stage"><span id="wait">Prepare-se</span><div id="symbol" class="attention-symbol" hidden></div></div><div class="attention-responses"><button id="left" disabled></button><button id="right" disabled></button></div><p id="feedback" class="attention-feedback" role="status"></p><button id="stop" class="clinic-button secondary">Encerrar partida</button></section><section id="result" class="attention-panel" hidden><p class="clinic-kicker">Partida registrada</p><h2 id="result-title">Resultado</h2><p id="summary" class="attention-summary"></p><div class="clinic-actions"><button id="again" class="clinic-button">Jogar novamente</button><button id="change" class="clinic-button secondary">Trocar versão</button><a class="clinic-button secondary" href="/index.html">Trocar paciente ou jogo</a></div></section></main><script src="/clinic-local.js" defer></script><script src="/clinic.js" defer></script><script src="./script.js" defer></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cores e Regras · Reability</title>
+  <link rel="stylesheet" href="/reability.css">
+  <link rel="stylesheet" href="/clinic.css">
+  <link rel="stylesheet" href="/attention-games.css">
+</head>
+<body>
+  <main class="attention-shell">
+    <p class="clinic-kicker">Atenção · Resposta visual</p>
+    <h1>Cores e Regras</h1>
+    <p class="attention-lead">Observe o estímulo e escolha a resposta correta.</p>
+
+    <section id="setup" class="attention-panel">
+      <h2>Escolha a versão</h2>
+      <div class="attention-levels">
+        <button class="attention-choice" data-mode="colors">
+          <span class="attention-choice-tag">Regra fixa</span>
+          <strong>Cores</strong>
+          <span class="attention-map">
+            <span><i class="attention-dot is-blue" aria-hidden="true"></i><b>Azul</b><small>botão esquerdo</small></span>
+            <span><i class="attention-dot is-green" aria-hidden="true"></i><b>Verde</b><small>botão direito</small></span>
+          </span>
+          <span class="attention-choice-note">Responda pela cor.</span>
+          <span class="attention-select">Selecionar <b aria-hidden="true">→</b></span>
+        </button>
+
+        <button class="attention-choice" data-mode="shapes">
+          <span class="attention-choice-tag">Regra fixa</span>
+          <strong>Formas</strong>
+          <span class="attention-map">
+            <span><i class="attention-shape is-circle" aria-hidden="true"></i><b>Círculo</b><small>botão esquerdo</small></span>
+            <span><i class="attention-shape is-triangle" aria-hidden="true"></i><b>Triângulo</b><small>botão direito</small></span>
+          </span>
+          <span class="attention-choice-note">Responda pela forma.</span>
+          <span class="attention-select">Selecionar <b aria-hidden="true">→</b></span>
+        </button>
+
+        <button class="attention-choice" data-mode="hard">
+          <span class="attention-choice-tag">Troca de regras</span>
+          <strong>Difícil</strong>
+          <span class="attention-steps">
+            <span><b>1</b>Observe a regra atual</span>
+            <span><b>2</b>Responda pela cor ou pela forma</span>
+          </span>
+          <span class="attention-choice-note">A regra fica visível durante a rodada.</span>
+          <span class="attention-select">Selecionar <b aria-hidden="true">→</b></span>
+        </button>
+      </div>
+
+      <div class="attention-facts" aria-label="Informações da partida">
+        <span><b aria-hidden="true">▥</b>12 rodadas</span>
+        <span><b aria-hidden="true">◷</b>0,7 s de estímulo</span>
+        <span><b aria-hidden="true">⌛</b>Até 4 s para responder</span>
+      </div>
+      <p class="attention-controls">Controles: botões na tela ou setas <kbd>←</kbd> <kbd>→</kbd></p>
+    </section>
+
+    <section id="play" class="attention-panel" hidden>
+      <div class="attention-stats"><div class="attention-stat"><small>Modo de jogo</small><strong id="mode-label"></strong></div><div class="attention-stat"><small>Rodada atual</small><strong id="progress"></strong></div><div class="attention-stat attention-stat-score"><small>Pontuação</small><strong id="score"></strong></div></div>
+      <div id="rule" class="attention-rule"><small>Regra da rodada</small><strong id="rule-label"></strong></div>
+      <div class="attention-stage"><span id="wait">Prepare-se</span><div id="symbol" class="attention-symbol" hidden></div></div>
+      <div class="attention-responses"><button id="left" disabled aria-keyshortcuts="ArrowLeft"><span class="response-arrow" aria-hidden="true">←</span><span class="response-copy"><strong></strong><small>Seta esquerda</small></span></button><button id="right" disabled aria-keyshortcuts="ArrowRight"><span class="response-copy"><strong></strong><small>Seta direita</small></span><span class="response-arrow" aria-hidden="true">→</span></button></div>
+      <p id="feedback" class="attention-feedback" role="status"></p>
+      <button id="stop" class="clinic-button secondary">Encerrar partida</button>
+    </section>
+
+    <section id="result" class="attention-panel" hidden>
+      <p class="clinic-kicker">Partida registrada</p><h2 id="result-title">Resultado</h2><p id="summary" class="attention-summary"></p>
+      <div class="clinic-actions"><button id="again" class="clinic-button">Jogar novamente</button><button id="change" class="clinic-button secondary">Escolher outro modo</button><a class="clinic-button secondary" href="/index.html">Trocar paciente ou jogo</a></div>
+    </section>
+  </main>
+  <script src="/clinic-local.js" defer></script><script src="/clinic.js" defer></script><script src="./script.js" defer></script>
+</body>
+</html>
