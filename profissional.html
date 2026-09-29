@@ -1,1 +1,56 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Histórico dos pacientes · Reability</title><link rel="stylesheet" href="/reability.css"><link rel="stylesheet" href="/clinic.css"></head><body><main class="clinic-shell"><p class="clinic-kicker">Acompanhamento</p><h1>Histórico dos pacientes</h1><p>Cada partida, cada resposta. Consulte os registros das suas sessões.</p><div class="clinic-actions"><a class="clinic-button" href="/index.html">Iniciar atendimento</a><button class="clinic-button secondary" id="refresh">Atualizar</button><button class="clinic-button secondary" id="export">Exportar partidas (CSV)</button><button class="clinic-button secondary" id="export-rounds">Exportar rodadas (CSV)</button></div><div class="clinic-filters"><label>Paciente<select id="patient-filter" class="clinic-filter"><option value="">Todos os pacientes</option></select></label><label>Jogo<select id="game-filter" class="clinic-filter"><option value="">Todos os jogos</option></select></label><label>De<input type="date" id="from" class="clinic-filter"></label><label>Até<input type="date" id="to" class="clinic-filter"></label></div><p id="history-error" class="clinic-error" role="alert"></p><p id="history-stats" class="clinic-stat" aria-live="polite">Carregando registros…</p><section class="clinic-card clinic-table-wrap"><table class="clinic-table"><thead><tr><th>Paciente / idade</th><th>Data</th><th>Jogo / nível</th><th>Rodadas</th><th>Resultado</th><th>Detalhes</th></tr></thead><tbody id="history-body"></tbody></table><p id="empty" hidden>Nenhuma partida encontrada. Escolha um jogo para começar.</p></section><p>“Em aberto” indica uma partida sem encerramento recebido. Os dados descrevem o desempenho no jogo.</p></main><dialog id="details" class="clinic-dialog clinic-detail" aria-labelledby="detail-heading"><header class="detail-header"><div><p class="clinic-kicker">Relatório da sessão</p><h2 id="detail-heading">Detalhes da partida</h2><div id="detail-title" class="detail-meta"></div></div><button id="close-details" class="detail-close" type="button" aria-label="Fechar detalhes" title="Fechar">×</button></header><section class="detail-summary-section" aria-labelledby="summary-heading"><h3 id="summary-heading">Resumo da partida</h3><div id="detail-summary" class="detail-summary"></div></section><section class="detail-rounds-section" aria-labelledby="rounds-heading"><div class="detail-section-heading"><div><h3 id="rounds-heading">Desempenho por rodada</h3><p>Respostas e estímulos registrados durante a partida.</p></div><span id="detail-round-count" class="detail-round-count"></span></div><div class="detail-round-labels" aria-hidden="true"><span>Rodada</span><span>Resposta</span><span>Tempo</span><span>Dados da rodada</span></div><div id="detail-rows" class="detail-round-list"></div></section><footer class="detail-footer"><button class="clinic-button js-close-details" type="button">Fechar relatório</button></footer></dialog><script src="/clinic-local.js" defer></script><script src="/clinic.js" defer></script><script src="/profissional.js" defer></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Histórico dos pacientes · Reability</title>
+  <link rel="stylesheet" href="/reability.css">
+  <link rel="stylesheet" href="/clinic.css">
+</head>
+<body>
+  <main class="clinic-shell">
+    <p class="clinic-kicker">Acompanhamento</p>
+    <h1>Histórico dos pacientes</h1>
+    <p>Cada partida, cada resposta. Consulte os registros das suas sessões.</p>
+
+    <div class="clinic-actions">
+      <a class="clinic-button" href="/index.html">Iniciar atendimento</a>
+      <button class="clinic-button secondary" id="refresh">Atualizar</button>
+    </div>
+
+    <div class="clinic-filters">
+      <label>Paciente<select id="patient-filter" class="clinic-filter"><option value="">Todos os pacientes</option></select></label>
+      <label>Jogo<select id="game-filter" class="clinic-filter"><option value="">Todos os jogos</option></select></label>
+      <label>De<input type="date" id="from" class="clinic-filter"></label>
+      <label>Até<input type="date" id="to" class="clinic-filter"></label>
+    </div>
+
+    <p id="history-error" class="clinic-error" role="alert"></p>
+    <p id="history-stats" class="clinic-stat" aria-live="polite">Carregando registros…</p>
+
+    <section class="clinic-card clinic-table-card">
+      <div class="history-selection" aria-live="polite">
+        <span id="selection-status">Selecione as partidas que deseja exportar.</span>
+        <button class="clinic-button secondary" id="export-selected" disabled>Exportar selecionadas (CSV)</button>
+      </div>
+      <div class="clinic-table-wrap">
+        <table class="clinic-table">
+          <thead><tr><th class="history-check"><input type="checkbox" id="select-all" aria-label="Selecionar todas as partidas visíveis"></th><th>Paciente / idade</th><th>Horário</th><th>Jogo / nível</th><th>Rodadas</th><th>Resultado</th><th>Ações</th></tr></thead>
+          <tbody id="history-body"></tbody>
+        </table>
+        <p id="empty" hidden>Nenhuma partida encontrada. Escolha um jogo para começar.</p>
+      </div>
+    </section>
+    <p>“Em aberto” indica uma partida sem encerramento recebido. Os dados descrevem o desempenho no jogo.</p>
+  </main>
+
+  <dialog id="details" class="clinic-dialog clinic-detail" aria-labelledby="detail-heading">
+    <header class="detail-header"><div><p class="clinic-kicker">Relatório da sessão</p><h2 id="detail-heading">Detalhes da partida</h2><div id="detail-title" class="detail-meta"></div></div><button id="close-details" class="detail-close" type="button" aria-label="Fechar detalhes" title="Fechar">×</button></header>
+    <section class="detail-summary-section" aria-labelledby="summary-heading"><h3 id="summary-heading">Resumo da partida</h3><div id="detail-summary" class="detail-summary"></div></section>
+    <section class="detail-rounds-section" aria-labelledby="rounds-heading"><div class="detail-section-heading"><div><h3 id="rounds-heading">Desempenho por rodada</h3><p>Respostas e estímulos registrados durante a partida.</p></div><span id="detail-round-count" class="detail-round-count"></span></div><div class="detail-round-labels" aria-hidden="true"><span>Rodada</span><span>Resposta</span><span>Tempo</span><span>Dados da rodada</span></div><div id="detail-rows" class="detail-round-list"></div></section>
+    <footer class="detail-footer"><button class="clinic-button js-close-details" type="button">Fechar relatório</button></footer>
+  </dialog>
+
+  <script src="/clinic-local.js" defer></script><script src="/clinic.js" defer></script><script src="/profissional.js" defer></script>
+</body>
+</html>

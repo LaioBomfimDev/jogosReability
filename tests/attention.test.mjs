@@ -66,3 +66,11 @@ test('tracking: 15 moving targets freeze, accept one answer and finish ten round
   }
   const finish=h.events.find(e=>e.type==='finish');assert.equal(finish.status,'completed');assert.equal(finish.data.correct+finish.data.errors,10);
 });
+
+test('tracking: difficulty choices are 10, 15 and 20; highest level creates 20 targets',async()=>{
+  const html=readFileSync(new URL('../jogo-rastreio-foco/index.html',import.meta.url),'utf8');
+  assert.deepEqual([...html.matchAll(/<option value="(\d+)">/g)].map(match=>Number(match[1])),[10,15,20]);
+  const h=harness('../jogo-rastreio-foco/script.js');h.get('count').value='20';await h.startTrack();
+  assert.equal(h.get('arena').children.length,20);
+  assert.deepEqual(h.events.find(event=>event.type==='start').args,['rastreio-foco','20']);
+});
