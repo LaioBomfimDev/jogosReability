@@ -7,7 +7,10 @@ function harness(file) {
   const elements=new Map(),handlers={},events=[];let now=0,serial=0;
   let seed=0x12345678;const seededMath=Object.create(Math);seededMath.random=()=>{seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;};
   const timers=new Map(),frames=new Map();
-  const element=()=>({hidden:false,disabled:false,textContent:'',dataset:{},style:{},value:'10',clientWidth:280,clientHeight:360,children:[],classList:{add(){},remove(){},toggle(){}},setAttribute(){},focus(){},append(e){this.children.push(e);},replaceChildren(){this.children=[];}});
+  const element=()=>{
+    const classes=new Set();
+    return {hidden:false,disabled:false,textContent:'',dataset:{},style:{},value:'10',clientWidth:280,clientHeight:360,children:[],classList:{add(...names){names.forEach(name=>classes.add(name));},remove(...names){names.forEach(name=>classes.delete(name));},toggle(name,force){if(force===true)classes.add(name);else if(force===false)classes.delete(name);else if(classes.has(name))classes.delete(name);else classes.add(name);},contains:name=>classes.has(name)},setAttribute(){},focus(){},append(e){this.children.push(e);},replaceChildren(){this.children=[];}};
+  };
   const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
   const choices=['colors','shapes','hard'].map(mode=>({...element(),dataset:{mode}}));
   const document={hidden:false,getElementById:get,querySelectorAll:()=>choices,createElement:element,addEventListener:(name,fn)=>handlers[name]=fn};
@@ -75,6 +78,28 @@ test('tracking: difficulty choices are 10, 15 and 20; highest level creates 20 t
   const h=harness('../jogo-rastreio-foco/script.js');h.get('count').value='20';await h.startTrack();
   assert.equal(h.get('arena').children.length,20);
   assert.deepEqual(h.events.find(event=>event.type==='start').args,['rastreio-foco','20']);
+});
+
+test('tracking: pieces follow straight paths between impacts',async()=>{
+  const h=harness('../jogo-rastreio-foco/script.js');await h.startTrack();
+  const points=()=>h.get('arena').children.map(e=>e.style.transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\)/).slice(1).map(Number));
+  const first=points();h.frame(16);const second=points();h.frame(16);const third=points();
+  for(let i=0;i<first.length;i++) {
+    assert.ok(Math.abs((second[i][0]-first[i][0])-(third[i][0]-second[i][0]))<1e-8);
+    assert.ok(Math.abs((second[i][1]-first[i][1])-(third[i][1]-second[i][1]))<1e-8);
+  }
+});
+
+test('tracking: target is never completely covered when movement freezes',async()=>{
+  const h=harness('../jogo-rastreio-foco/script.js');await h.startTrack();
+  const target=h.get('arena').children.find(e=>e.classList.contains('is-target'));
+  for(let frame=0;frame<10;frame++)h.frame(1000);
+  const point=e=>e.style.transform.match(/translate\(([-\d.]+)px,([-\d.]+)px\)/).slice(1).map(Number);
+  const [targetX,targetY]=point(target);
+  for(const piece of h.get('arena').children.filter(e=>e!==target)) {
+    const [x,y]=point(piece);
+    assert.ok(Math.abs(x-targetX)>=12||Math.abs(y-targetY)>=12,'target keeps a visible exposed area');
+  }
 });
 
 test('every game waits for player confirmation before starting',()=>{

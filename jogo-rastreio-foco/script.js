@@ -1,6 +1,6 @@
 (() => {
   const $=id=>document.getElementById(id), size=46;
-  let items=[],target=0,phase='idle',frame,round=0,correct=0,count=10,roundLimit=10,started,previous,trackingMs,freezeAt,run=0,chaosIn=0;
+  let items=[],target=0,phase='idle',frame,round=0,correct=0,count=10,roundLimit=10,started,previous,trackingMs,freezeAt,run=0;
   const paint=()=>items.forEach(p=>p.el.style.transform=`translate(${p.x}px,${p.y}px)`);
   const position=(width,height)=>{
     const maxX=width-size,maxY=height-size,gap=size+8;
@@ -11,30 +11,35 @@
     const cell=size+8,cols=Math.max(1,Math.floor(width/cell)),i=items.length;
     return {x:6+(i%cols)*Math.max(1,(maxX-12)/Math.max(1,cols-1)),y:6+Math.floor(i/cols)*cell};
   };
-  const limits=()=>count===10?{min:175,max:300,crowd:7}:count===15?{min:205,max:345,crowd:10}:{min:235,max:395,crowd:14};
-  const redirect=(p,angle=Math.random()*Math.PI*2,boost=1)=>{
-    const {min,max}=limits(),speed=(min+Math.random()*(max-min))*boost;
+  const limits=()=>count===10?{min:200,max:335}:count===15?{min:235,max:385}:{min:270,max:440};
+  const redirect=(p,angle=Math.random()*Math.PI*2)=>{
+    const {min,max}=limits(),speed=min+Math.random()*(max-min);
     p.vx=Math.cos(angle)*speed;p.vy=Math.sin(angle)*speed;
-    p.spin=(Math.random()-.5)*(4.2+count/12);
-    p.turnIn=55+Math.random()*150;
   };
-  const crowdBurst=(width,height)=>{
-    const {crowd}=limits();
-    const tracked=items[target];
-    if(Math.random()<.72)redirect(tracked,Math.random()*Math.PI*2,1.2+Math.random()*.35);
-    const anchor=Math.random()<.78
-      ?{x:tracked.x+tracked.vx*.18,y:tracked.y+tracked.vy*.18}
-      :Math.random()<.6?items[Math.floor(Math.random()*items.length)]:{x:Math.random()*(width-size),y:Math.random()*(height-size)};
-    const shuffled=items.filter(p=>p!==tracked).sort(()=>Math.random()-.5).slice(0,crowd);
-    shuffled.forEach((p,index)=>{
-      const angle=Math.atan2(anchor.y-p.y,anchor.x-p.x)+(Math.random()-.5)*.24;
-      redirect(p,angle,1.15+Math.random()*.48);
-      p.el.style.zIndex=String(5+index);
-    });
-    tracked.el.style.zIndex='1';
-    const escape=items[Math.floor(Math.random()*items.length)];
-    redirect(escape,Math.random()*Math.PI*2,1.35+Math.random()*.35);
-    chaosIn=140+Math.random()*300;
+  const rotate=(p,angle)=>{
+    const cos=Math.cos(angle),sin=Math.sin(angle),vx=p.vx*cos-p.vy*sin;
+    p.vy=p.vx*sin+p.vy*cos;p.vx=vx;
+  };
+  const bounceWall=(p,axis,side)=>{
+    if(axis==='x')p.vx=side*Math.abs(p.vx);else p.vy=side*Math.abs(p.vy);
+    rotate(p,(Math.random()-.5)*.36);
+    // The small random deflection must never point the piece back into the wall.
+    if(axis==='x')p.vx=side*Math.abs(p.vx);else p.vy=side*Math.abs(p.vy);
+  };
+  const protectTarget=(maxX,maxY)=>{
+    const tracked=items[target],exposure=12;
+    // Leave at least a visible strip of the tracked piece; partial overlaps remain allowed.
+    const clear=(x,y)=>items.every(p=>p===tracked||Math.abs(p.x-x)>=exposure||Math.abs(p.y-y)>=exposure);
+    if(clear(tracked.x,tracked.y))return;
+    const xs=[tracked.x,0,maxX],ys=[tracked.y,0,maxY];
+    for(let x=0;x<=maxX;x+=exposure)xs.push(x);
+    for(let y=0;y<=maxY;y+=exposure)ys.push(y);
+    let best=null;
+    for(const x of xs)for(const y of ys)if(clear(x,y)) {
+      const distance=(x-tracked.x)**2+(y-tracked.y)**2;
+      if(!best||distance<best.distance)best={x,y,distance};
+    }
+    if(best){tracked.x=best.x;tracked.y=best.y;}
   };
   function next() {
     if(round>=roundLimit){finish();return;}
@@ -46,44 +51,53 @@
     for(let i=0;i<count;i++) {
       const el=document.createElement('button');el.type='button';el.className='tracking-square';el.disabled=true;el.setAttribute('aria-label',`Quadrado ${i+1}`);el.style.zIndex=i===target?'1':String(2+Math.floor(Math.random()*4));if(i===target)el.classList.add('is-target');el.onclick=()=>answer(i);$('arena').append(el);
       const point=position(width,height);
-      const p={el,...point,vx:0,vy:0,spin:0,turnIn:0,hitUntil:0};
+      const p={el,...point,vx:0,vy:0,hitUntil:0};
       redirect(p);
       items.push(p);
     }
-    chaosIn=80+Math.random()*140;started=previous=performance.now();trackingMs=7000+Math.random()*2000;paint();frame=requestAnimationFrame(tick);
+    started=previous=performance.now();trackingMs=7000+Math.random()*2000;paint();frame=requestAnimationFrame(tick);
   }
   function tick(now) {
     if(phase!=='tracking')return;
     const dt=Math.min((now-previous)/1000,.04);previous=now;
     const maxX=$('arena').clientWidth-size,maxY=$('arena').clientHeight-size;
-    chaosIn-=dt*1000;if(chaosIn<=0)crowdBurst(maxX+size,maxY+size);
     for(const p of items) {
-      p.turnIn-=dt*1000;if(p.turnIn<=0)redirect(p);
-      const turn=p.spin*dt,cos=Math.cos(turn),sin=Math.sin(turn),vx=p.vx*cos-p.vy*sin;
-      p.vy=p.vx*sin+p.vy*cos;p.vx=vx;
       p.x+=p.vx*dt;p.y+=p.vy*dt;
-      if(p.x<0||p.x>maxX){p.x=Math.max(0,Math.min(maxX,p.x));redirect(p,Math.atan2(p.vy,-p.vx)+(Math.random()-.5)*.85,1.08);}
-      if(p.y<0||p.y>maxY){p.y=Math.max(0,Math.min(maxY,p.y));redirect(p,Math.atan2(-p.vy,p.vx)+(Math.random()-.5)*.85,1.08);}
+      if(p.x<0){p.x=0;bounceWall(p,'x',1);}
+      else if(p.x>maxX){p.x=maxX;bounceWall(p,'x',-1);}
+      if(p.y<0){p.y=0;bounceWall(p,'y',1);}
+      else if(p.y>maxY){p.y=maxY;bounceWall(p,'y',-1);}
     }
-    // Some encounters bounce and others cross, so the group can obstruct and overtake the target.
+    // Pieces keep a straight course and only receive a new, slightly random course on impact.
     for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++) {
       const a=items[i],b=items[j],dx=b.x-a.x,dy=b.y-a.y;
-      if(Math.abs(dx)<size*.92&&Math.abs(dy)<size*.92&&now>a.hitUntil&&now>b.hitUntil) {
-        a.hitUntil=b.hitUntil=now+110;
-        if(Math.random()<.46) {
-          const angle=Math.atan2(dy,dx),jolt=.55+Math.random()*.5;
-          redirect(a,angle+Math.PI+(Math.random()-.5)*1.25,jolt);
-          redirect(b,angle+(Math.random()-.5)*1.25,jolt);
+      const overlapX=size-Math.abs(dx),overlapY=size-Math.abs(dy);
+      if(overlapX>0&&overlapY>0&&now>a.hitUntil&&now>b.hitUntil) {
+        const horizontal=overlapX<overlapY;
+        const side=horizontal?(dx>=0?1:-1):(dy>=0?1:-1);
+        a.hitUntil=b.hitUntil=now+90;
+        if(horizontal) {
+          const shift=overlapX/2+.2;
+          a.x-=side*shift;b.x+=side*shift;
+          [a.vx,b.vx]=[b.vx,a.vx];
+          if(a.vx*side>0)a.vx*=-1;if(b.vx*side<0)b.vx*=-1;
         } else {
-          a.spin*=-1.7;b.spin*=-1.7;
-          a.el.style.zIndex=String(2+Math.floor(Math.random()*8));
-          b.el.style.zIndex=String(2+Math.floor(Math.random()*8));
+          const shift=overlapY/2+.2;
+          a.y-=side*shift;b.y+=side*shift;
+          [a.vy,b.vy]=[b.vy,a.vy];
+          if(a.vy*side>0)a.vy*=-1;if(b.vy*side<0)b.vy*=-1;
         }
+        rotate(a,(Math.random()-.5)*.28);rotate(b,(Math.random()-.5)*.28);
+        if(horizontal){a.vx=-side*Math.abs(a.vx);b.vx=side*Math.abs(b.vx);}
+        else{a.vy=-side*Math.abs(a.vy);b.vy=side*Math.abs(b.vy);}
+        a.el.style.zIndex=String(2+Math.floor(Math.random()*8));
+        b.el.style.zIndex=String(2+Math.floor(Math.random()*8));
       }
     }
     for(const p of items){p.x=Math.max(0,Math.min(maxX,p.x));p.y=Math.max(0,Math.min(maxY,p.y));}
     paint();
     if(now-started>=trackingMs) {
+      protectTarget(maxX,maxY);paint();
       phase='answer';freezeAt=performance.now();ReabilityClinic.mark();
       items.forEach(p=>{p.el.classList.remove('is-target');p.el.disabled=false;});
       $('instruction').textContent='Onde estava o quadrado dourado?';$('feedback').textContent='Escolha um dos quadrados.';
