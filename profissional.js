@@ -5,10 +5,16 @@
   const $=id=>document.getElementById(id); let rows=[]; const selectedIds=new Set();
   const date=value=>new Date(value).toLocaleString('pt-BR');
   const time=value=>new Date(value).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const detailDateTime=value=>{
+    const parsed=new Date(value);
+    const day=new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'}).format(parsed);
+    return `${day} · ${time(value)}`;
+  };
   const localDay=value=>{const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const dayLabel=value=>{const text=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(new Date(`${value}T12:00:00`));return text.charAt(0).toUpperCase()+text.slice(1);};
   const selected=()=>rows.filter(r=>(!$('patient-filter').value||r.patient_id===$('patient-filter').value)&&(!$('game-filter').value||r.game===$('game-filter').value)&&(!$('from').value||localDay(r.started_at)>=$('from').value)&&(!$('to').value||localDay(r.started_at)<=$('to').value));
   const cell=(tr,value,label)=>{ const td=document.createElement('td');td.textContent=value;if(label)td.dataset.label=label;tr.append(td);return td; };
+  const summaryCell=(tr,label,primary,secondary,className='')=>{const td=cell(tr,'',label);if(className)td.className=className;appendText(td,'strong',primary,'history-primary');if(secondary)appendText(td,'span',secondary,'history-secondary');return td;};
   const result=data=>data.outcome==='omission'?'Sem resposta':data.correct===true?'Acerto':data.correct===false?'Erro':'Movimento';
   const metricNames={score:'Pontos',correct:'Acertos',errors:'Erros',omissions:'Sem resposta',attempts:'Tentativas',matches:'Pares',moves:'Movimentos',won:'Concluiu o objetivo',correctAnswers:'Respostas corretas',solved:'Palavras resolvidas',perfect:'Pulsos perfeitos',good:'Pulsos bons',miss:'Pulsos perdidos',maxCombo:'Maior combo',correctSlots:'Peças corretas',durationMs:'Duração (ms)',rounds:'Rodadas',status:'Situação',responseMs:'Tempo de resposta (ms)',action:'Ação',outcome:'Resultado',response:'Resposta',expected:'Esperado',guess:'Palpite',rule:'Regra',color:'Cor',shape:'Forma',switched:'Houve troca de regra',trackingMs:'Tempo de acompanhamento (ms)',target:'Alvo',chosen:'Selecionado',count:'Quadrados',round:'Rodada',selected:'Selecionado',answer:'Resposta esperada',modifier:'Mecânica',newMatches:'Novas peças corretas',lostMatches:'Peças retiradas do lugar certo',lane:'Pista',timingErrorMs:'Desvio do pulso (ms)',elapsedMs:'Tempo de jogo (ms)',hits:'Pulsos',age:'Idade',game:'Jogo',level:'Nível'};
   const values={left:'Esquerda',right:'Direita',blue:'Azul',green:'Verde',circle:'Círculo',triangle:'Triângulo',color:'Cor',shape:'Forma',omission:'Sem resposta',error:'Erro',correct:'Acerto',move:'Movimento',early_or_late:'Fora da janela de resposta'};
@@ -16,6 +22,24 @@
   const describe=data=>Object.entries(data).map(([k,v])=>`${k==='correct'&&typeof v==='boolean'?'Acertou':metricNames[k]||k}: ${k==='status'?(statuses[v]||v):readable(v)}`).join('\n');
   const resultTone=data=>data.outcome==='omission'?'warning':data.correct===true?'success':data.correct===false?'danger':'';
   const appendText=(parent,tag,text,className)=>{const element=document.createElement(tag);element.textContent=text;if(className)element.className=className;parent.append(element);return element;};
+  const detailIcons={
+    patient:['M20 21a8 8 0 0 0-16 0','M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8'],
+    age:['M4 14h16v7H4z','M4 18c2 0 2-2 4-2s2 2 4 2 2-2 4-2 2 2 4 2','M8 14v-3h8v3','M9 8V6','M12 8V5','M15 8V6'],
+    game:['M8.5 12h-3','M7 10.5v3','M15 11h.01','M18 13h.01','M6.5 7h11a4 4 0 0 1 3.8 5.2l-1.4 5a2.5 2.5 0 0 1-4.2 1.1L14 16h-4l-1.7 2.3a2.5 2.5 0 0 1-4.2-1.1l-1.4-5A4 4 0 0 1 6.5 7Z'],
+    calendar:['M8 3v4','M16 3v4','M3 10h18','M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2','M12 14v3l2 1']
+  };
+  const detailIcon=name=>{
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');
+    for(const d of detailIcons[name]) {const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',d);svg.append(path);}
+    return svg;
+  };
+  const detailInfo=(label,value,icon)=>{
+    const item=document.createElement('div');item.className='detail-meta-item';
+    const iconBox=document.createElement('span');iconBox.className='detail-meta-icon';iconBox.append(detailIcon(icon));
+    appendText(item,'span',label,'detail-meta-label');appendText(item,'strong',value,'detail-meta-value');item.prepend(iconBox);
+    return item;
+  };
   const performanceFrom=rounds=>{
     const attempts=rounds.length;
     const correct=rounds.filter(event=>event.data?.correct===true&&event.data?.outcome!=='omission').length;
@@ -39,9 +63,9 @@
     $('select-all').indeterminate=selectedVisible>0&&selectedVisible<visible.length;
     $('export-selected').disabled=selectedIds.size===0;
     $('delete-selected').disabled=selectedIds.size===0;
-    $('export-selected').textContent=selectedIds.size?`Exportar selecionadas (${selectedIds.size})`:'Exportar selecionadas (CSV)';
-    $('delete-selected').textContent=selectedIds.size?`Apagar selecionadas (${selectedIds.size})`:'Apagar selecionadas';
-    $('selection-status').textContent=selectedIds.size===0?'Selecione partidas para exportar ou apagar.':`${selectedIds.size} ${selectedIds.size===1?'partida selecionada':'partidas selecionadas'}.`;
+    $('export-selected').textContent=selectedIds.size?`Exportar CSV (${selectedIds.size})`:'Exportar CSV';
+    $('delete-selected').textContent=selectedIds.size?`Apagar (${selectedIds.size})`:'Apagar';
+    $('selection-status').textContent=selectedIds.size===0?'Nenhuma partida selecionada.':`${selectedIds.size} ${selectedIds.size===1?'partida selecionada':'partidas selecionadas'}.`;
     document.querySelectorAll('.history-day-check').forEach(checkbox=>{
       const matches=visible.filter(r=>localDay(r.started_at)===checkbox.dataset.day), count=matches.filter(r=>selectedIds.has(r.id)).length;
       checkbox.checked=matches.length>0&&count===matches.length;checkbox.indeterminate=count>0&&count<matches.length;
@@ -50,10 +74,12 @@
   async function details(id) {
     try {
       const m=await ReabilityClinic.api('/api/matches/'+id);
-      const patient=document.createElement('span');appendText(patient,'strong',m.patient_name);patient.append(`, ${m.patient_age} anos`);
-      const game=document.createElement('span');game.textContent=names[m.game]||m.game;
-      const started=document.createElement('span');started.textContent=date(m.started_at);
-      $('detail-title').replaceChildren(patient,game,started);
+      $('detail-title').replaceChildren(
+        detailInfo('Paciente',m.patient_name,'patient'),
+        detailInfo('Idade',`${m.patient_age} anos`,'age'),
+        detailInfo('Jogo',names[m.game]||m.game,'game'),
+        detailInfo('Data e horário',detailDateTime(m.started_at),'calendar')
+      );
       const rounds=m.events.filter(e=>e.kind==='round');
       const performance=performanceFrom(rounds), feedback=performanceFeedback(performance);
       const summary=document.createDocumentFragment();
@@ -105,10 +131,14 @@
       }
       const tr=document.createElement('tr');
       const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=selectedIds.has(r.id);checkbox.setAttribute('aria-label',`Selecionar partida de ${r.patient_name} em ${date(r.started_at)}`);checkbox.onchange=()=>{if(checkbox.checked)selectedIds.add(r.id);else selectedIds.delete(r.id);updateSelection();};cell(tr,'').className='history-check';tr.firstChild.append(checkbox);
-      cell(tr,`${r.patient_name} · ${r.patient_age} anos`,'Paciente');cell(tr,time(r.started_at),'Horário');cell(tr,`${names[r.game]||r.game} · ${levels[r.level]||r.level}`,'Jogo / nível');cell(tr,r.rounds,'Rodadas');cell(tr,statuses[r.status],'Resultado');
+      summaryCell(tr,'Paciente',r.patient_name,`${r.patient_age} anos`,'history-patient');
+      summaryCell(tr,'Horário',time(r.started_at),'','history-time');
+      summaryCell(tr,'Jogo',names[r.game]||r.game,levels[r.level]||r.level,'history-game');
+      summaryCell(tr,'Rodadas',r.rounds,'','history-rounds');
+      const statusCell=cell(tr,'','Resultado');const status=document.createElement('strong');status.className='history-status';status.dataset.status=r.status;status.textContent=statuses[r.status]||r.status;statusCell.append(status);
       const actions=document.createElement('div');actions.className='history-row-actions';
-      const view=document.createElement('button');view.type='button';view.textContent='Ver rodadas';view.onclick=()=>details(r.id);
-      const exportButton=document.createElement('button');exportButton.type='button';exportButton.textContent='Exportar CSV';exportButton.className='history-export';exportButton.onclick=()=>exportRounds([r],exportButton);
+      const view=document.createElement('button');view.type='button';view.textContent='Ver detalhes';view.setAttribute('aria-label',`Ver detalhes da partida de ${r.patient_name}`);view.onclick=()=>details(r.id);
+      const exportButton=document.createElement('button');exportButton.type='button';exportButton.textContent='CSV';exportButton.setAttribute('aria-label',`Exportar CSV da partida de ${r.patient_name}`);exportButton.className='history-export';exportButton.onclick=()=>exportRounds([r],exportButton);
       actions.append(view,exportButton);cell(tr,'','Ações').append(actions);$('history-body').append(tr);
     }
     updateSelection();

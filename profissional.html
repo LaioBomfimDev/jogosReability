@@ -11,7 +11,7 @@
   <main class="clinic-shell">
     <p class="clinic-kicker">Acompanhamento</p>
     <h1>Histórico dos pacientes</h1>
-    <p>Cada partida, cada resposta. Consulte os registros das suas sessões.</p>
+    <p>Consulte partidas, resultados e rodadas de cada paciente.</p>
 
     <div class="clinic-actions">
       <a class="clinic-button" href="/index.html">Iniciar atendimento</a>
@@ -32,15 +32,16 @@
       <div class="history-selection" aria-live="polite">
         <div class="history-selection-copy">
           <label class="history-select-all"><input type="checkbox" id="select-all" aria-label="Selecionar todas as partidas visíveis"><span>Selecionar partidas visíveis</span></label>
-          <span id="selection-status">Selecione partidas para exportar ou apagar.</span>
+          <span id="selection-status">Nenhuma partida selecionada.</span>
         </div>
         <div class="history-selection-actions">
-          <button class="clinic-button history-export-selected" id="export-selected" disabled>Exportar selecionadas (CSV)</button>
-          <button class="clinic-button history-delete-selected" id="delete-selected" disabled>Apagar selecionadas</button>
+          <button class="clinic-button history-export-selected" id="export-selected" disabled>Exportar CSV</button>
+          <button class="clinic-button history-delete-selected" id="delete-selected" disabled>Apagar</button>
         </div>
       </div>
       <div class="clinic-table-wrap">
-        <table class="clinic-table">
+        <table class="clinic-table" aria-label="Partidas dos pacientes">
+          <colgroup><col class="history-col-check"><col class="history-col-patient"><col class="history-col-time"><col class="history-col-game"><col class="history-col-rounds"><col class="history-col-result"><col class="history-col-actions"></colgroup>
           <thead><tr><th class="history-check" aria-label="Seleção"></th><th>Paciente / idade</th><th>Horário</th><th>Jogo / nível</th><th>Rodadas</th><th>Resultado</th><th>Ações</th></tr></thead>
           <tbody id="history-body"></tbody>
         </table>
@@ -51,7 +52,7 @@
   </main>
 
   <dialog id="details" class="clinic-dialog clinic-detail" aria-labelledby="detail-heading">
-    <header class="detail-header"><div><p class="clinic-kicker">Relatório da sessão</p><h2 id="detail-heading">Detalhes da partida</h2><div id="detail-title" class="detail-meta"></div></div><button id="close-details" class="detail-close" type="button" aria-label="Fechar detalhes" title="Fechar">×</button></header>
+    <header class="detail-header"><div class="detail-header-copy"><p class="clinic-kicker">Relatório da sessão</p><h2 id="detail-heading">Detalhes da partida</h2><div id="detail-title" class="detail-meta" aria-label="Informações da partida"></div></div><button id="close-details" class="detail-close" type="button" aria-label="Fechar detalhes" title="Fechar">×</button></header>
     <section class="detail-summary-section" aria-labelledby="summary-heading"><h3 id="summary-heading">Resumo da partida</h3><div id="detail-summary" class="detail-summary"></div></section>
     <section class="detail-rounds-section" aria-labelledby="rounds-heading"><div class="detail-section-heading"><div><h3 id="rounds-heading">Desempenho por rodada</h3><p>Respostas e estímulos registrados durante a partida.</p></div><span id="detail-round-count" class="detail-round-count"></span></div><div class="detail-round-labels" aria-hidden="true"><span>Rodada</span><span>Resposta</span><span>Tempo</span><span>Dados da rodada</span></div><div id="detail-rows" class="detail-round-list"></div></section>
     <footer class="detail-footer"><button class="clinic-button js-close-details" type="button">Fechar relatório</button></footer>
