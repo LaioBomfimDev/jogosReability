@@ -8,17 +8,30 @@
   const localDay=value=>{const d=new Date(value);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
   const dayLabel=value=>{const text=new Intl.DateTimeFormat('pt-BR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'}).format(new Date(`${value}T12:00:00`));return text.charAt(0).toUpperCase()+text.slice(1);};
   const selected=()=>rows.filter(r=>(!$('patient-filter').value||r.patient_id===$('patient-filter').value)&&(!$('game-filter').value||r.game===$('game-filter').value)&&(!$('from').value||localDay(r.started_at)>=$('from').value)&&(!$('to').value||localDay(r.started_at)<=$('to').value));
-  const cell=(tr,value)=>{ const td=document.createElement('td');td.textContent=value;tr.append(td);return td; };
+  const cell=(tr,value,label)=>{ const td=document.createElement('td');td.textContent=value;if(label)td.dataset.label=label;tr.append(td);return td; };
   const result=data=>data.outcome==='omission'?'Sem resposta':data.correct===true?'Acerto':data.correct===false?'Erro':'Movimento';
   const metricNames={score:'Pontos',correct:'Acertos',errors:'Erros',omissions:'Sem resposta',attempts:'Tentativas',matches:'Pares',moves:'Movimentos',won:'Concluiu o objetivo',correctAnswers:'Respostas corretas',solved:'Palavras resolvidas',perfect:'Pulsos perfeitos',good:'Pulsos bons',miss:'Pulsos perdidos',maxCombo:'Maior combo',correctSlots:'Peças corretas',durationMs:'Duração (ms)',rounds:'Rodadas',status:'Situação',responseMs:'Tempo de resposta (ms)',action:'Ação',outcome:'Resultado',response:'Resposta',expected:'Esperado',guess:'Palpite',rule:'Regra',color:'Cor',shape:'Forma',switched:'Houve troca de regra',trackingMs:'Tempo de acompanhamento (ms)',target:'Alvo',chosen:'Selecionado',count:'Quadrados',round:'Rodada',selected:'Selecionado',answer:'Resposta esperada',modifier:'Mecânica',newMatches:'Novas peças corretas',lostMatches:'Peças retiradas do lugar certo',lane:'Pista',timingErrorMs:'Desvio do pulso (ms)',elapsedMs:'Tempo de jogo (ms)',hits:'Pulsos',age:'Idade',game:'Jogo',level:'Nível'};
-  const configNames={rounds:'Rodadas configuradas',totalRounds:'Rodadas configuradas',stimulusMs:'Exibição do estímulo (ms)',responseMs:'Tempo de resposta (ms)',trackingMs:'Acompanhamento (ms)',speed:'Velocidade',count:'Elementos',pairs:'Pares',timeLimitSeconds:'Limite de tempo (s)',timeLimitMs:'Limite de tempo (ms)',revealTimeMs:'Exibição após erro (ms)',maxAttempts:'Limite de tentativas',limit:'Intervalo máximo',gridSize:'Tamanho da grade',durationSeconds:'Duração (s)',bpm:'BPM',attempts:'Tentativas',boards:'Tabuleiros',sound:'Som'};
   const values={left:'Esquerda',right:'Direita',blue:'Azul',green:'Verde',circle:'Círculo',triangle:'Triângulo',color:'Cor',shape:'Forma',omission:'Sem resposta',error:'Erro',correct:'Acerto',move:'Movimento',early_or_late:'Fora da janela de resposta'};
   const readable=value=>typeof value==='boolean'?(value?'Sim':'Não'):value===null?'—':typeof value==='object'?JSON.stringify(value):(values[value]||String(value));
   const describe=data=>Object.entries(data).map(([k,v])=>`${k==='correct'&&typeof v==='boolean'?'Acertou':metricNames[k]||k}: ${k==='status'?(statuses[v]||v):readable(v)}`).join('\n');
-  const duration=value=>{const seconds=Math.round(Number(value)/100)/10;if(!Number.isFinite(seconds))return readable(value);return seconds<60?`${seconds.toLocaleString('pt-BR')} s`:`${Math.floor(seconds/60)} min ${Math.round(seconds%60)} s`;};
-  const summaryTone=key=>key==='correct'?'success':key==='errors'?'danger':key==='omissions'?'warning':key==='status'?'status':'';
   const resultTone=data=>data.outcome==='omission'?'warning':data.correct===true?'success':data.correct===false?'danger':'';
   const appendText=(parent,tag,text,className)=>{const element=document.createElement(tag);element.textContent=text;if(className)element.className=className;parent.append(element);return element;};
+  const performanceFrom=rounds=>{
+    const attempts=rounds.length;
+    const correct=rounds.filter(event=>event.data?.correct===true&&event.data?.outcome!=='omission').length;
+    const omissions=rounds.filter(event=>event.data?.outcome==='omission').length;
+    const errors=rounds.filter(event=>event.data?.correct===false&&event.data?.outcome!=='omission').length;
+    return {attempts,correct,errors,omissions};
+  };
+  const performanceFeedback=performance=>{
+    const evaluated=performance.correct+performance.errors+performance.omissions;
+    if(!performance.attempts)return {tone:'status',title:'Sem dados para avaliar',text:'Nenhuma tentativa foi registrada nesta partida.'};
+    if(!evaluated)return {tone:'status',title:'Sem classificação de desempenho',text:'Esta atividade registrou movimentos, mas não classificou as tentativas como acerto, erro ou sem resposta.'};
+    const accuracy=performance.correct/evaluated, omissionRate=performance.omissions/evaluated;
+    if(accuracy>=.7&&omissionRate<=.2)return {tone:'success',title:'Foi bem',text:'A maioria das tentativas terminou em acerto, com poucas respostas ausentes.'};
+    if(accuracy<.4||omissionRate>=.5)return {tone:'danger',title:'Abaixo do esperado',text:performance.omissions>=performance.errors?'Houve muitas tentativas sem resposta. Vale observar se o tempo ou a dificuldade estavam adequados.':'Os erros foram mais frequentes que os acertos. Vale ajustar a dificuldade e acompanhar a próxima partida.'};
+    return {tone:'warning',title:'Desempenho mediano',text:'O resultado ficou entre acertos e dificuldades. A próxima partida pode ajudar a confirmar esse padrão.'};
+  };
   function updateSelection() {
     const visible=selected(), selectedVisible=visible.filter(r=>selectedIds.has(r.id)).length;
     $('select-all').disabled=!visible.length;
@@ -28,7 +41,7 @@
     $('delete-selected').disabled=selectedIds.size===0;
     $('export-selected').textContent=selectedIds.size?`Exportar selecionadas (${selectedIds.size})`:'Exportar selecionadas (CSV)';
     $('delete-selected').textContent=selectedIds.size?`Apagar selecionadas (${selectedIds.size})`:'Apagar selecionadas';
-    $('selection-status').textContent=selectedIds.size===0?'Selecione as partidas que deseja exportar.':`${selectedIds.size} ${selectedIds.size===1?'partida selecionada':'partidas selecionadas'}.`;
+    $('selection-status').textContent=selectedIds.size===0?'Selecione partidas para exportar ou apagar.':`${selectedIds.size} ${selectedIds.size===1?'partida selecionada':'partidas selecionadas'}.`;
     document.querySelectorAll('.history-day-check').forEach(checkbox=>{
       const matches=visible.filter(r=>localDay(r.started_at)===checkbox.dataset.day), count=matches.filter(r=>selectedIds.has(r.id)).length;
       checkbox.checked=matches.length>0&&count===matches.length;checkbox.indeterminate=count>0&&count<matches.length;
@@ -41,22 +54,18 @@
       const game=document.createElement('span');game.textContent=names[m.game]||m.game;
       const started=document.createElement('span');started.textContent=date(m.started_at);
       $('detail-title').replaceChildren(patient,game,started);
+      const rounds=m.events.filter(e=>e.kind==='round');
+      const performance=performanceFrom(rounds), feedback=performanceFeedback(performance);
       const summary=document.createDocumentFragment();
-      const priority=['score','correct','errors','omissions','durationMs','rounds','status'];
-      const entries=Object.entries(m.summary||{}).sort(([a],[b])=>{const ai=priority.indexOf(a),bi=priority.indexOf(b);return (ai<0?priority.length:ai)-(bi<0?priority.length:bi);});
-      for(const [key,value] of entries) {
-        const metric=document.createElement('div');metric.className='detail-metric';metric.dataset.tone=summaryTone(key);
-        appendText(metric,'span',metricNames[key]||key);
-        appendText(metric,'strong',key==='durationMs'?duration(value):key==='status'?(statuses[value]||value):readable(value));
+      for(const [key,label,tone] of [['attempts','Tentativas',''],['correct','Acertos','success'],['errors','Erros','danger'],['omissions','Sem resposta','warning']]) {
+        const metric=document.createElement('div');metric.className='detail-metric';metric.dataset.tone=tone;
+        appendText(metric,'span',label);
+        appendText(metric,'strong',performance[key]);
         summary.append(metric);
       }
-      const startConfig=m.events.find(event=>event.kind==='start')?.data?.config;
-      if(startConfig&&typeof startConfig==='object')for(const [key,value] of Object.entries(startConfig)){
-        const metric=document.createElement('div');metric.className='detail-metric';metric.dataset.tone='status';
-        appendText(metric,'span',configNames[key]||metricNames[key]||key);appendText(metric,'strong',readable(value));summary.append(metric);
-      }
+      const feedbackBox=document.createElement('div');feedbackBox.className='detail-feedback';feedbackBox.dataset.tone=feedback.tone;
+      appendText(feedbackBox,'span','Feedback');appendText(feedbackBox,'strong',feedback.title);appendText(feedbackBox,'p',feedback.text);summary.append(feedbackBox);
       $('detail-summary').replaceChildren(summary);
-      const rounds=m.events.filter(e=>e.kind==='round');
       $('detail-round-count').textContent=`${rounds.length} ${rounds.length===1?'rodada':'rodadas'}`;
       const roundList=document.createDocumentFragment();
       rounds.forEach((e,index)=>{
@@ -96,11 +105,11 @@
       }
       const tr=document.createElement('tr');
       const checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.checked=selectedIds.has(r.id);checkbox.setAttribute('aria-label',`Selecionar partida de ${r.patient_name} em ${date(r.started_at)}`);checkbox.onchange=()=>{if(checkbox.checked)selectedIds.add(r.id);else selectedIds.delete(r.id);updateSelection();};cell(tr,'').className='history-check';tr.firstChild.append(checkbox);
-      cell(tr,`${r.patient_name} · ${r.patient_age} anos`);cell(tr,time(r.started_at));cell(tr,`${names[r.game]||r.game} · ${levels[r.level]||r.level}`);cell(tr,r.rounds);cell(tr,statuses[r.status]);
+      cell(tr,`${r.patient_name} · ${r.patient_age} anos`,'Paciente');cell(tr,time(r.started_at),'Horário');cell(tr,`${names[r.game]||r.game} · ${levels[r.level]||r.level}`,'Jogo / nível');cell(tr,r.rounds,'Rodadas');cell(tr,statuses[r.status],'Resultado');
       const actions=document.createElement('div');actions.className='history-row-actions';
       const view=document.createElement('button');view.type='button';view.textContent='Ver rodadas';view.onclick=()=>details(r.id);
       const exportButton=document.createElement('button');exportButton.type='button';exportButton.textContent='Exportar CSV';exportButton.className='history-export';exportButton.onclick=()=>exportRounds([r],exportButton);
-      actions.append(view,exportButton);cell(tr,'').append(actions);$('history-body').append(tr);
+      actions.append(view,exportButton);cell(tr,'','Ações').append(actions);$('history-body').append(tr);
     }
     updateSelection();
   }

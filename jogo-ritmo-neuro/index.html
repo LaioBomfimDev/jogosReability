@@ -16,24 +16,33 @@
     <link rel="stylesheet" href="../reability.css" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="/clinic.css" />
+    <link rel="stylesheet" href="/game-shell.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="game-card" aria-labelledby="game-title">
-        <div class="game-navigation">
-          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
-          <div class="brand-lock" aria-label="Reability">
-            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
-            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+        <header class="game-hero">
+          <div class="game-navigation">
+            <a class="back-link" href="../index.html">← Biblioteca</a>
+            <div class="brand-lock" aria-label="Reability">
+              <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="" />
+              <p class="brand-name">Reability<small>Jogos cognitivos</small></p>
+            </div>
           </div>
-        </div>
-
-        <p class="eyebrow">Atenção e tempo de resposta</p>
-        <h1 id="game-title">Ritmo em Foco</h1>
-        <p class="intro">
-          Toque quando o pulso chegar à linha. Treine foco, coordenação e ritmo em partidas curtas.
-          Este é um desafio recreativo — não é uma avaliação clínica.
-        </p>
+          <div class="game-hero__body">
+            <div class="game-hero__copy">
+              <div class="game-hero__meta">
+                <span class="game-hero__number">Jogo 10</span>
+                <p class="eyebrow">Atenção e tempo de resposta</p>
+              </div>
+              <h1 id="game-title">Ritmo em Foco</h1>
+              <p class="intro">Toque quando o pulso chegar à linha e mantenha o ritmo nas quatro pistas.</p>
+            </div>
+            <div class="game-hero__visual" aria-hidden="true">
+              <img src="../assets/games/ritmo-em-foco.svg" alt="" />
+            </div>
+          </div>
+        </header>
 
         <section id="level-screen" class="level-screen" data-game-screen aria-labelledby="level-title">
           <h2 id="level-title">Configure a partida</h2>

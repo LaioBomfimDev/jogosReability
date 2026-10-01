@@ -7,12 +7,32 @@
   <link rel="stylesheet" href="/reability.css">
   <link rel="stylesheet" href="/clinic.css">
   <link rel="stylesheet" href="/attention-games.css">
+  <link rel="stylesheet" href="/game-shell.css">
 </head>
 <body>
   <main class="attention-shell">
-    <p class="clinic-kicker">Atenção · Acompanhamento visual</p>
-    <h1>Siga o Foco</h1>
-    <p class="attention-lead">Acompanhe o quadrado dourado enquanto todos se movem. Quando pararem e ficarem iguais, encontre o que você estava seguindo.</p>
+    <header class="game-hero">
+      <div class="game-navigation">
+        <a class="back-link" href="/index.html">← Biblioteca</a>
+        <div class="brand-lock" aria-label="Reability">
+          <img class="brand-mark" src="/assets/brand/logo-mark.png" alt="" />
+          <p class="brand-name">Reability<small>Jogos cognitivos</small></p>
+        </div>
+      </div>
+      <div class="game-hero__body">
+        <div class="game-hero__copy">
+          <div class="game-hero__meta">
+            <span class="game-hero__number">Jogo 02</span>
+            <p class="eyebrow">Atenção · Acompanhamento visual</p>
+          </div>
+          <h1>Siga o Foco</h1>
+          <p class="attention-lead">Acompanhe o quadrado dourado enquanto todos se movem. Quando pararem e ficarem iguais, encontre o alvo que você estava seguindo.</p>
+        </div>
+        <div class="game-hero__visual" aria-hidden="true">
+          <img src="/assets/games/home/siga-o-foco-960.jpg" alt="" />
+        </div>
+      </div>
+    </header>
     <section id="setup" class="attention-panel" data-game-screen>
       <p class="attention-section-kicker">Configuração profissional</p>
       <h2>Prepare a partida</h2>
@@ -35,7 +55,11 @@
             <small>Ajusta a velocidade sem mudar a quantidade de peças.</small>
           </label>
         </div>
-        <p class="attention-help">O alvo mantém a cor dourada até a parada. Depois, escolha um quadrado com o mouse ou toque; também é possível usar Tab e Enter.</p>
+        <aside class="attention-help" aria-labelledby="patient-explanation-title">
+          <strong id="patient-explanation-title">Como explicar para o paciente</strong>
+          <p>“Vamos acompanhar o quadrado dourado? Siga-o com os olhos enquanto ele se movimenta. Quando todos pararem e ficarem da mesma cor, toque ou clique naquele que você estava seguindo.”</p>
+          <small>No computador, também é possível usar a tecla Tab para escolher e Enter para confirmar.</small>
+        </aside>
         <button class="clinic-button">Começar a acompanhar</button>
       </form>
     </section>

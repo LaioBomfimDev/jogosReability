@@ -16,26 +16,37 @@
     <link rel="stylesheet" href="../reability.css" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="/clinic.css" />
+    <link rel="stylesheet" href="/game-shell.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="game-card" aria-labelledby="game-title">
-        <div class="game-navigation">
-          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
-          <div class="brand-lock" aria-label="Reability">
-            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
-            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+        <header class="game-hero">
+          <div class="game-navigation">
+            <a class="back-link" href="../index.html">← Biblioteca</a>
+            <div class="brand-lock" aria-label="Reability">
+              <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="" />
+              <p class="brand-name">Reability<small>Jogos cognitivos</small></p>
+            </div>
           </div>
-        </div>
-        <p class="eyebrow">Cuidado, ciência e humanidade</p>
-        <h1 id="game-title">Lógica Numérica</h1>
-        <p class="intro">
-          Descubra o número secreto, acompanhe seus palpites enviados e use as pistas de maior/menor para ajustar a próxima tentativa.
-        </p>
-        <div class="game-highlights" aria-label="Destaques da Lógica Numérica">
-          <span>Palpites enviados</span>
-          <span>Pistas maior/menor</span>
-        </div>
+          <div class="game-hero__body">
+            <div class="game-hero__copy">
+              <div class="game-hero__meta">
+                <span class="game-hero__number">Jogo 04</span>
+                <p class="eyebrow">Lógica e estratégia</p>
+              </div>
+              <h1 id="game-title">Lógica Numérica</h1>
+              <p class="intro">Descubra o número secreto e use as pistas de maior ou menor para ajustar cada tentativa.</p>
+              <div class="game-highlights" aria-label="Destaques da Lógica Numérica">
+                <span>Histórico de palpites</span>
+                <span>Pistas maior/menor</span>
+              </div>
+            </div>
+            <div class="game-hero__visual" aria-hidden="true">
+              <img src="../assets/games/home/logica-numerica-960.jpg" alt="" />
+            </div>
+          </div>
+        </header>
 
         <section id="difficulty-screen" class="difficulty-screen" data-game-screen aria-labelledby="difficulty-title">
           <h2 id="difficulty-title">Configure a partida</h2>

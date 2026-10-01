@@ -29,3 +29,42 @@
 @keyframes attention-rule-pulse{0%,100%{box-shadow:inset 0 0 45px rgba(6,27,49,.07)}50%{box-shadow:inset 0 0 45px rgba(168,149,76,.2),0 0 0 5px rgba(168,149,76,.14)}}
 @media(max-width:900px){.attention-stats{grid-template-columns:repeat(2,minmax(0,1fr));padding-right:0}.attention-sound{position:static;width:100%;margin:10px 0}.attention-stat:first-child{grid-column:auto}}
 @media(max-width:700px){.attention-choice.is-selected{transform:none}.attention-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.attention-stat:first-child{grid-column:auto}.attention-time-track{margin-top:0}.attention-stage{height:min(35svh,260px)}.attention-result-mark{width:62px;height:62px;font-size:35px}}
+
+/* Tipografia ampliada para leitura confortável em todas as telas de atenção. */
+.attention-lead{font-size:1.0625rem}
+.attention-choice-tag{font-size:.6875rem}
+.attention-map b{font-size:.9375rem}
+.attention-map small{font-size:.75rem}
+.attention-choice-note{font-size:.9375rem}
+.attention-steps>span{font-size:.875rem}
+.attention-steps b{font-size:1rem}
+.attention-select{font-size:.9375rem}
+.attention-facts span,.attention-controls,.attention-controls kbd{font-size:.875rem}
+.attention-stat small,.attention-rule small{font-size:.6875rem}
+.attention-stat strong{font-size:.9375rem}
+.attention-rule strong{font-size:clamp(1.125rem,3vw,1.4375rem)}
+#wait{font-size:.875rem}
+.response-copy strong{font-size:clamp(1.1875rem,3vw,1.5rem)}
+.response-copy small{font-size:.6875rem}
+.attention-feedback{font-size:1rem}
+.attention-summary{font-size:1.125rem}
+.attention-section-kicker{font-size:.6875rem}
+.attention-setup-copy{font-size:.9375rem}
+.attention-start{font-size:1.0625rem}
+.game-sound-option{font-size:.9375rem}
+.attention-sound{font-size:.75rem}
+
+.attention-help{
+  display:grid;
+  gap:6px;
+  margin:20px 0 0;
+  padding:16px 18px;
+  border-left:4px solid var(--gold);
+  border-radius:0 12px 12px 0;
+  color:#354852;
+  background:rgba(239,232,201,.48);
+  font:1rem/1.65 var(--sans);
+}
+.attention-help strong{color:var(--navy);font-size:1.0625rem;line-height:1.35}
+.attention-help p{margin:0}
+.attention-help small{color:#596970;font-size:.875rem;line-height:1.55}

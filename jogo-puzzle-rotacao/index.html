@@ -16,23 +16,33 @@
     <link rel="stylesheet" href="../reability.css" />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="/clinic.css" />
+    <link rel="stylesheet" href="/game-shell.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="game-card" aria-labelledby="game-title">
-        <div class="game-navigation">
-          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
-          <div class="brand-lock" aria-label="Reability">
-            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
-            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+        <header class="game-hero">
+          <div class="game-navigation">
+            <a class="back-link" href="../index.html">← Biblioteca</a>
+            <div class="brand-lock" aria-label="Reability">
+              <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="" />
+              <p class="brand-name">Reability<small>Jogos cognitivos</small></p>
+            </div>
           </div>
-        </div>
-
-        <p class="eyebrow">Raciocínio visoespacial</p>
-        <h1 id="game-title">Puzzle de Rotação</h1>
-        <p class="intro">
-          Observe o objetivo, reposicione os fragmentos e ajuste cada giro até a imagem voltar a fazer sentido.
-        </p>
+          <div class="game-hero__body">
+            <div class="game-hero__copy">
+              <div class="game-hero__meta">
+                <span class="game-hero__number">Jogo 08</span>
+                <p class="eyebrow">Raciocínio visoespacial</p>
+              </div>
+              <h1 id="game-title">Puzzle de Rotação</h1>
+              <p class="intro">Reposicione os fragmentos e ajuste cada giro até o painel voltar a fazer sentido.</p>
+            </div>
+            <div class="game-hero__visual" aria-hidden="true">
+              <img src="../assets/games/puzzle-rotacao.svg" alt="" />
+            </div>
+          </div>
+        </header>
 
         <div class="game-workspace">
           <section class="objective-panel" aria-labelledby="objective-title">

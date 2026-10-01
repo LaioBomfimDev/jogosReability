@@ -30,7 +30,10 @@
 
     <section class="clinic-card clinic-table-card">
       <div class="history-selection" aria-live="polite">
-        <span id="selection-status">Selecione as partidas que deseja exportar.</span>
+        <div class="history-selection-copy">
+          <label class="history-select-all"><input type="checkbox" id="select-all" aria-label="Selecionar todas as partidas visíveis"><span>Selecionar partidas visíveis</span></label>
+          <span id="selection-status">Selecione partidas para exportar ou apagar.</span>
+        </div>
         <div class="history-selection-actions">
           <button class="clinic-button history-export-selected" id="export-selected" disabled>Exportar selecionadas (CSV)</button>
           <button class="clinic-button history-delete-selected" id="delete-selected" disabled>Apagar selecionadas</button>
@@ -38,7 +41,7 @@
       </div>
       <div class="clinic-table-wrap">
         <table class="clinic-table">
-          <thead><tr><th class="history-check"><input type="checkbox" id="select-all" aria-label="Selecionar todas as partidas visíveis"></th><th>Paciente / idade</th><th>Horário</th><th>Jogo / nível</th><th>Rodadas</th><th>Resultado</th><th>Ações</th></tr></thead>
+          <thead><tr><th class="history-check" aria-label="Seleção"></th><th>Paciente / idade</th><th>Horário</th><th>Jogo / nível</th><th>Rodadas</th><th>Resultado</th><th>Ações</th></tr></thead>
           <tbody id="history-body"></tbody>
         </table>
         <p id="empty" hidden>Nenhuma partida encontrada. Escolha um jogo para começar.</p>

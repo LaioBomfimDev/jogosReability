@@ -84,6 +84,7 @@
 
 html {
   background: var(--bg-page);
+  font-size: 112.5%;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -91,12 +92,15 @@ body {
   margin: 0;
   color: var(--text-main);
   background: var(--bg-page-gradient);
+  font-size: 1rem;
   font-family: var(--serif);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
 }
 

@@ -37,6 +37,10 @@
 .clinic-table-card .clinic-table-wrap { padding:0 18px 12px; }
 .history-selection { min-height:68px; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 20px; border-bottom:1px solid #e5e1d5; background:#f7f4ea; font:14px/1.5 Arial,sans-serif; }
 .history-selection span { color:#4b5963; }
+.history-selection-copy { display:grid; gap:5px; }
+.history-select-all { display:flex; align-items:center; gap:9px; width:max-content; color:#061b31; cursor:pointer; font-weight:700; }
+.history-select-all input { width:18px; height:18px; margin:0; accent-color:#061b31; cursor:pointer; }
+.history-select-all span { color:#061b31; }
 .history-selection-actions { display:flex; flex:0 0 auto; flex-wrap:wrap; justify-content:flex-end; gap:9px; }
 .history-selection .clinic-button { flex:0 0 auto; padding:11px 17px; }
 .history-selection .history-export-selected { color:#fffdf6; background:#061b31; box-shadow:0 6px 14px rgba(6,27,49,.18); }
@@ -67,6 +71,9 @@
   background:#fffdf6;
 }
 .detail-header {
+  position:sticky;
+  top:0;
+  z-index:2;
   display:flex;
   align-items:flex-start;
   justify-content:space-between;
@@ -98,7 +105,8 @@
 .detail-summary-section,.detail-rounds-section { padding:26px 34px; }
 .detail-summary-section { background:#f7f4ea; }
 .detail-summary-section h3,.detail-section-heading h3 { margin:0; color:#061b31; font:700 18px/1.3 Arial,sans-serif; }
-.detail-summary { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:10px; margin-top:16px; }
+.detail-summary { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:16px; }
+.detail-summary:empty::after { grid-column:1/-1; padding:16px; border:1px dashed #c9c2b2; border-radius:8px; color:#626866; content:"Resumo indisponível para esta partida."; font:14px/1.5 Arial,sans-serif; text-align:center; }
 .detail-metric { min-width:0; padding:14px; border:1px solid #d7d0be; border-radius:8px; background:#fffdf6; }
 .detail-metric span { display:block; margin-bottom:6px; color:#626866; font:700 11px/1.3 Arial,sans-serif; letter-spacing:.5px; text-transform:uppercase; }
 .detail-metric strong { display:block; overflow-wrap:anywhere; color:#061b31; font:700 20px/1.15 Arial,sans-serif; }
@@ -107,6 +115,13 @@
 .detail-metric[data-tone="warning"] { border-color:#d9c985; background:#fff9df; }
 .detail-metric[data-tone="status"] { border-color:#b9c9d3; background:#edf3f6; }
 .detail-metric[data-tone="status"] strong { font-size:16px; }
+.detail-feedback { grid-column:1/-1; padding:16px 18px; border:1px solid #b9c9d3; border-left-width:5px; border-radius:8px; background:#edf3f6; }
+.detail-feedback span { display:block; margin-bottom:4px; color:#626866; font:700 11px/1.3 Arial,sans-serif; letter-spacing:.5px; text-transform:uppercase; }
+.detail-feedback strong { display:block; color:#061b31; font:700 18px/1.3 Arial,sans-serif; }
+.detail-feedback p { margin:5px 0 0; color:#4b5963; font:14px/1.5 Arial,sans-serif; }
+.detail-feedback[data-tone="success"] { border-color:#6e9f7d; background:#eff8f1; }
+.detail-feedback[data-tone="danger"] { border-color:#cd7e6d; background:#fff3ef; }
+.detail-feedback[data-tone="warning"] { border-color:#c1a43b; background:#fff9df; }
 .detail-rounds-section { padding-bottom:34px; }
 .detail-section-heading { display:flex; align-items:end; justify-content:space-between; gap:16px; margin-bottom:18px; }
 .detail-section-heading p { margin:5px 0 0; color:#626866; font:13px/1.5 Arial,sans-serif; }
@@ -140,37 +155,80 @@
 .detail-empty { margin:0; padding:24px; border:1px dashed #c9c2b2; border-radius:8px; color:#626866; font:14px/1.5 Arial,sans-serif; text-align:center; }
 .detail-footer { display:flex; justify-content:flex-end; padding:18px 34px; border-top:1px solid #e5e1d5; background:#f7f4ea; }
 [hidden] { display:none !important; }
-@media(max-width:800px) {
-  .detail-summary { grid-template-columns:repeat(3,minmax(0,1fr)); }
+@media(max-width:980px) {
+  .clinic-shell { padding-left:18px; padding-right:18px; }
+  .clinic-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .history-selection { align-items:stretch; flex-direction:column; }
+  .history-selection-copy { gap:8px; }
+  .history-selection-actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .history-selection .clinic-button { width:100%; min-height:46px; }
+  .clinic-table-card .clinic-table-wrap { padding:14px; overflow:visible; }
+  .clinic-table,.clinic-table tbody { display:block; }
+  .clinic-table thead { display:none; }
+  .clinic-table tbody { display:grid; gap:12px; }
+  .clinic-table tbody tr:not(.history-date-group) { display:grid; grid-template-columns:42px minmax(0,1.25fr) minmax(0,.75fr); gap:12px 18px; padding:16px; border:1px solid #d9d6ca; border-radius:14px; background:#fff; box-shadow:0 6px 16px rgba(6,27,49,.06); }
+  .clinic-table tbody tr:not(.history-date-group) td { width:auto; min-width:0; padding:0 !important; border:0; }
+  .clinic-table tbody tr:not(.history-date-group) td[data-label]::before { display:block; margin-bottom:3px; color:#777369; content:attr(data-label); font:700 10px/1.3 Arial,sans-serif; letter-spacing:.5px; text-transform:uppercase; }
+  .clinic-table tbody tr:not(.history-date-group) .history-check { grid-column:1; grid-row:1/5; display:flex; align-items:flex-start; justify-content:center; padding-top:3px !important; }
+  .clinic-table tbody tr:not(.history-date-group) td:nth-child(2) { grid-column:2; }
+  .clinic-table tbody tr:not(.history-date-group) td:nth-child(3) { grid-column:3; }
+  .clinic-table tbody tr:not(.history-date-group) td:nth-child(4) { grid-column:2/4; }
+  .clinic-table tbody tr:not(.history-date-group) td:nth-child(5) { grid-column:2; }
+  .clinic-table tbody tr:not(.history-date-group) td:nth-child(6) { grid-column:3; }
+  .clinic-table tbody tr:not(.history-date-group) td:nth-child(7) { grid-column:2/4; }
+  .history-date-group { display:block; margin-top:10px; }
+  .history-date-group:first-child { margin-top:0; }
+  .history-date-group td { display:block; }
+  .history-date-group label { border:1px solid #b9c9d3; border-left:4px solid #376b67; border-radius:10px; }
+  .history-row-actions { min-width:0; }
+  .history-row-actions button { min-height:44px; flex:1 1 150px; font-size:13px; }
+  .clinic-detail { width:calc(100% - 20px); max-height:96dvh; }
+  .detail-summary { grid-template-columns:repeat(4,minmax(0,1fr)); }
   .detail-round-labels { display:none; }
-  .detail-round { grid-template-columns:52px minmax(110px,1fr) auto; gap:12px; }
+  .detail-round { grid-template-columns:52px minmax(110px,1fr) auto; gap:12px 16px; padding:18px; border-radius:12px; }
   .detail-data { grid-column:1/-1; padding-top:12px; border-top:1px solid #ece8dc; }
+  .detail-footer { position:sticky; bottom:0; z-index:2; }
 }
 @media(max-width:700px) {
-  .clinic-filters { grid-template-columns:1fr 1fr; }
   .clinic-shell { padding:25px 14px; }
   .clinic-card { padding:18px; }
   .clinic-table-card { padding:0; }
   .clinic-table-card .clinic-table-wrap { padding:0 10px 10px; }
-  .history-selection { align-items:stretch; flex-direction:column; padding:14px; }
-  .history-selection-actions { display:grid; grid-template-columns:1fr; }
+  .history-selection { padding:14px; }
+  .history-selection-actions { grid-template-columns:1fr; }
   .history-selection .clinic-button { width:100%; }
   .clinic-bar { padding:10px 14px; }
   .clinic-detail { width:100%; max-width:none; max-height:100dvh; height:100dvh; margin:0; border:0; border-radius:0; }
   .detail-header,.detail-summary-section,.detail-rounds-section { padding-left:18px; padding-right:18px; }
-  .detail-header { padding-top:22px; }
+  .detail-header { padding-top:18px; padding-bottom:18px; }
   .clinic-dialog .detail-header h2 { font-size:28px; }
   .detail-meta { align-items:flex-start; flex-direction:column; gap:2px; }
   .detail-meta span+span::before { display:none; }
   .detail-footer { position:sticky; bottom:0; padding:12px 18px; }
   .detail-footer .clinic-button { width:100%; }
+  .detail-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
-@media(max-width:480px) {
+@media(max-width:520px) {
+  .clinic-shell>h1 { font-size:34px; }
+  .clinic-shell>.clinic-actions { display:grid; grid-template-columns:1fr auto; }
+  .clinic-filters { grid-template-columns:1fr; gap:10px; }
+  .clinic-table-card .clinic-table-wrap { padding:10px; }
+  .clinic-table tbody { gap:10px; }
+  .clinic-table tbody tr:not(.history-date-group) { grid-template-columns:34px minmax(0,1fr) minmax(0,.7fr); gap:11px 12px; padding:14px 12px; }
+  .history-date-group label { align-items:flex-start; padding:11px 10px; }
+  .history-date-group strong { font-size:13px; }
+  .history-date-group small { margin-left:0; }
+  .detail-summary-section,.detail-rounds-section { padding-top:20px; padding-bottom:20px; }
   .detail-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .detail-round { grid-template-columns:42px minmax(0,1fr); }
+  .detail-result { grid-column:2; }
   .detail-round-time { grid-column:2; }
   .detail-data { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .detail-section-heading { align-items:flex-start; flex-direction:column; }
+  .detail-round-count { align-self:flex-start; }
 }
+@media(max-width:360px) {.detail-summary,.detail-data { grid-template-columns:1fr; }}
+
 /* Shared game setup and active-screen positioning */
 [data-game-screen],#setup,#play,#result,#start-screen,#game-area,#game-interface,#play-screen,#word-game {
   scroll-margin-block:96px;
@@ -241,3 +299,42 @@
   .game-config-grid { grid-template-columns:1fr; gap:10px; }
   .game-config-field { padding:12px; }
 }
+
+/* A tipografia clínica acompanha a base ampliada definida em reability.css. */
+.clinic-bar{font-size:.875rem}
+.clinic-sync{font-size:.75rem}
+.clinic-dialog h2{font-size:2rem}
+.clinic-ready-dialog h2{font-size:clamp(2rem,6vw,2.875rem)}
+.clinic-ready-dialog>p:not(.clinic-kicker){font-size:1rem}
+.clinic-ready-icon{font-size:2.125rem}
+.clinic-ready-button{font-size:1.0625rem}
+.clinic-form label{font-size:.9375rem}
+.clinic-form input,.clinic-form select,.clinic-filter{font-size:1rem}
+.clinic-button{font-size:.9375rem}
+.clinic-error{font-size:.875rem}
+.clinic-shell h1{font-size:clamp(1.875rem,5vw,3rem)}
+.clinic-kicker{font-size:.75rem}
+.clinic-filters label,.clinic-table,.history-selection{font-size:.875rem}
+.clinic-table th{font-size:.75rem}
+.history-date-group strong{font-size:.875rem}
+.history-date-group small{font-size:.6875rem}
+.history-row-actions button{font-size:.8125rem}
+.clinic-stat{font-size:1rem}
+.clinic-dialog .detail-header h2{font-size:clamp(1.75rem,5vw,2.125rem)}
+.detail-close{font-size:1.75rem}
+.detail-meta{font-size:.875rem}
+.detail-summary-section h3,.detail-section-heading h3{font-size:1.125rem}
+.detail-summary:empty::after{font-size:.875rem}
+.detail-metric span,.detail-feedback span,.detail-round-labels{font-size:.6875rem}
+.detail-metric strong{font-size:1.25rem}
+.detail-metric[data-tone="status"] strong{font-size:1rem}
+.detail-feedback strong,.detail-round-number{font-size:1.125rem}
+.detail-feedback p,.detail-round-time,.detail-data dd,.detail-empty{font-size:.875rem}
+.detail-section-heading p{font-size:.8125rem}
+.detail-round-count,.detail-result{font-size:.75rem}
+.detail-data dt,.clinic-table tbody tr:not(.history-date-group) td[data-label]::before{font-size:.625rem}
+.game-config-field{font-size:.8125rem}
+.game-config-field small{font-size:.75rem}
+.game-config-field input,.game-config-field select{font-size:1rem}
+.game-config-summary{font-size:.875rem}
+.game-sound-toggle{font-size:.8125rem}

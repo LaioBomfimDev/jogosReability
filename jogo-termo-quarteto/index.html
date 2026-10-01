@@ -16,23 +16,33 @@
     <link rel="stylesheet" href="../reability.css" />
     <link rel="stylesheet" href="../jogo-termo-core/styles.css" />
     <link rel="stylesheet" href="/clinic.css" />
+    <link rel="stylesheet" href="/game-shell.css" />
   </head>
   <body>
     <main class="page-shell">
       <section class="game-card" aria-labelledby="game-title">
-        <div class="game-navigation">
-          <a class="back-link" href="../index.html">← Voltar aos jogos</a>
-          <div class="brand-lock" aria-label="Reability">
-            <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="Símbolo Reability" />
-            <p class="brand-name">Reability<small>Jogos da clínica</small></p>
+        <header class="game-hero game-hero--compact">
+          <div class="game-navigation">
+            <a class="back-link" href="../index.html">← Biblioteca</a>
+            <div class="brand-lock" aria-label="Reability">
+              <img class="brand-mark" src="../assets/brand/logo-mark.png" alt="" />
+              <p class="brand-name">Reability<small>Jogos cognitivos</small></p>
+            </div>
           </div>
-        </div>
-
-        <p class="eyebrow">Linguagem e atenção</p>
-        <h1 id="game-title">Quarteto</h1>
-        <p class="intro">
-          Quatro palavras escondidas, um palpite por rodada. Compare padrões e priorize as pistas mais fortes.
-        </p>
+          <div class="game-hero__body">
+            <div class="game-hero__copy">
+              <div class="game-hero__meta">
+                <span class="game-hero__number">Jogo 09</span>
+                <p class="eyebrow">Linguagem e atenção</p>
+              </div>
+              <h1 id="game-title">Quarteto</h1>
+              <p class="intro">Compare as pistas e resolva quatro palavras com um palpite por rodada.</p>
+            </div>
+            <div class="game-hero__visual" aria-hidden="true">
+              <img src="../assets/games/palavras-em-jogo.svg" alt="" />
+            </div>
+          </div>
+        </header>
 
         <section id="word-game" class="word-game" aria-labelledby="game-title">
           <nav class="mode-links" aria-label="Modos de palavras">
