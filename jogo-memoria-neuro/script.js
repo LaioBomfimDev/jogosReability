@@ -299,6 +299,7 @@ const createCard = ({ symbol, label }, index) => {
 
 const startGame = async () => {
   await ReabilityClinic.confirmReady();
+  await globalThis.ReabilityGameShell?.countdown?.();
   window.clearTimeout(turnTimeout);
   timeLimitSeconds = Math.max(0, Math.min(600, Number(timeLimitSelect.value) || 0));
   revealTime = Math.max(250, Math.min(2500, Number(revealTimeSelect.value) || 700));

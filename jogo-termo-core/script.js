@@ -494,7 +494,7 @@ const playAgainButton = document.querySelector("#play-again-button");
 let sessionRound=1,sessionRoundLimit=1;
 const setupScreen=document.createElement('section');
 setupScreen.id='word-setup';setupScreen.className='start-screen word-setup';setupScreen.dataset.gameScreen='';
-setupScreen.innerHTML=`<p class="eyebrow">Configuração profissional</p><h2>Prepare a partida</h2><div class="game-config-grid"><label class="game-config-field">Modo<select id="word-mode"><option value="unico">Palavra Secreta</option><option value="dueto">Dueto</option><option value="quarteto">Quarteto</option></select><small>Define quantas palavras são resolvidas ao mesmo tempo.</small></label><label class="game-config-field">Tentativas por desafio<select id="word-attempts"><option value="5">5 tentativas</option><option value="6" selected>6 tentativas</option><option value="7">7 tentativas</option><option value="8">8 tentativas</option><option value="10">10 tentativas</option></select><small>Cada palpite válido conta como uma rodada.</small></label><label class="game-config-field">Quantidade de desafios<input id="word-rounds" type="number" min="1" max="10" value="1" inputmode="numeric"><small>Ao terminar, o próximo desafio mantém esta configuração.</small></label></div><button id="word-start-button" class="button button-primary" type="button">Começar partida</button>`;
+setupScreen.innerHTML=`<p class="eyebrow">Configuração profissional</p><h2>Prepare a partida</h2><div class="game-config-grid"><label class="game-config-field">Modo<select id="word-mode"><option value="unico">Palavra Secreta</option><option value="dueto">Dueto</option><option value="quarteto">Quarteto</option></select><small>Define quantas palavras são resolvidas ao mesmo tempo.</small></label><label class="game-config-field">Tentativas por desafio<select id="word-attempts"><option value="5">5 tentativas</option><option value="6" selected>6 tentativas</option><option value="7">7 tentativas</option><option value="8">8 tentativas</option><option value="9">9 tentativas</option><option value="10">10 tentativas</option></select><small>Cada palpite válido conta como uma rodada.</small></label><label class="game-config-field">Quantidade de desafios<input id="word-rounds" type="number" min="1" max="10" value="1" inputmode="numeric"><small>Ao terminar, o próximo desafio mantém esta configuração.</small></label></div><button id="word-start-button" class="button button-primary" type="button">Começar partida</button>`;
 wordGame.before(setupScreen);wordGame.hidden=true;
 const wordModeSelect=setupScreen.querySelector('#word-mode'),wordAttemptsSelect=setupScreen.querySelector('#word-attempts'),wordRoundsInput=setupScreen.querySelector('#word-rounds'),wordStartButton=setupScreen.querySelector('#word-start-button');
 wordModeSelect.value=config.mode;wordAttemptsSelect.value=String(config.maxAttempts);
@@ -1133,6 +1133,7 @@ const render = (animateRowIndex = -1) => {
 
 const startGame = async (seed, roundLabel = "Dia", dayKey = ReabilityDaily.todayKey()) => {
   await ReabilityClinic.confirmReady();
+  await globalThis.ReabilityGameShell?.countdown?.();
   window.clearTimeout(state.resultTimer);
   ReabilityClinic.start(DAILY_GAME_ID, config.mode,{attempts:config.maxAttempts,boards:config.boardCount,sessionRound,totalRounds:sessionRoundLimit});
   closeDialog();

@@ -546,7 +546,11 @@ const selectLevel = (event) => {
 };
 
 const startDailyGame = async () => {
-  if (await ensureDailyAllowance()) { await ReabilityClinic.confirmReady(); prepareGame(true); }
+  if (await ensureDailyAllowance()) {
+    await ReabilityClinic.confirmReady();
+    await globalThis.ReabilityGameShell?.countdown?.();
+    prepareGame(true);
+  }
 };
 
 startButton.addEventListener("click", startDailyGame);

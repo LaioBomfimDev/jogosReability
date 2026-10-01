@@ -125,6 +125,7 @@ const renderGuessHistory = () => {
 
 const resetGame = async () => {
   await ReabilityClinic.confirmReady();
+  await globalThis.ReabilityGameShell?.countdown?.();
   maxAttempts = Math.max(0, Math.min(50, Number(maxAttemptsSelect.value) || 0));
   ReabilityClinic.start(GAME_ID, activeLevel.key, { limit:activeLevel.limit, maxAttempts });
   secretNumber = createSecretNumber();

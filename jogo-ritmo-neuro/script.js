@@ -551,6 +551,7 @@ const startGame = async () => {
     return;
   }
 
+  await globalThis.ReabilityGameShell?.countdown?.();
   resetResultGoal();
   ReabilityClinic.start(GAME_ID, state.levelKey,{durationSeconds:state.duration,bpm:activeLevel().bpm,sound:state.audioEnabled});
   resetGameState();

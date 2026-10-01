@@ -236,6 +236,7 @@ async function handleCellClick(event) {
 
 const startGame = async () => {
   await ReabilityClinic.confirmReady();
+  await globalThis.ReabilityGameShell?.countdown?.();
   targetLimit=Math.max(1,Math.min(100,Number(roundsSelect.value)||20));
   ReabilityClinic.start(GAME_ID, activeDifficulty.key, { rounds:targetLimit, responseMs:activeDifficulty.delay });
   stopTimers();

@@ -128,7 +128,7 @@
     e?.preventDefault();const token=++run;await ReabilityClinic.ready;if(token!==run)return;
     await ReabilityClinic.confirmReady();if(token!==run)return;
     cancelAnimationFrame(frame);count=Number($('count').value);roundLimit=Math.max(1,Math.min(30,Math.round(Number($('rounds').value)||10)));$('rounds').value=String(roundLimit);
-    trackingDuration=Math.max(3000,Math.min(15000,Math.round(Number($('tracking-time').value)||8000)));speedFactor=Math.max(.6,Math.min(1.5,Number($('speed').value)||1));round=correct=0;
+    trackingDuration=Math.max(3000,Math.min(15000,Math.round(Number($('tracking-time').value)||8000)));speedFactor=Math.max(.6,Math.min(1.5,Number($('speed').value)||1));await globalThis.ReabilityGameShell?.countdown?.();if(token!==run)return;round=correct=0;
     ReabilityClinic.start('rastreio-foco',String(count),{count,rounds:roundLimit,trackingMs:trackingDuration,speed:speedFactor});$('setup').hidden=true;$('result').hidden=true;$('play').hidden=false;next();
   }
   $('start-form').onsubmit=start;$('next').onclick=next;$('stop').onclick=()=>finish(true);$('again').onclick=()=>{$('result').hidden=true;$('setup').hidden=false;};

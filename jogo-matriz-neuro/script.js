@@ -529,6 +529,7 @@ const startTimer = () => {
 
 const startGame = async (modeKey) => {
   await ReabilityClinic.confirmReady();
+  await globalThis.ReabilityGameShell?.countdown?.();
   const puzzles=Math.max(1,Math.min(20,Math.round(Number(roundsInput.value)||modes[modeKey].puzzles))),duration=Math.max(0,Math.min(300,Math.round(Number(timeSelect.value)||0)));
   activeMode = { key: modeKey, ...modes[modeKey], puzzles, duration };
   ReabilityClinic.start(GAME_ID, modeKey,{rounds:puzzles,responseSeconds:duration});

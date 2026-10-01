@@ -113,7 +113,7 @@
   }
   async function start(){
     const token=++run;await ReabilityClinic.ready;if(token!==run)return;await ReabilityClinic.confirmReady();if(token!==run)return;
-    clear();readConfig();await ensureAudio();round=correct=errors=omissions=0;responseTimes.length=0;rule=lastRule=null;
+    clear();readConfig();await ensureAudio();await globalThis.ReabilityGameShell?.countdown?.();if(token!==run)return;round=correct=errors=omissions=0;responseTimes.length=0;rule=lastRule=null;
     ReabilityClinic.start('atencao-cores',mode,{rounds:roundLimit,stimulusMs,responseMs:responseLimit,sound:soundEnabled});
     $('setup').hidden=true;$('result').hidden=true;$('play').hidden=false;$('mode-label').textContent=labels[mode];document.querySelector?.('.attention-shell')?.setAttribute('data-mode',mode);next();
   }
