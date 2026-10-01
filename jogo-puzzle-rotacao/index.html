@@ -44,7 +44,7 @@
             <div id="target-grid" class="target-grid" role="img" aria-label="Objetivo do puzzle"></div>
           </section>
 
-          <section class="challenge-panel" aria-labelledby="challenge-title">
+          <section class="challenge-panel" data-game-screen aria-labelledby="challenge-title">
             <div class="challenge-header">
               <div>
                 <p class="section-label">Sua grade</p>
@@ -64,6 +64,17 @@
             </div>
 
             <p id="daily-status" class="daily-status" aria-live="polite"></p>
+
+            <div id="puzzle-config" class="game-config-grid">
+              <label class="game-config-field">Quantidade de desafios
+                <input id="puzzle-rounds" type="number" min="1" max="10" value="1" inputmode="numeric">
+                <small>Cada novo painel conta como uma rodada.</small>
+              </label>
+              <label class="game-config-field">Tempo por desafio
+                <select id="puzzle-time"><option value="0" selected>Padrão do nível</option><option value="60">60 segundos</option><option value="90">90 segundos</option><option value="120">120 segundos</option><option value="180">180 segundos</option></select>
+                <small>O relógio reinicia em cada painel.</small>
+              </label>
+            </div>
 
             <div class="game-status" aria-live="polite" aria-atomic="true">
               <p>Pontos <strong id="score">0</strong></p>

@@ -44,6 +44,9 @@ const resultDialog = document.querySelector("#result-dialog");
 const resultEyebrow = document.querySelector("#result-eyebrow");
 const resultSummary = document.querySelector("#result-summary");
 const playAgainButton = document.querySelector("#play-again-button");
+const roundsInput = document.querySelector("#puzzle-rounds");
+const timeSelect = document.querySelector("#puzzle-time");
+const configPanel = document.querySelector("#puzzle-config");
 
 const state = {
   active: false,
@@ -55,6 +58,10 @@ const state = {
   lastMatchAt: undefined,
   startedAt: undefined,
   timer: undefined,
+  timeLimit: undefined,
+  roundLimit: 1,
+  currentRound: 1,
+  wins: 0,
   pieces: [],
   drag: undefined,
   dailyAttemptRecorded: false,
@@ -62,6 +69,7 @@ const state = {
 };
 
 const activeLevel = () => LEVELS[state.levelKey];
+const activeTimeLimit = () => state.timeLimit || activeLevel().timeLimit;
 
 const updateDailyStatus = () => {
   dailyStatus.textContent = ReabilityDaily.statusText({
@@ -288,8 +296,8 @@ const renderBoard = () => {
 
 const updateClock = () => {
   const elapsed = state.startedAt ? performance.now() - state.startedAt : 0;
-  const remaining = Math.max(0, activeLevel().timeLimit - elapsed);
-  const percent = (remaining / activeLevel().timeLimit) * 100;
+  const remaining = Math.max(0, activeTimeLimit() - elapsed);
+  const percent = (remaining / activeTimeLimit()) * 100;
 
   timeLeftElement.textContent = formatTime(remaining);
   timeBar.style.setProperty("--time-progress", `${percent}%`);
@@ -462,19 +470,25 @@ const endGame = (isVictory) => {
   updateLevelControls();
 
   if (isVictory) {
-    const remaining = Math.max(0, activeLevel().timeLimit - (performance.now() - state.startedAt));
+    const remaining = Math.max(0, activeTimeLimit() - (performance.now() - state.startedAt));
     const timeBonus = Math.round((remaining / 1000) * 3 * activeLevel().scoreMultiplier);
 
     state.score += timeBonus;
+    state.wins += 1;
     updateStatus();
-    resultEyebrow.textContent = "Puzzle concluído";
-    resultSummary.textContent = `Você completou o nível ${activeLevel().name} com ${state.score} pontos, bônus de tempo de ${timeBonus} e combo máximo x${Math.max(1, state.maxCombo)}.`;
+  }
+
+  if(state.currentRound<state.roundLimit){state.currentRound+=1;window.setTimeout(()=>prepareGame(true,true),550);return;}
+
+  if (isVictory) {
+    resultEyebrow.textContent = "Puzzles concluídos";
+    resultSummary.textContent = `Você concluiu ${state.wins} de ${state.roundLimit} desafios no nível ${activeLevel().name}, com ${state.score} pontos e combo máximo x${Math.max(1, state.maxCombo)}.`;
   } else {
     resultEyebrow.textContent = "Tempo esgotado";
     resultSummary.textContent = `Você encaixou ${state.correctSlots.size} de ${activeLevel().gridSize ** 2} peças e fez ${state.score} pontos no nível ${activeLevel().name}.`;
   }
 
-  ReabilityClinic.finish({ score: state.score, correctSlots: state.correctSlots.size, maxCombo: state.maxCombo, won: isVictory }, isVictory ? "completed" : "timeout");
+  ReabilityClinic.finish({ score: state.score, correctSlots: state.correctSlots.size, maxCombo: state.maxCombo, won: state.wins===state.roundLimit, wins:state.wins, totalRounds:state.roundLimit }, state.wins===state.roundLimit ? "completed" : "timeout");
   ReabilityDaily.goals.showGoalResult(
     resultSummary,
     ReabilityDaily.goals.rateHigher(state.score, activeLevel().goals),
@@ -482,23 +496,27 @@ const endGame = (isVictory) => {
   if (!resultDialog.open) resultDialog.showModal();
 };
 
-const prepareGame = (startImmediately = false) => {
-  if (startImmediately) ReabilityClinic.start(GAME_ID, state.levelKey);
+const prepareGame = (startImmediately = false, preserveSession = false) => {
+  if (startImmediately&&!preserveSession) {
+    state.roundLimit=Math.max(1,Math.min(10,Math.round(Number(roundsInput.value)||1)));
+    const chosenSeconds=Math.max(0,Math.min(420,Number(timeSelect.value)||0));state.timeLimit=chosenSeconds?chosenSeconds*1000:activeLevel().timeLimit;
+    state.currentRound=1;state.wins=0;
+    ReabilityClinic.start(GAME_ID, state.levelKey,{rounds:state.roundLimit,timeLimitMs:state.timeLimit,gridSize:activeLevel().gridSize});
+  }
   clearTimer();
   stopDrag();
   if (resultDialog.open) resultDialog.close();
   clearGoalResult();
 
   state.active = startImmediately;
-  state.score = 0;
+  configPanel.hidden=startImmediately;
+  if(!preserveSession){state.score = 0;state.maxCombo = 0;}
   state.combo = 0;
-  state.maxCombo = 0;
   state.lastMatchAt = undefined;
   state.pieces = createScrambledPieces();
   state.correctSlots = getCorrectSlots();
   state.startedAt = startImmediately ? performance.now() : undefined;
-  state.dailyAttemptRecorded = false;
-  state.dailyAttemptPending = false;
+  if(!preserveSession){state.dailyAttemptRecorded = false;state.dailyAttemptPending = false;}
 
   renderTarget();
   updateStatus();
@@ -509,12 +527,12 @@ const prepareGame = (startImmediately = false) => {
   if (startImmediately) {
     startButton.textContent = "Desafio em andamento";
     startButton.disabled = true;
-    setMessage(`${activeLevel().name}: encaixes em sequência ativam combos maiores.`);
+    setMessage(`Rodada ${state.currentRound} de ${state.roundLimit} · ${activeLevel().name}: encaixes em sequência ativam combos maiores.`);
     state.timer = window.setInterval(updateClock, 100);
   } else {
     startButton.textContent = "Iniciar desafio";
     startButton.disabled = false;
-    setMessage(`${activeLevel().name}: ${activeLevel().gridSize}×${activeLevel().gridSize} em ${activeLevel().timeLimit / 1000} segundos.`);
+    setMessage(`${activeLevel().name}: ${activeLevel().gridSize}×${activeLevel().gridSize} em ${activeTimeLimit() / 1000} segundos.`);
   }
 };
 

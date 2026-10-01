@@ -27,6 +27,8 @@ const gameDailyStatus = document.querySelector("#game-daily-status");
 const newGameButton = document.querySelector("#new-game-button");
 const changeLevelButton = document.querySelector("#change-level-button");
 const submitButton = form.querySelector("button[type='submit']");
+const startButton = document.querySelector("#number-start-button");
+const maxAttemptsSelect = document.querySelector("#number-max-attempts");
 
 let activeLevel;
 let secretNumber;
@@ -35,6 +37,7 @@ let hasFinished;
 let guessHistory;
 let dailyAttemptRecorded = false;
 let dailyAttemptPending = false;
+let maxAttempts = 8;
 
 const createSecretNumber = () => Math.floor(Math.random() * activeLevel.limit) + 1;
 
@@ -122,7 +125,8 @@ const renderGuessHistory = () => {
 
 const resetGame = async () => {
   await ReabilityClinic.confirmReady();
-  ReabilityClinic.start(GAME_ID, activeLevel.key);
+  maxAttempts = Math.max(0, Math.min(50, Number(maxAttemptsSelect.value) || 0));
+  ReabilityClinic.start(GAME_ID, activeLevel.key, { limit:activeLevel.limit, maxAttempts });
   secretNumber = createSecretNumber();
   attempts = 0;
   hasFinished = false;
@@ -134,7 +138,7 @@ const resetGame = async () => {
   guessInput.max = activeLevel.limit;
   guessInput.disabled = false;
   submitButton.disabled = false;
-  instruction.textContent = `Escolha um número inteiro entre 1 e ${activeLevel.limit}. Seus palpites aparecerão abaixo com a pista de maior/menor.`;
+  instruction.textContent = `Escolha um número inteiro entre 1 e ${activeLevel.limit}.${maxAttempts?` Você tem até ${maxAttempts} tentativas.`:''} Seus palpites aparecerão abaixo com a pista de maior/menor.`;
   feedback.textContent = "";
   clearGoalResult();
   renderGuessHistory();
@@ -142,7 +146,7 @@ const resetGame = async () => {
   guessInput.focus();
 };
 
-const selectLevel = async (event) => {
+const selectLevel = (event) => {
   const button = event.currentTarget;
 
   activeLevel = {
@@ -151,9 +155,12 @@ const selectLevel = async (event) => {
     limit: Number(button.dataset.limit),
   };
 
-  if (!(await ensureDailyAllowance())) return;
-
   selectedLevel.textContent = `${activeLevel.name} · 1 a ${activeLevel.limit}`;
+  difficultyButtons.forEach(candidate=>{const selected=candidate===button;candidate.classList.toggle('is-selected',selected);candidate.setAttribute('aria-pressed',String(selected));});
+};
+
+const startSelectedGame = async()=>{
+  if (!(await ensureDailyAllowance())) return;
   difficultyScreen.hidden = true;
   gameArea.hidden = false;
   await resetGame();
@@ -208,6 +215,15 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
+  if(maxAttempts&&attempts>=maxAttempts){
+    hasFinished=true;
+    ReabilityClinic.finish({ attempts, errors:attempts, won:false, maxAttempts });
+    instruction.textContent='Limite de tentativas alcançado.';
+    feedback.textContent=`O número era ${secretNumber}. Você pode iniciar um novo número ou ajustar a configuração.`;
+    guessInput.disabled=true;submitButton.disabled=true;
+    return;
+  }
+
   feedback.textContent =
     guess > secretNumber
       ? "Pista: o número secreto é menor que seu palpite."
@@ -217,7 +233,9 @@ form.addEventListener("submit", async (event) => {
 });
 
 difficultyButtons.forEach((button) => button.addEventListener("click", selectLevel));
+startButton.addEventListener('click',startSelectedGame);
 newGameButton.addEventListener("click", startNewGame);
 changeLevelButton.addEventListener("click", showDifficultyScreen);
 
 updateDailyStatus();
+selectLevel({currentTarget:difficultyButtons[0]});

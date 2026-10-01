@@ -9,7 +9,7 @@ function harness(file) {
   const timers=new Map(),frames=new Map();
   const element=()=>{
     const classes=new Set();
-    return {hidden:false,disabled:false,textContent:'',dataset:{},style:{},value:'10',clientWidth:280,clientHeight:360,children:[],classList:{add(...names){names.forEach(name=>classes.add(name));},remove(...names){names.forEach(name=>classes.delete(name));},toggle(name,force){if(force===true)classes.add(name);else if(force===false)classes.delete(name);else if(classes.has(name))classes.delete(name);else classes.add(name);},contains:name=>classes.has(name)},setAttribute(){},focus(){},append(e){this.children.push(e);},replaceChildren(){this.children=[];}};
+    return {hidden:false,disabled:false,checked:false,textContent:'',dataset:{},style:{},value:'10',clientWidth:280,clientHeight:360,children:[],classList:{add(...names){names.forEach(name=>classes.add(name));},remove(...names){names.forEach(name=>classes.delete(name));},toggle(name,force){if(force===true)classes.add(name);else if(force===false)classes.delete(name);else if(classes.has(name))classes.delete(name);else classes.add(name);},contains:name=>classes.has(name)},setAttribute(){},hasAttribute(){return false;},focus(){},append(e){this.children.push(e);},replaceChildren(){this.children=[];}};
   };
   const get=id=>{if(!elements.has(id))elements.set(id,element());return elements.get(id);};
   const choices=['colors','shapes','hard'].map(mode=>({...element(),dataset:{mode}}));
@@ -18,8 +18,8 @@ function harness(file) {
   const context=vm.createContext({document,ReabilityClinic:clinic,performance:{now:()=>now},Math:seededMath,setTimeout:(fn,delay)=>{const id=++serial;timers.set(id,{fn,at:now+delay});return id;},clearTimeout:id=>timers.delete(id),requestAnimationFrame:fn=>{const id=++serial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)});
   vm.runInContext(readFileSync(new URL(file,import.meta.url),'utf8'),context);
   return {get,events,choices,document,handlers,
-    async startColor(mode){await choices.find(c=>c.dataset.mode===mode).onclick();},
-    async startTrack(){await get('start-form').onsubmit({preventDefault(){}});},
+    async startColor(mode,config={}){get('rounds').value=String(config.rounds??12);get('stimulus-time').value=String(config.stimulusMs??700);get('response-time').value=String(config.responseMs??4000);get('sound-enabled').checked=config.sound??true;get('sound-enabled').onchange();choices.find(c=>c.dataset.mode===mode).onclick();await get('start').onclick();},
+    async startTrack(){get('tracking-time').value='8000';get('speed').value='1';await get('start-form').onsubmit({preventDefault(){}});},
     timer(){assert.ok(timers.size,'timer available');const [id,timer]=[...timers].sort((a,b)=>a[1].at-b[1].at)[0];timers.delete(id);now=timer.at;timer.fn();},
     frame(ms=16){now+=ms;const pending=[...frames];frames.clear();pending.forEach(([,fn])=>fn(now));},
   };
@@ -30,7 +30,7 @@ for(const mode of ['colors','shapes','hard'])test(`colors: ${mode} has 12 correc
   assert.deepEqual(h.events.slice(0,2).map(event=>event.type),['ready','start']);
   for(let i=0;i<12;i++) {
     h.timer();
-    const shape=h.get('symbol').dataset.shape,color=h.get('symbol').dataset.color,byColor=h.get('rule').textContent.includes('COR');rules.push(byColor?'color':'shape');
+    const shape=h.get('symbol').dataset.shape,color=h.get('symbol').dataset.color,byColor=h.get('rule-label').textContent.includes('cor');rules.push(byColor?'color':'shape');
     const side=byColor?(color==='blue'?'left':'right'):(shape==='circle'?'left':'right');
     h.get(side).onclick();h.get(side).onclick();
     assert.equal(h.events.filter(e=>e.type==='round').length,i+1);h.timer();
@@ -47,6 +47,15 @@ test('colors: omissions have no reaction time; ending cancels pending stimuli',a
   const h=harness('../jogo-atencao-cores/script.js');await h.startColor('colors');h.timer();h.timer();h.timer();
   const round=h.events.find(e=>e.type==='round');assert.equal(round.data.outcome,'omission');assert.equal(round.data.responseMs,null);
   h.get('stop').onclick();assert.equal(h.events.at(-1).status,'interrupted');
+});
+
+test('colors: professional configuration controls rounds and per-round time',async()=>{
+  const h=harness('../jogo-atencao-cores/script.js');await h.startColor('hard',{rounds:3,stimulusMs:1000,responseMs:2000,sound:false});
+  const start=h.events.find(event=>event.type==='start');
+  assert.deepEqual(start.args.slice(0,2),['atencao-cores','hard']);
+  assert.equal(start.args[2].rounds,3);assert.equal(start.args[2].responseMs,2000);assert.equal(start.args[2].sound,false);
+  for(let round=0;round<3;round++){h.timer();h.get('left').onclick();h.timer();}
+  assert.equal(h.events.find(event=>event.type==='finish').data.totalRounds,3);
 });
 
 test('tracking: 15 moving targets freeze, accept one answer and finish ten rounds',async()=>{
@@ -74,10 +83,11 @@ test('tracking: 15 moving targets freeze, accept one answer and finish ten round
 
 test('tracking: difficulty choices are 10, 15 and 20; highest level creates 20 targets',async()=>{
   const html=readFileSync(new URL('../jogo-rastreio-foco/index.html',import.meta.url),'utf8');
-  assert.deepEqual([...html.matchAll(/<option value="(\d+)">/g)].map(match=>Number(match[1])),[10,15,20]);
+  const countSelect=html.match(/<select id="count">([\s\S]*?)<\/select>/)?.[1]||'';
+  assert.deepEqual([...countSelect.matchAll(/<option value="(\d+)">/g)].map(match=>Number(match[1])),[10,15,20]);
   const h=harness('../jogo-rastreio-foco/script.js');h.get('count').value='20';await h.startTrack();
   assert.equal(h.get('arena').children.length,20);
-  assert.deepEqual(h.events.find(event=>event.type==='start').args,['rastreio-foco','20']);
+  assert.deepEqual(h.events.find(event=>event.type==='start').args.slice(0,2),['rastreio-foco','20']);
 });
 
 test('tracking: pieces follow straight paths between impacts',async()=>{
@@ -105,6 +115,12 @@ test('tracking: target is never completely covered when movement freezes',async(
 test('every game waits for player confirmation before starting',()=>{
   const scripts=['jogo-memoria-neuro/script.js','jogo-numero-neuro/script.js','jogo-cerebro-feliz/script.js','jogo-cubos-em-foco/script.js','jogo-matriz-neuro/script.js','jogo-puzzle-rotacao/script.js','jogo-ritmo-neuro/script.js','jogo-termo-core/script.js','jogo-atencao-cores/script.js','jogo-rastreio-foco/script.js'];
   for(const script of scripts)assert.match(readFileSync(new URL(`../${script}`,import.meta.url),'utf8'),/await ReabilityClinic\.confirmReady\(\)/,script);
+});
+
+test('every game family exposes professional configuration controls',()=>{
+  const pages=['jogo-atencao-cores/index.html','jogo-rastreio-foco/index.html','jogo-memoria-neuro/index.html','jogo-numero-neuro/index.html','jogo-cerebro-feliz/index.html','jogo-cubos-em-foco/index.html','jogo-matriz-neuro/index.html','jogo-puzzle-rotacao/index.html','jogo-ritmo-neuro/index.html'];
+  for(const page of pages)assert.match(readFileSync(new URL(`../${page}`,import.meta.url),'utf8'),/game-config-field/,page);
+  assert.match(readFileSync(new URL('../jogo-termo-core/script.js',import.meta.url),'utf8'),/setupScreen\.id='word-setup'/);
 });
 
 test('tracking: professional can choose the number of rounds',async()=>{

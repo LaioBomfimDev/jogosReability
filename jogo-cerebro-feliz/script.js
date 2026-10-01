@@ -27,16 +27,17 @@ const resultDialog = document.querySelector("#result-dialog");
 const resultSummary = document.querySelector("#result-summary");
 const playAgainButton = document.querySelector("#play-again-button");
 const chooseLevelButton = document.querySelector("#choose-level-button");
+const startButton = document.querySelector("#brain-start-button");
+const roundsSelect = document.querySelector("#brain-rounds");
 
 const cellCount = 36;
-const gameDuration = 45;
-
 let activeDifficulty;
 let activeCellIndex = -1;
 let previousBrainIndex = -1;
 let cells = [];
 let score = 0;
-let timeLeft = gameDuration;
+let completedTargets = 0;
+let targetLimit = 20;
 let isPlaying = false;
 let isTransitioning = false;
 let timerInterval;
@@ -123,7 +124,7 @@ const createBoard = () => {
 
 const updateStatus = () => {
   scoreElement.textContent = score;
-  timeLeftElement.textContent = timeLeft;
+  timeLeftElement.textContent = `${completedTargets}/${targetLimit}`;
 };
 
 const clearActiveCell = () => {
@@ -169,6 +170,9 @@ const scheduleNextMove = () => {
     if (!isPlaying || isTransitioning) return;
 
     ReabilityClinic.round({ correct: false, outcome: "omission", target: activeCellIndex });
+    completedTargets += 1;
+    updateStatus();
+    if(completedTargets>=targetLimit){finishGame();return;}
     moveBrain();
     scheduleNextMove();
   }, activeDifficulty.delay);
@@ -177,7 +181,7 @@ const scheduleNextMove = () => {
 const finishGame = (wasStopped = false) => {
   if (!isPlaying) return;
 
-  ReabilityClinic.finish({ score }, wasStopped ? "interrupted" : "completed");
+  ReabilityClinic.finish({ score, correct:score, omissions:Math.max(0,completedTargets-score), totalRounds:targetLimit }, wasStopped ? "interrupted" : "completed");
   isPlaying = false;
   isTransitioning = false;
   stopTimers();
@@ -188,7 +192,7 @@ const finishGame = (wasStopped = false) => {
   gameMessage.textContent = "Desafio encerrado.";
   resultSummary.textContent = wasStopped
     ? `Você marcou ${score} ${score === 1 ? "ponto" : "pontos"} antes de encerrar o desafio.`
-    : `Tempo encerrado! Você marcou ${score} ${score === 1 ? "ponto" : "pontos"}.`;
+    : `${targetLimit} alvos concluídos! Você marcou ${score} ${score === 1 ? "ponto" : "pontos"}.`;
   ReabilityDaily.goals.showGoalResult(
     resultSummary,
     ReabilityDaily.goals.rateHigher(score, LEVEL_GOALS[activeDifficulty.key]),
@@ -208,6 +212,7 @@ async function handleCellClick(event) {
   const hitCell = event.currentTarget;
   ReabilityClinic.round({ correct: true, chosen: clickedIndex, target: activeCellIndex });
   score += 1;
+  completedTargets += 1;
   updateStatus();
   activeCellIndex = -1;
   hitCell.classList.remove("is-active");
@@ -220,6 +225,7 @@ async function handleCellClick(event) {
     hitCell.textContent = "";
     hitCell.setAttribute("aria-label", `Espaço ${clickedIndex + 1}`);
 
+    if (isPlaying && completedTargets>=targetLimit) { finishGame(); return; }
     if (isPlaying) {
       isTransitioning = false;
       moveBrain();
@@ -230,12 +236,13 @@ async function handleCellClick(event) {
 
 const startGame = async () => {
   await ReabilityClinic.confirmReady();
-  ReabilityClinic.start(GAME_ID, activeDifficulty.key);
+  targetLimit=Math.max(1,Math.min(100,Number(roundsSelect.value)||20));
+  ReabilityClinic.start(GAME_ID, activeDifficulty.key, { rounds:targetLimit, responseMs:activeDifficulty.delay });
   stopTimers();
   resultDialog.close();
   clearGoalResult();
   score = 0;
-  timeLeft = gameDuration;
+  completedTargets = 0;
   activeCellIndex = -1;
   previousBrainIndex = -1;
   isPlaying = true;
@@ -253,16 +260,9 @@ const startGame = async () => {
   gameMessage.textContent = "Toque no cérebro quando ele aparecer.";
   moveBrain(true);
   scheduleNextMove();
-
-  timerInterval = window.setInterval(() => {
-    timeLeft -= 1;
-    updateStatus();
-
-    if (timeLeft <= 0) finishGame();
-  }, 1000);
 };
 
-const selectDifficulty = async (event) => {
+const selectDifficulty = (event) => {
   const button = event.currentTarget;
   const delayInSeconds = Number(button.dataset.delay) / 1000;
   activeDifficulty = {
@@ -271,7 +271,7 @@ const selectDifficulty = async (event) => {
     delay: Number(button.dataset.delay),
     label: delayInSeconds === 1 ? "1 segundo" : `${delayInSeconds.toString().replace(".", ",")} segundos`,
   };
-  if (await ensureDailyAllowance()) await startGame();
+  difficultyButtons.forEach(candidate=>{const selected=candidate===button;candidate.classList.toggle('is-selected',selected);candidate.setAttribute('aria-pressed',String(selected));});
 };
 
 const showLevelSelection = () => {
@@ -288,8 +288,10 @@ const playAgain = async () => {
 };
 
 difficultyButtons.forEach((button) => button.addEventListener("click", selectDifficulty));
+startButton.addEventListener('click',async()=>{if(await ensureDailyAllowance())await startGame();});
 playAgainButton.addEventListener("click", playAgain);
 stopButton.addEventListener("click", () => finishGame(true));
 chooseLevelButton.addEventListener("click", showLevelSelection);
 
 updateDailyStatus();
+selectDifficulty({currentTarget:difficultyButtons[0]});

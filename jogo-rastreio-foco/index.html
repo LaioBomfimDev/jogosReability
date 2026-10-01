@@ -1,1 +1,56 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Siga o Foco · Reability</title><link rel="stylesheet" href="/reability.css"><link rel="stylesheet" href="/clinic.css"><link rel="stylesheet" href="/attention-games.css"></head><body><main class="attention-shell"><p class="clinic-kicker">Atenção · Acompanhamento visual</p><h1>Siga o Foco</h1><p class="attention-lead">Acompanhe o quadrado dourado enquanto todos se movem. Quando pararem e ficarem iguais, encontre o que você estava seguindo.</p><section id="setup" class="attention-panel"><h2>Prepare a partida</h2><form id="start-form" class="clinic-form"><label>Quantidade de quadrados<select id="count"><option value="10">10 quadrados</option><option value="15">15 quadrados</option><option value="20">20 quadrados</option></select></label><label>Quantidade de rodadas<input id="rounds" type="number" min="1" max="30" step="1" value="10" inputmode="numeric" required></label><p class="attention-help">Escolha entre 1 e 30 rodadas. Os quadrados mudam bruscamente de velocidade e direção, fazem curvas, se aglomeram, cruzam e encobrem o alvo. O alvo mantém a cor até a parada. Depois, escolha um quadrado com o mouse ou toque; também é possível usar Tab e Enter.</p><button class="clinic-button">Começar a acompanhar</button></form></section><section id="play" class="attention-panel" hidden><div class="attention-stats"><span id="progress"></span><span id="score"></span></div><p id="instruction" class="attention-rule" role="status"></p><div id="arena" class="attention-arena" aria-label="Área dos quadrados"></div><p id="feedback" class="attention-feedback" role="status"></p><div class="clinic-actions"><button id="next" class="clinic-button" hidden>Próxima rodada</button><button id="stop" class="clinic-button secondary">Encerrar partida</button></div></section><section id="result" class="attention-panel" hidden><p class="clinic-kicker">Partida registrada</p><h2>Resultado</h2><p id="summary" class="attention-summary"></p><div class="clinic-actions"><button id="again" class="clinic-button">Jogar novamente</button><a href="/index.html" class="clinic-button secondary">Trocar paciente ou jogo</a></div></section></main><script src="/clinic-local.js" defer></script><script src="/clinic.js" defer></script><script src="./script.js" defer></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Siga o Foco · Reability</title>
+  <link rel="stylesheet" href="/reability.css">
+  <link rel="stylesheet" href="/clinic.css">
+  <link rel="stylesheet" href="/attention-games.css">
+</head>
+<body>
+  <main class="attention-shell">
+    <p class="clinic-kicker">Atenção · Acompanhamento visual</p>
+    <h1>Siga o Foco</h1>
+    <p class="attention-lead">Acompanhe o quadrado dourado enquanto todos se movem. Quando pararem e ficarem iguais, encontre o que você estava seguindo.</p>
+    <section id="setup" class="attention-panel" data-game-screen>
+      <p class="attention-section-kicker">Configuração profissional</p>
+      <h2>Prepare a partida</h2>
+      <form id="start-form" class="clinic-form">
+        <div class="game-config-grid">
+          <label class="game-config-field">Quantidade de quadrados
+            <select id="count"><option value="10">10 quadrados</option><option value="15">15 quadrados</option><option value="20">20 quadrados</option></select>
+            <small>Mais quadrados aumentam a carga visual.</small>
+          </label>
+          <label class="game-config-field">Quantidade de rodadas
+            <input id="rounds" type="number" min="1" max="30" step="1" value="10" inputmode="numeric" required>
+            <small>Entre 1 e 30 rodadas.</small>
+          </label>
+          <label class="game-config-field">Tempo de acompanhamento
+            <select id="tracking-time"><option value="5000">5 segundos</option><option value="8000" selected>8 segundos</option><option value="10000">10 segundos</option><option value="12000">12 segundos</option></select>
+            <small>Tempo em que as peças permanecem em movimento.</small>
+          </label>
+          <label class="game-config-field">Velocidade
+            <select id="speed"><option value="0.8">Suave</option><option value="1" selected>Normal</option><option value="1.2">Rápida</option></select>
+            <small>Ajusta a velocidade sem mudar a quantidade de peças.</small>
+          </label>
+        </div>
+        <p class="attention-help">O alvo mantém a cor dourada até a parada. Depois, escolha um quadrado com o mouse ou toque; também é possível usar Tab e Enter.</p>
+        <button class="clinic-button">Começar a acompanhar</button>
+      </form>
+    </section>
+    <section id="play" class="attention-panel" data-game-screen hidden>
+      <div class="attention-stats"><span id="progress"></span><span id="score"></span></div>
+      <p id="instruction" class="attention-rule" role="status"></p>
+      <div id="arena" class="attention-arena" aria-label="Área dos quadrados"></div>
+      <p id="feedback" class="attention-feedback" role="status"></p>
+      <div class="clinic-actions"><button id="next" class="clinic-button" hidden>Próxima rodada</button><button id="stop" class="clinic-button secondary">Encerrar partida</button></div>
+    </section>
+    <section id="result" class="attention-panel" data-game-screen hidden>
+      <p class="clinic-kicker">Partida registrada</p><h2>Resultado</h2><p id="summary" class="attention-summary"></p>
+      <div class="clinic-actions"><button id="again" class="clinic-button">Jogar novamente</button><a href="/index.html" class="clinic-button secondary">Trocar paciente ou jogo</a></div>
+    </section>
+  </main>
+  <script src="/clinic-local.js" defer></script><script src="/clinic.js" defer></script><script src="./script.js" defer></script>
+</body>
+</html>

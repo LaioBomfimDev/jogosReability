@@ -30,9 +30,10 @@ Mantenha cópias de segurança do banco em local de acesso restrito. Com o servi
 
 ## Regras e métricas
 
-- **Cores e Regras simples:** azul à esquerda, verde à direita; 12 estímulos de 700 ms, até 4 s para responder. Um clique válido por estímulo. Pontua acertos; registra erros, omissões e tempo desde a apresentação.
+- Todos os jogos abrem na configuração ou na área ativa, centralizada no viewport. O profissional pode ajustar os parâmetros pertinentes antes de confirmar o início; a configuração usada é preservada no evento inicial da partida.
+- **Cores e Regras simples:** azul à esquerda, verde à direita; quantidade de rodadas, exibição do estímulo e tempo de resposta configuráveis. O padrão continua sendo 12 estímulos de 700 ms e até 4 s para responder. O cronômetro visível reinicia em cada rodada e os sons começam ativados.
 - **Difícil:** alterna COR/FORMA a cada três rodadas, mantendo a legenda visível. Pela forma, círculo à esquerda e triângulo à direita. Registra também regra, estímulo e se ocorreu troca de regra.
-- **Siga o Foco:** 10, 12 ou 15 quadrados; alvo dourado durante todo o movimento, removido somente quando todos param. Dez rodadas. Registra alvo, escolha, acerto, duração do acompanhamento e tempo após a parada. Sair da aba encerra os jogos novos como interrompidos para evitar medir tempos com o jogo invisível.
+- **Siga o Foco:** 10, 15 ou 20 quadrados; alvo dourado durante todo o movimento, removido somente quando todos param. Quantidade de rodadas, tempo de acompanhamento e velocidade são configuráveis. Registra alvo, escolha, acerto, duração do acompanhamento e tempo após a parada. Sair da aba encerra os jogos novos como interrompidos para evitar medir tempos com o jogo invisível.
 - **Memória:** uma rodada por par tentado. **Número/Termooo:** uma por palpite válido. **Matriz:** uma por resposta. **Atenção Plena:** cliques e alvos não respondidos. **Cubos/Puzzle:** uma por movimento, registrando peças ganhas/perdidas; movimentos intermediários não são classificados automaticamente como erros. **Ritmo:** pulsos acertados/perdidos e toques fora da janela, com desvio temporal quando aplicável.
 - Nos jogos antigos, `responseMs` representa o intervalo entre interações registradas (ou desde a apresentação quando há marcação explícita). No Ritmo, usa-se o desvio do pulso em vez de tempo de reação. A duração da partida é o tempo total decorrido, incluindo pausas.
 

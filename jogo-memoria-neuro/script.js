@@ -50,6 +50,9 @@ const shareFeedback = document.querySelector("#share-feedback");
 const victoryDialog = document.querySelector("#victory-dialog");
 const victorySummary = document.querySelector("#victory-summary");
 const playAgainButton = document.querySelector("#play-again-button");
+const startButton = document.querySelector("#memory-start-button");
+const timeLimitSelect = document.querySelector("#memory-time-limit");
+const revealTimeSelect = document.querySelector("#memory-reveal-time");
 
 let activeLevelKey = "easy";
 let firstCard;
@@ -62,6 +65,9 @@ let timerInterval;
 let turnTimeout;
 let dailyAttemptRecorded = false;
 let dailyAttemptPending = false;
+let timeLimitSeconds = 90;
+let revealTime = 700;
+let gameFinished = false;
 
 const activeLevel = () => LEVELS[activeLevelKey];
 
@@ -171,7 +177,12 @@ const rateMemoryGoal = (elapsedSeconds) => {
 
 const updateTimer = () => {
   if (startedAt) {
-    timerElement.textContent = formatTime(Date.now() - startedAt);
+    const elapsed = Date.now() - startedAt;
+    if (timeLimitSeconds) {
+      const remaining = Math.max(0, timeLimitSeconds * 1000 - elapsed);
+      timerElement.textContent = formatTime(remaining);
+      if (remaining <= 0) finishGame(true);
+    } else timerElement.textContent = formatTime(elapsed);
   }
 };
 
@@ -198,13 +209,17 @@ const resetTurn = () => {
   isResolving = false;
 };
 
-const finishGame = () => {
-  ReabilityClinic.finish({ moves, matches, errors: moves - matches });
+const finishGame = (timedOut = false) => {
+  if (gameFinished) return;
+  gameFinished = true;
+  ReabilityClinic.finish({ moves, matches, errors: moves - matches, timedOut });
   stopTimer();
   const elapsedMilliseconds = startedAt ? Date.now() - startedAt : 0;
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
 
-  victorySummary.textContent = `Você concluiu o nível ${activeLevel().name} em ${moves} tentativas e ${timerElement.textContent}.`;
+  victorySummary.textContent = timedOut
+    ? `Tempo encerrado: ${matches} de ${activeLevel().pairCount} pares encontrados em ${moves} tentativas.`
+    : `Você concluiu o nível ${activeLevel().name} em ${moves} tentativas e ${timerElement.textContent}.`;
   ReabilityDaily.goals.showGoalResult(victorySummary, rateMemoryGoal(elapsedSeconds));
   victoryDialog.showModal();
 };
@@ -233,7 +248,7 @@ const resolveTurn = () => {
     firstCard.classList.remove("is-open");
     secondCard.classList.remove("is-open");
     resetTurn();
-  }, 700);
+  }, revealTime);
 };
 
 const handleCardClick = async (event) => {
@@ -285,7 +300,9 @@ const createCard = ({ symbol, label }, index) => {
 const startGame = async () => {
   await ReabilityClinic.confirmReady();
   window.clearTimeout(turnTimeout);
-  ReabilityClinic.start(GAME_ID, activeLevelKey);
+  timeLimitSeconds = Math.max(0, Math.min(600, Number(timeLimitSelect.value) || 0));
+  revealTime = Math.max(250, Math.min(2500, Number(revealTimeSelect.value) || 700));
+  ReabilityClinic.start(GAME_ID, activeLevelKey, { pairs:activeLevel().pairCount, timeLimitSeconds, revealTimeMs:revealTime });
   stopTimer();
   board.replaceChildren();
   if (victoryDialog.open) victoryDialog.close();
@@ -298,7 +315,8 @@ const startGame = async () => {
   startedAt = undefined;
   dailyAttemptRecorded = false;
   dailyAttemptPending = false;
-  timerElement.textContent = "00:00";
+  gameFinished = false;
+  timerElement.textContent = timeLimitSeconds ? formatTime(timeLimitSeconds * 1000) : "00:00";
   totalMatchesElement.textContent = activeLevel().pairCount;
   selectedLevelElement.textContent = `${activeLevel().name} · ${activeLevel().pairCount} pares`;
   startScreen.hidden = true;
@@ -311,10 +329,10 @@ const startGame = async () => {
   shuffledDeck.forEach((card, index) => board.append(createCard(card, index)));
 };
 
-const selectLevel = async (event) => {
+const selectLevel = (event) => {
   activeLevelKey = event.currentTarget.dataset.level;
-
-  if (await ensureDailyAllowance()) await startGame();
+  difficultyButtons.forEach(button=>{const selected=button.dataset.level===activeLevelKey;button.classList.toggle('is-selected',selected);button.setAttribute('aria-pressed',String(selected));});
+  selectedLevelElement.textContent = `${activeLevel().name} · ${activeLevel().pairCount} pares`;
 };
 
 const restartGame = async () => {
@@ -352,9 +370,11 @@ const shareChallenge = async () => {
 };
 
 difficultyButtons.forEach((button) => button.addEventListener("click", selectLevel));
+startButton.addEventListener("click", async()=>{ if(await ensureDailyAllowance()) await startGame(); });
 restartButton.addEventListener("click", restartGame);
 changeLevelButton.addEventListener("click", showLevelSelection);
 playAgainButton.addEventListener("click", restartGame);
 shareButton.addEventListener("click", shareChallenge);
 
 updateDailyStatus();
+selectLevel({ currentTarget:difficultyButtons[0] });

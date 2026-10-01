@@ -24,6 +24,27 @@
     }
   };
   const safeReturn = value => /^\/(?!\/)[a-zA-Z0-9/_-]*(?:\.html)?$/.test(value || '') ? value : '/index.html';
+  const gameSurfaceSelector = [
+    '[data-game-screen]:not([hidden])',
+    '#setup:not([hidden])', '#play:not([hidden])', '#result:not([hidden])',
+    '#start-screen:not([hidden])', '#game-area:not([hidden])', '#game-interface:not([hidden])',
+    '#play-screen:not([hidden])', '#word-game:not([hidden])',
+  ].join(',');
+  let focusFrame;
+  const focusGame = target => {
+    if (!title) return;
+    window.cancelAnimationFrame(focusFrame);
+    focusFrame = window.requestAnimationFrame(() => {
+      const surface = target || document.querySelector(gameSurfaceSelector);
+      if (!surface) return;
+      const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      const tall=surface.getBoundingClientRect().height>window.innerHeight-140;
+      surface.scrollIntoView({ block:tall?'start':'center', inline:'nearest', behavior:reduced?'auto':'smooth' });
+      const heading = surface.querySelector('h1,h2,[data-game-focus]') || surface;
+      if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex','-1');
+      heading.focus({ preventScroll:true });
+    });
+  };
   const login = () => location.assign(`/login.html?return=${encodeURIComponent(location.pathname)}`);
   const status = (message, error = false) => { const el = document.querySelector('#clinic-sync'); if (el) { el.textContent = message; el.dataset.error = String(error); } };
   const prefix = () => `reability-outbox:${account.id}:`;
@@ -79,11 +100,11 @@
     emit('finish', { ...summary, durationMs:Math.round(performance.now()-active.started), rounds:active.rounds, status:result });
     active = null;
   };
-  const start = (game, level) => {
+  const start = (game, level, config) => {
     if (!patient) throw new Error('Selecione o paciente antes de iniciar.');
     finish({}, 'interrupted');
     active = { id:crypto.randomUUID(), started:performance.now(), rounds:0, last:performance.now() };
-    emit('start', { patientId:patient.id, age:patient.age, game, level });
+    emit('start', { patientId:patient.id, age:patient.age, game, level, ...(config?{config}:{} ) });
   };
   const mark = () => { if (active) active.last = performance.now(); };
   const round = data => {
@@ -120,6 +141,7 @@
     document.body.append(dialog);dialog.showModal();dialog.addEventListener('cancel',event=>event.preventDefault());
     await new Promise(resolve=>dialog.querySelector('button').onclick=resolve);
     dialog.close();dialog.remove();main?.removeAttribute('inert');
+    window.setTimeout(()=>focusGame(),0);
   };
   const choosePatient = async () => {
     document.querySelector('main')?.setAttribute('inert','');
@@ -156,14 +178,22 @@
     }
     toolbar();
     if (account) { await flush(); window.setInterval(flush,4000); }
-    if (title) await choosePatient();
+    if (title) { await choosePatient(); focusGame(); }
     return account;
   })();
+  if (title) {
+    const observer = new MutationObserver(records=>{
+      const revealed = records.find(record=>record.type==='attributes'&&record.attributeName==='hidden'&&record.target.matches?.(gameSurfaceSelector));
+      if (revealed) focusGame(revealed.target);
+    });
+    const watch = () => { const main=document.querySelector('main'); if(main) observer.observe(main,{subtree:true,attributes:true,attributeFilter:['hidden']}); };
+    document.readyState==='loading'?document.addEventListener('DOMContentLoaded',watch,{once:true}):watch();
+  }
   window.addEventListener('pagehide',()=>{ finish({},'interrupted'); });
   window.addEventListener('online',flush);
   window.addEventListener('beforeunload',event=>{ if (storageFailed && memoryQueue.length) { event.preventDefault(); event.returnValue=''; } });
   window.addEventListener('pageshow',event=>{ if(event.persisted) location.reload(); });
   // Avoid game keyboard shortcuts consuming input in the patient dialog.
   document.addEventListener('keydown',event=>{ if (event.target.closest('.clinic-dialog')) event.stopPropagation(); },true);
-  window.ReabilityClinic={api,ready,confirmReady,start,round,mark,finish,flush,safeReturn,getPatient:()=>patient};
+  window.ReabilityClinic={api,ready,confirmReady,start,round,mark,finish,flush,safeReturn,focusGame,getPatient:()=>patient};
 })();

@@ -44,7 +44,7 @@
             <div id="target-grid" class="target-grid" aria-label="Padrão geométrico a ser montado"></div>
           </aside>
 
-          <section class="challenge" aria-labelledby="challenge-title">
+          <section class="challenge" data-game-screen aria-labelledby="challenge-title">
             <div class="challenge-header">
               <div>
                 <p class="section-label">Sua grade</p>
@@ -66,6 +66,17 @@
                 <p id="game-message" class="game-message" aria-live="polite">Pronto para observar o padrão?</p>
               </div>
             </div>
+
+          <div id="cubos-config" class="game-config-grid">
+            <label class="game-config-field">Quantidade de desafios
+              <input id="cubos-rounds" type="number" min="1" max="10" value="1" inputmode="numeric">
+              <small>Cada novo padrão conta como uma rodada.</small>
+            </label>
+            <label class="game-config-field">Tempo por desafio
+              <select id="cubos-time"><option value="0" selected>Padrão do nível</option><option value="45">45 segundos</option><option value="60">60 segundos</option><option value="90">90 segundos</option><option value="120">120 segundos</option></select>
+              <small>O relógio reinicia em cada padrão.</small>
+            </label>
+          </div>
 
           <div class="game-status" aria-live="polite" aria-atomic="true">
             <p>Pontos <strong id="score">0</strong></p>

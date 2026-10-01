@@ -1,7 +1,13 @@
 (() => {
   const $=id=>document.getElementById(id), size=46;
-  let items=[],target=0,phase='idle',frame,round=0,correct=0,count=10,roundLimit=10,started,previous,trackingMs,freezeAt,run=0;
+  let items=[],target=0,phase='idle',frame,round=0,correct=0,count=10,roundLimit=10,trackingDuration=8000,speedFactor=1,started,previous,trackingMs,freezeAt,run=0;
   const paint=()=>items.forEach(p=>p.el.style.transform=`translate(${p.x}px,${p.y}px)`);
+  const spreadStarts=(width,height)=>{
+    if(items.length<4)return;
+    const maxX=width-size,maxY=height-size,xs=items.map(item=>item.x),ys=items.map(item=>item.y);
+    if(Math.max(...xs)-Math.min(...xs)<width*.58){items[0].x=6;items[1].x=Math.max(6,maxX-6);}
+    if(Math.max(...ys)-Math.min(...ys)<height*.7){items[2].y=6;items[3].y=Math.max(6,maxY-6);}
+  };
   const position=(width,height)=>{
     const maxX=width-size,maxY=height-size,gap=size+8;
     for(let attempt=0;attempt<180;attempt++) {
@@ -13,7 +19,7 @@
   };
   const limits=()=>count===10?{min:200,max:335}:count===15?{min:235,max:385}:{min:270,max:440};
   const redirect=(p,angle=Math.random()*Math.PI*2)=>{
-    const {min,max}=limits(),speed=min+Math.random()*(max-min);
+    const {min,max}=limits(),speed=(min+Math.random()*(max-min))*speedFactor;
     p.vx=Math.cos(angle)*speed;p.vy=Math.sin(angle)*speed;
   };
   const rotate=(p,angle)=>{
@@ -55,7 +61,7 @@
       redirect(p);
       items.push(p);
     }
-    started=previous=performance.now();trackingMs=7000+Math.random()*2000;paint();frame=requestAnimationFrame(tick);
+    spreadStarts(width,height);started=previous=performance.now();trackingMs=trackingDuration;paint();frame=requestAnimationFrame(tick);
   }
   function tick(now) {
     if(phase!=='tracking')return;
@@ -121,8 +127,9 @@
   async function start(e) {
     e?.preventDefault();const token=++run;await ReabilityClinic.ready;if(token!==run)return;
     await ReabilityClinic.confirmReady();if(token!==run)return;
-    cancelAnimationFrame(frame);count=Number($('count').value);roundLimit=Math.max(1,Math.min(30,Math.round(Number($('rounds').value)||10)));$('rounds').value=String(roundLimit);round=correct=0;
-    ReabilityClinic.start('rastreio-foco',String(count));$('setup').hidden=true;$('result').hidden=true;$('play').hidden=false;next();
+    cancelAnimationFrame(frame);count=Number($('count').value);roundLimit=Math.max(1,Math.min(30,Math.round(Number($('rounds').value)||10)));$('rounds').value=String(roundLimit);
+    trackingDuration=Math.max(3000,Math.min(15000,Math.round(Number($('tracking-time').value)||8000)));speedFactor=Math.max(.6,Math.min(1.5,Number($('speed').value)||1));round=correct=0;
+    ReabilityClinic.start('rastreio-foco',String(count),{count,rounds:roundLimit,trackingMs:trackingDuration,speed:speedFactor});$('setup').hidden=true;$('result').hidden=true;$('play').hidden=false;next();
   }
   $('start-form').onsubmit=start;$('next').onclick=next;$('stop').onclick=()=>finish(true);$('again').onclick=()=>{$('result').hidden=true;$('setup').hidden=false;};
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&['tracking','answer','feedback'].includes(phase))finish(true);});

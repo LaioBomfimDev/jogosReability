@@ -35,8 +35,8 @@
           Este é um desafio recreativo — não é uma avaliação clínica.
         </p>
 
-        <section id="level-screen" class="level-screen" aria-labelledby="level-title">
-          <h2 id="level-title">Escolha o ritmo</h2>
+        <section id="level-screen" class="level-screen" data-game-screen aria-labelledby="level-title">
+          <h2 id="level-title">Configure a partida</h2>
           <p id="daily-status" class="daily-status" aria-live="polite"></p>
           <div class="difficulty-options">
             <button class="difficulty-option" type="button" data-level="easy">
@@ -55,9 +55,20 @@
               <small>50 segundos. Boa meta: 5200 pontos. Destaque: 9200.</small>
             </button>
           </div>
+          <div class="game-config-grid">
+            <label class="game-config-field">Duração
+              <select id="rhythm-duration"><option value="20">20 segundos</option><option value="30">30 segundos</option><option value="45" selected>45 segundos</option><option value="60">60 segundos</option><option value="90">90 segundos</option></select>
+              <small>A duração define a quantidade aproximada de pulsos.</small>
+            </label>
+            <label class="game-config-field game-config-sound">Som da partida
+              <span class="game-sound-option"><input id="rhythm-sound" type="checkbox" checked> <b>Sons ativados</b></span>
+              <small>Pode ser alterado durante a partida.</small>
+            </label>
+          </div>
+          <button id="rhythm-start-button" class="button button-primary" type="button">Começar partida</button>
         </section>
 
-        <section id="play-screen" class="play-screen" hidden aria-label="Área do jogo">
+        <section id="play-screen" class="play-screen" data-game-screen hidden aria-label="Área do jogo">
           <div class="play-heading">
             <div>
               <p id="selected-level" class="selected-level"></p>

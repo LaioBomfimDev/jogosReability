@@ -68,12 +68,16 @@ const resultMisses = document.querySelector("#result-misses");
 const resultCombo = document.querySelector("#result-combo");
 const playAgainButton = document.querySelector("#play-again-button");
 const chooseLevelButton = document.querySelector("#choose-level-button");
+const startButton = document.querySelector("#rhythm-start-button");
+const durationSelect = document.querySelector("#rhythm-duration");
+const soundCheckbox = document.querySelector("#rhythm-sound");
 
 const state = {
   levelKey: "easy",
   active: false,
   paused: false,
   audioEnabled: true,
+  duration: undefined,
   audioContext: undefined,
   animationFrame: undefined,
   startedAt: undefined,
@@ -91,6 +95,7 @@ const state = {
 };
 
 const activeLevel = () => LEVELS[state.levelKey];
+const activeGameLevel = () => ({...activeLevel(),duration:state.duration||activeLevel().duration});
 
 const formatTime = (milliseconds) => {
   const seconds = Math.max(0, Math.ceil(milliseconds / 1000));
@@ -235,7 +240,7 @@ const createNotes = (level) => {
 };
 
 const updateStatus = () => {
-  const level = activeLevel();
+  const level = activeGameLevel();
   const remaining = level.duration * 1000 - state.elapsed;
   const progress = Math.max(0, Math.min(100, (remaining / (level.duration * 1000)) * 100));
 
@@ -262,7 +267,7 @@ const resetGameState = () => {
   state.lives = 3;
   state.hits = { perfect: 0, good: 0, miss: 0 };
   state.laneGlow = [0, 0, 0, 0];
-  state.notes = createNotes(activeLevel());
+  state.notes = createNotes(activeGameLevel());
   state.startedAt = performance.now();
   state.pauseStartedAt = undefined;
   state.dailyAttemptRecorded = false;
@@ -289,7 +294,7 @@ const roundedRect = (ctx, x, y, width, height, radius) => {
 };
 
 const drawCanvas = () => {
-  const level = activeLevel();
+  const level = activeGameLevel();
   const laneWidth = CANVAS_WIDTH / 4;
   const gradient = context.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
 
@@ -518,7 +523,7 @@ const tick = () => {
       return;
     }
 
-    if (state.elapsed >= activeLevel().duration * 1000 + GOOD_WINDOW) {
+    if (state.elapsed >= activeGameLevel().duration * 1000 + GOOD_WINDOW) {
       finishGame(true);
       return;
     }
@@ -532,6 +537,9 @@ const tick = () => {
 
 const startGame = async () => {
   await ReabilityClinic.confirmReady();
+  state.duration=Math.max(10,Math.min(180,Number(durationSelect.value)||activeLevel().duration));
+  state.audioEnabled=soundCheckbox.checked;
+  audioButton.textContent=state.audioEnabled?'Som ligado':'Som desligado';audioButton.setAttribute('aria-pressed',String(state.audioEnabled));
   await ensureAudio();
   window.cancelAnimationFrame(state.animationFrame);
   if (resultDialog.open) resultDialog.close();
@@ -544,11 +552,11 @@ const startGame = async () => {
   }
 
   resetResultGoal();
-  ReabilityClinic.start(GAME_ID, state.levelKey);
+  ReabilityClinic.start(GAME_ID, state.levelKey,{durationSeconds:state.duration,bpm:activeLevel().bpm,sound:state.audioEnabled});
   resetGameState();
   levelScreen.hidden = true;
   playScreen.hidden = false;
-  selectedLevelElement.textContent = activeLevel().label;
+  selectedLevelElement.textContent = `${activeLevel().name} · ${activeLevel().bpm} BPM · ${state.duration} s`;
   pauseButton.textContent = "Pausar";
   setMessage("Acompanhe o pulso até a linha dourada. D, F, J e K também funcionam.");
   updateDailyStatus();
@@ -557,10 +565,9 @@ const startGame = async () => {
   state.animationFrame = window.requestAnimationFrame(tick);
 };
 
-const selectLevel = async (event) => {
+const selectLevel = (event) => {
   state.levelKey = event.currentTarget.dataset.level;
-  await ensureAudio();
-  if (await ensureDailyAllowance()) await startGame();
+  difficultyButtons.forEach(button=>{const selected=button===event.currentTarget;button.classList.toggle('is-selected',selected);button.setAttribute('aria-pressed',String(selected));});
 };
 
 const restartGame = async () => {
@@ -647,6 +654,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 difficultyButtons.forEach((button) => button.addEventListener("click", selectLevel));
+startButton.addEventListener('click',async()=>{await ensureAudio();if(await ensureDailyAllowance())await startGame();});
 audioButton.addEventListener("click", toggleAudio);
 pauseButton.addEventListener("click", togglePause);
 restartButton.addEventListener("click", restartGame);
@@ -655,3 +663,4 @@ playAgainButton.addEventListener("click", restartGame);
 chooseLevelButton.addEventListener("click", showLevelSelection);
 
 updateDailyStatus();
+selectLevel({currentTarget:difficultyButtons[0]});

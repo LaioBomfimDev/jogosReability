@@ -14,10 +14,12 @@
     <h1>Cores e Regras</h1>
     <p class="attention-lead">Observe o estímulo e escolha a resposta correta.</p>
 
-    <section id="setup" class="attention-panel">
-      <h2>Escolha a versão</h2>
+    <section id="setup" class="attention-panel" data-game-screen>
+      <p class="attention-section-kicker">Configuração profissional</p>
+      <h2>Prepare a partida</h2>
+      <p class="attention-setup-copy">Escolha a regra e ajuste o ritmo para esta sessão.</p>
       <div class="attention-levels">
-        <button class="attention-choice" data-mode="colors">
+        <button class="attention-choice is-selected" type="button" data-mode="colors" aria-pressed="true">
           <span class="attention-choice-tag">Regra fixa</span>
           <strong>Cores</strong>
           <span class="attention-map">
@@ -25,10 +27,10 @@
             <span><i class="attention-dot is-green" aria-hidden="true"></i><b>Verde</b><small>botão direito</small></span>
           </span>
           <span class="attention-choice-note">Responda pela cor.</span>
-          <span class="attention-select">Selecionar <b aria-hidden="true">→</b></span>
+          <span class="attention-select">Selecionado <b aria-hidden="true">✓</b></span>
         </button>
 
-        <button class="attention-choice" data-mode="shapes">
+        <button class="attention-choice" type="button" data-mode="shapes" aria-pressed="false">
           <span class="attention-choice-tag">Regra fixa</span>
           <strong>Formas</strong>
           <span class="attention-map">
@@ -39,7 +41,7 @@
           <span class="attention-select">Selecionar <b aria-hidden="true">→</b></span>
         </button>
 
-        <button class="attention-choice" data-mode="hard">
+        <button class="attention-choice" type="button" data-mode="hard" aria-pressed="false">
           <span class="attention-choice-tag">Troca de regras</span>
           <strong>Difícil</strong>
           <span class="attention-steps">
@@ -51,24 +53,55 @@
         </button>
       </div>
 
-      <div class="attention-facts" aria-label="Informações da partida">
-        <span><b aria-hidden="true">▥</b>12 rodadas</span>
-        <span><b aria-hidden="true">◷</b>0,7 s de estímulo</span>
-        <span><b aria-hidden="true">⌛</b>Até 4 s para responder</span>
+      <div class="game-config-grid">
+        <label class="game-config-field">Quantidade de rodadas
+          <input id="rounds" type="number" min="1" max="30" step="1" value="12" inputmode="numeric" required>
+          <small>Entre 1 e 30 estímulos.</small>
+        </label>
+        <label class="game-config-field">Tempo do estímulo
+          <select id="stimulus-time">
+            <option value="500">0,5 segundo</option>
+            <option value="700" selected>0,7 segundo</option>
+            <option value="1000">1 segundo</option>
+            <option value="1500">1,5 segundo</option>
+          </select>
+          <small>Por quanto tempo a figura fica visível.</small>
+        </label>
+        <label class="game-config-field">Tempo para responder
+          <select id="response-time">
+            <option value="2000">2 segundos</option>
+            <option value="3000">3 segundos</option>
+            <option value="4000" selected>4 segundos</option>
+            <option value="5000">5 segundos</option>
+            <option value="6000">6 segundos</option>
+            <option value="8000">8 segundos</option>
+          </select>
+          <small>O cronômetro reinicia a cada rodada.</small>
+        </label>
+        <label class="game-config-field game-config-sound">Som da partida
+          <span class="game-sound-option"><input id="sound-enabled" type="checkbox" checked> <b>Sons ativados</b></span>
+          <small>Pode ser silenciado durante a partida.</small>
+        </label>
       </div>
+      <p id="setup-summary" class="game-config-summary" role="status">Cores · 12 rodadas · 4 segundos por rodada · som ativado.</p>
+      <button id="start" class="clinic-button attention-start" type="button">Começar partida</button>
       <p class="attention-controls">Controles: botões na tela ou setas <kbd>←</kbd> <kbd>→</kbd></p>
     </section>
 
-    <section id="play" class="attention-panel" hidden>
-      <div class="attention-stats"><div class="attention-stat"><small>Modo de jogo</small><strong id="mode-label"></strong></div><div class="attention-stat"><small>Rodada atual</small><strong id="progress"></strong></div><div class="attention-stat attention-stat-score"><small>Pontuação</small><strong id="score"></strong></div></div>
+    <section id="play" class="attention-panel" data-game-screen hidden>
+      <div class="attention-play-top">
+        <div class="attention-stats"><div class="attention-stat"><small>Modo de jogo</small><strong id="mode-label"></strong></div><div class="attention-stat"><small>Rodada atual</small><strong id="progress"></strong></div><div class="attention-stat attention-stat-score"><small>Pontuação</small><strong id="score"></strong></div><div class="attention-stat attention-stat-timer"><small>Tempo da rodada</small><strong id="round-timer">--</strong></div></div>
+        <button id="sound-button" class="attention-sound" type="button" aria-pressed="true" aria-label="Desativar sons"><span aria-hidden="true">♪</span><b>Som ligado</b></button>
+      </div>
+      <div class="attention-time-track" aria-hidden="true"><span id="timer-fill"></span></div>
       <div id="rule" class="attention-rule"><small>Regra da rodada</small><strong id="rule-label"></strong></div>
-      <div class="attention-stage"><span id="wait">Prepare-se</span><div id="symbol" class="attention-symbol" hidden></div></div>
+      <div id="stage" class="attention-stage"><span id="wait">Prepare-se</span><div id="symbol" class="attention-symbol" hidden></div><span id="result-mark" class="attention-result-mark" aria-hidden="true"></span></div>
       <div class="attention-responses"><button id="left" disabled aria-keyshortcuts="ArrowLeft"><span class="response-arrow" aria-hidden="true">←</span><span class="response-copy"><strong></strong><small>Seta esquerda</small></span></button><button id="right" disabled aria-keyshortcuts="ArrowRight"><span class="response-copy"><strong></strong><small>Seta direita</small></span><span class="response-arrow" aria-hidden="true">→</span></button></div>
       <p id="feedback" class="attention-feedback" role="status"></p>
       <button id="stop" class="clinic-button secondary">Encerrar partida</button>
     </section>
 
-    <section id="result" class="attention-panel" hidden>
+    <section id="result" class="attention-panel" data-game-screen hidden>
       <p class="clinic-kicker">Partida registrada</p><h2 id="result-title">Resultado</h2><p id="summary" class="attention-summary"></p>
       <div class="clinic-actions"><button id="again" class="clinic-button">Jogar novamente</button><button id="change" class="clinic-button secondary">Escolher outro modo</button><a class="clinic-button secondary" href="/index.html">Trocar paciente ou jogo</a></div>
     </section>

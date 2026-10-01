@@ -171,3 +171,73 @@
   .detail-round-time { grid-column:2; }
   .detail-data { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
+/* Shared game setup and active-screen positioning */
+[data-game-screen],#setup,#play,#result,#start-screen,#game-area,#game-interface,#play-screen,#word-game {
+  scroll-margin-block:96px;
+}
+[data-game-screen]:focus,#setup:focus,#play:focus,#result:focus,#start-screen:focus,#game-area:focus,#game-interface:focus,#play-screen:focus,#word-game:focus,
+[data-game-screen] h1:focus,[data-game-screen] h2:focus,#setup h2:focus,#play h2:focus,#result h2:focus,#start-screen h2:focus,#game-area h2:focus,#game-interface h2:focus,#play-screen h2:focus,#word-game h2:focus {
+  outline:none;
+}
+.game-config-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin:20px 0;
+}
+.game-config-field {
+  min-width:0;
+  display:grid;
+  gap:7px;
+  padding:14px;
+  border:1px solid rgba(168,149,76,.3);
+  border-radius:14px;
+  color:#061b31;
+  background:rgba(255,255,255,.72);
+  font:700 13px/1.35 Arial,sans-serif;
+}
+.game-config-field small { color:#667178; font-size:12px; font-weight:400; }
+.game-config-field input,.game-config-field select {
+  width:100%;
+  min-height:48px;
+  padding:10px 12px;
+  border:1px solid #b9c4c2;
+  border-radius:10px;
+  color:#061b31;
+  background:#fff;
+  font:700 16px/1.2 Arial,sans-serif;
+}
+.game-config-field input:focus-visible,.game-config-field select:focus-visible { outline:3px solid rgba(168,149,76,.35); border-color:#8b782d; }
+.game-config-summary {
+  margin:14px 0 18px;
+  padding:13px 15px;
+  border-left:4px solid #a8954c;
+  border-radius:0 12px 12px 0;
+  color:#45545c;
+  background:rgba(239,232,201,.46);
+  font:600 14px/1.55 Arial,sans-serif;
+}
+.game-sound-toggle {
+  min-height:44px;
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:8px 12px;
+  border:1px solid #c9cabb;
+  border-radius:999px;
+  color:#263c4d;
+  background:#fff;
+  font:700 13px/1 Arial,sans-serif;
+  cursor:pointer;
+}
+.game-sound-toggle input { width:18px; height:18px; margin:0; accent-color:#376b67; }
+.difficulty-option.is-selected,.level-option.is-selected,.difficulty-option[aria-pressed="true"],.level-option[aria-pressed="true"] {
+  border-color:#8d7b31 !important;
+  box-shadow:0 0 0 3px rgba(168,149,76,.18),0 12px 25px rgba(6,27,49,.1) !important;
+  transform:translateY(-2px);
+}
+@media(max-width:700px) {
+  [data-game-screen],#setup,#play,#result,#start-screen,#game-area,#game-interface,#play-screen,#word-game { scroll-margin-block:72px; }
+  .game-config-grid { grid-template-columns:1fr; gap:10px; }
+  .game-config-field { padding:12px; }
+}

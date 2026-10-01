@@ -11,6 +11,7 @@
   const cell=(tr,value)=>{ const td=document.createElement('td');td.textContent=value;tr.append(td);return td; };
   const result=data=>data.outcome==='omission'?'Sem resposta':data.correct===true?'Acerto':data.correct===false?'Erro':'Movimento';
   const metricNames={score:'Pontos',correct:'Acertos',errors:'Erros',omissions:'Sem resposta',attempts:'Tentativas',matches:'Pares',moves:'Movimentos',won:'Concluiu o objetivo',correctAnswers:'Respostas corretas',solved:'Palavras resolvidas',perfect:'Pulsos perfeitos',good:'Pulsos bons',miss:'Pulsos perdidos',maxCombo:'Maior combo',correctSlots:'Peças corretas',durationMs:'Duração (ms)',rounds:'Rodadas',status:'Situação',responseMs:'Tempo de resposta (ms)',action:'Ação',outcome:'Resultado',response:'Resposta',expected:'Esperado',guess:'Palpite',rule:'Regra',color:'Cor',shape:'Forma',switched:'Houve troca de regra',trackingMs:'Tempo de acompanhamento (ms)',target:'Alvo',chosen:'Selecionado',count:'Quadrados',round:'Rodada',selected:'Selecionado',answer:'Resposta esperada',modifier:'Mecânica',newMatches:'Novas peças corretas',lostMatches:'Peças retiradas do lugar certo',lane:'Pista',timingErrorMs:'Desvio do pulso (ms)',elapsedMs:'Tempo de jogo (ms)',hits:'Pulsos',age:'Idade',game:'Jogo',level:'Nível'};
+  const configNames={rounds:'Rodadas configuradas',totalRounds:'Rodadas configuradas',stimulusMs:'Exibição do estímulo (ms)',responseMs:'Tempo de resposta (ms)',trackingMs:'Acompanhamento (ms)',speed:'Velocidade',count:'Elementos',pairs:'Pares',timeLimitSeconds:'Limite de tempo (s)',timeLimitMs:'Limite de tempo (ms)',revealTimeMs:'Exibição após erro (ms)',maxAttempts:'Limite de tentativas',limit:'Intervalo máximo',gridSize:'Tamanho da grade',durationSeconds:'Duração (s)',bpm:'BPM',attempts:'Tentativas',boards:'Tabuleiros',sound:'Som'};
   const values={left:'Esquerda',right:'Direita',blue:'Azul',green:'Verde',circle:'Círculo',triangle:'Triângulo',color:'Cor',shape:'Forma',omission:'Sem resposta',error:'Erro',correct:'Acerto',move:'Movimento',early_or_late:'Fora da janela de resposta'};
   const readable=value=>typeof value==='boolean'?(value?'Sim':'Não'):value===null?'—':typeof value==='object'?JSON.stringify(value):(values[value]||String(value));
   const describe=data=>Object.entries(data).map(([k,v])=>`${k==='correct'&&typeof v==='boolean'?'Acertou':metricNames[k]||k}: ${k==='status'?(statuses[v]||v):readable(v)}`).join('\n');
@@ -48,6 +49,11 @@
         appendText(metric,'span',metricNames[key]||key);
         appendText(metric,'strong',key==='durationMs'?duration(value):key==='status'?(statuses[value]||value):readable(value));
         summary.append(metric);
+      }
+      const startConfig=m.events.find(event=>event.kind==='start')?.data?.config;
+      if(startConfig&&typeof startConfig==='object')for(const [key,value] of Object.entries(startConfig)){
+        const metric=document.createElement('div');metric.className='detail-metric';metric.dataset.tone='status';
+        appendText(metric,'span',configNames[key]||metricNames[key]||key);appendText(metric,'strong',readable(value));summary.append(metric);
       }
       $('detail-summary').replaceChildren(summary);
       const rounds=m.events.filter(e=>e.kind==='round');

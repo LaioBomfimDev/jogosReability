@@ -23,6 +23,9 @@ const resultDialog = document.querySelector("#result-dialog");
 const resultSummary = document.querySelector("#result-summary");
 const playAgainButton = document.querySelector("#play-again-button");
 const chooseModeButton = document.querySelector("#choose-mode-button");
+const startButton = document.querySelector("#matrix-start-button");
+const roundsInput = document.querySelector("#matrix-rounds");
+const timeSelect = document.querySelector("#matrix-time");
 
 const modes = {
   leve: {
@@ -81,6 +84,7 @@ let timerInterval;
 let matrixCells = [];
 let dailyAttemptRecorded = false;
 let dailyAttemptPending = false;
+let selectedModeKey = "leve";
 
 const currentModeKey = () => activeMode?.key || "leve";
 
@@ -415,6 +419,7 @@ const buildAnswers = () => {
 
 const showCurrentPuzzle = () => {
   ReabilityClinic.mark();
+  secondsLeft = activeMode.duration;
   currentPuzzle = puzzleQueue[currentRound];
   isAnswerLocked = false;
   modifierNameElement.textContent = `Mecânica ativa · ${currentPuzzle.modifier}`;
@@ -428,6 +433,7 @@ const showCurrentPuzzle = () => {
   buildMatrix();
   buildAnswers();
   updateStatus();
+  startTimer();
 };
 
 const revealMissingPiece = () => {
@@ -445,6 +451,7 @@ async function handleAnswer(event) {
   if (!(await recordDailyAttempt())) return;
 
   isAnswerLocked = true;
+  stopTimer();
   const selectedButton = event.currentTarget;
   const selectedKey = selectedButton.dataset.key;
   const isCorrect = selectedKey === tokenKey(currentPuzzle.answer);
@@ -510,14 +517,21 @@ const startTimer = () => {
     secondsLeft -= 1;
     updateStatus();
 
-    if (secondsLeft <= 0) finishGame(true);
+    if (secondsLeft <= 0) {
+      stopTimer();isAnswerLocked=true;streak=0;
+      ReabilityClinic.round({correct:false,outcome:'omission',answer:tokenKey(currentPuzzle.answer),modifier:currentPuzzle.modifier});
+      answerOptions.querySelectorAll('button').forEach(button=>{button.disabled=true;if(button.dataset.key===tokenKey(currentPuzzle.answer))button.classList.add('is-correct');});
+      revealMissingPiece();ruleHintElement.textContent=currentPuzzle.rule;ruleHintElement.classList.add('is-revealed');feedbackElement.textContent='Tempo da matriz encerrado. A resposta correta foi revelada.';
+      nextButton.textContent=currentRound+1>=activeMode.puzzles?'Ver resultado':'Próxima matriz';nextButton.hidden=false;nextButton.focus();
+    }
   }, 1000);
 };
 
 const startGame = async (modeKey) => {
   await ReabilityClinic.confirmReady();
-  ReabilityClinic.start(GAME_ID, modeKey);
-  activeMode = { key: modeKey, ...modes[modeKey] };
+  const puzzles=Math.max(1,Math.min(20,Math.round(Number(roundsInput.value)||modes[modeKey].puzzles))),duration=Math.max(0,Math.min(300,Math.round(Number(timeSelect.value)||0)));
+  activeMode = { key: modeKey, ...modes[modeKey], puzzles, duration };
+  ReabilityClinic.start(GAME_ID, modeKey,{rounds:puzzles,responseSeconds:duration});
   puzzleQueue = createPuzzleQueue(activeMode.puzzles);
   currentRound = 0;
   score = 0;
@@ -535,7 +549,6 @@ const startGame = async (modeKey) => {
   clearGoalResult();
   updateDailyStatus();
   showCurrentPuzzle();
-  startTimer();
 };
 
 const beginGame = async (modeKey) => {
@@ -556,8 +569,15 @@ const returnToModeSelection = () => {
 };
 
 difficultyButtons.forEach((button) => {
-  button.addEventListener("click", () => beginGame(button.dataset.mode));
+  button.addEventListener("click", () => {
+    selectedModeKey=button.dataset.mode;
+    difficultyButtons.forEach(candidate=>{const selected=candidate===button;candidate.classList.toggle('is-selected',selected);candidate.setAttribute('aria-pressed',String(selected));});
+    roundsInput.value=String(modes[selectedModeKey].puzzles);
+    timeSelect.value=selectedModeKey==='leve'?'0':selectedModeKey==='ritmo'?'30':'15';
+    updateDailyStatus(selectedModeKey);
+  });
 });
+startButton.addEventListener('click',()=>beginGame(selectedModeKey));
 
 nextButton.addEventListener("click", () => {
   if (currentRound + 1 >= activeMode.puzzles) {
@@ -576,3 +596,4 @@ chooseModeButton.addEventListener("click", returnToModeSelection);
 resultDialog.addEventListener("cancel", (event) => event.preventDefault());
 
 updateDailyStatus();
+difficultyButtons[0].click();

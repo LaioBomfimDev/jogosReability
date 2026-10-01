@@ -37,8 +37,8 @@
           <span>Pistas maior/menor</span>
         </div>
 
-        <section id="difficulty-screen" class="difficulty-screen" aria-labelledby="difficulty-title">
-          <h2 id="difficulty-title">Escolha seu nível</h2>
+        <section id="difficulty-screen" class="difficulty-screen" data-game-screen aria-labelledby="difficulty-title">
+          <h2 id="difficulty-title">Configure a partida</h2>
           <p class="difficulty-intro">
             Em todos os níveis, cada tentativa fica visível com a pista para tentar um número maior ou menor.
           </p>
@@ -60,9 +60,16 @@
               <small>Teste hipóteses com o histórico à vista.</small>
             </button>
           </div>
+          <div class="game-config-grid">
+            <label class="game-config-field">Limite de tentativas
+              <select id="number-max-attempts"><option value="0">Livre</option><option value="5">5 tentativas</option><option value="8" selected>8 tentativas</option><option value="10">10 tentativas</option><option value="15">15 tentativas</option></select>
+              <small>Cada palpite corresponde a uma rodada registrada.</small>
+            </label>
+          </div>
+          <button id="number-start-button" class="button button-primary" type="button">Começar partida</button>
         </section>
 
-        <section id="game-area" class="game-area" hidden>
+        <section id="game-area" class="game-area" data-game-screen hidden>
           <p id="selected-level" class="selected-level"></p>
           <p id="game-daily-status" class="daily-status" aria-live="polite"></p>
           <p id="instruction" class="instruction" aria-live="polite"></p>

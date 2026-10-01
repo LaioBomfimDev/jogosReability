@@ -5,10 +5,10 @@ const DEFAULT_CONFIG = {
   maxAttempts: 6,
 };
 
-const config = Object.freeze({
+const config = {
   ...DEFAULT_CONFIG,
   ...(window.WORD_GAME_CONFIG || {}),
-});
+};
 
 const DAILY_GAME_ID = "jogo-de-palavras";
 const WORD_GOALS = {
@@ -491,6 +491,13 @@ const resultEyebrow = document.querySelector("#result-eyebrow");
 const resultTitle = document.querySelector("#result-title");
 const resultSummary = document.querySelector("#result-summary");
 const playAgainButton = document.querySelector("#play-again-button");
+let sessionRound=1,sessionRoundLimit=1;
+const setupScreen=document.createElement('section');
+setupScreen.id='word-setup';setupScreen.className='start-screen word-setup';setupScreen.dataset.gameScreen='';
+setupScreen.innerHTML=`<p class="eyebrow">Configuração profissional</p><h2>Prepare a partida</h2><div class="game-config-grid"><label class="game-config-field">Modo<select id="word-mode"><option value="unico">Palavra Secreta</option><option value="dueto">Dueto</option><option value="quarteto">Quarteto</option></select><small>Define quantas palavras são resolvidas ao mesmo tempo.</small></label><label class="game-config-field">Tentativas por desafio<select id="word-attempts"><option value="5">5 tentativas</option><option value="6" selected>6 tentativas</option><option value="7">7 tentativas</option><option value="8">8 tentativas</option><option value="10">10 tentativas</option></select><small>Cada palpite válido conta como uma rodada.</small></label><label class="game-config-field">Quantidade de desafios<input id="word-rounds" type="number" min="1" max="10" value="1" inputmode="numeric"><small>Ao terminar, o próximo desafio mantém esta configuração.</small></label></div><button id="word-start-button" class="button button-primary" type="button">Começar partida</button>`;
+wordGame.before(setupScreen);wordGame.hidden=true;
+const wordModeSelect=setupScreen.querySelector('#word-mode'),wordAttemptsSelect=setupScreen.querySelector('#word-attempts'),wordRoundsInput=setupScreen.querySelector('#word-rounds'),wordStartButton=setupScreen.querySelector('#word-start-button');
+wordModeSelect.value=config.mode;wordAttemptsSelect.value=String(config.maxAttempts);
 
 const state = {
   targets: [],
@@ -1127,7 +1134,7 @@ const render = (animateRowIndex = -1) => {
 const startGame = async (seed, roundLabel = "Dia", dayKey = ReabilityDaily.todayKey()) => {
   await ReabilityClinic.confirmReady();
   window.clearTimeout(state.resultTimer);
-  ReabilityClinic.start(DAILY_GAME_ID, config.mode);
+  ReabilityClinic.start(DAILY_GAME_ID, config.mode,{attempts:config.maxAttempts,boards:config.boardCount,sessionRound,totalRounds:sessionRoundLimit});
   closeDialog();
   clearGoalResult();
   window.clearTimeout(state.shakeTimer);
@@ -1139,7 +1146,7 @@ const startGame = async (seed, roundLabel = "Dia", dayKey = ReabilityDaily.today
   state.attempt = 0;
   state.ended = false;
   state.won = false;
-  state.roundLabel = roundLabel;
+  state.roundLabel = sessionRoundLimit>1?`${sessionRound}/${sessionRoundLimit}`:roundLabel;
   state.dayKey = dayKey;
   state.dailyAttemptRecorded = false;
   state.dailyAttemptPending = false;
@@ -1217,6 +1224,7 @@ const endGame = (won) => {
     });
     setMessage(`Respostas: ${answers}.`);
   }
+  if(playAgainButton)playAgainButton.textContent=sessionRound<sessionRoundLimit?`Próximo desafio (${sessionRound+1}/${sessionRoundLimit})`:'Nova configuração';
 
   openDialog();
 };
@@ -1493,7 +1501,18 @@ contrastToggle.addEventListener("change", () => {
 if (newGameButton) newGameButton.addEventListener("click", startRandomGame);
 if (shareButton) shareButton.addEventListener("click", copyResult);
 if (dialogShareButton) dialogShareButton.addEventListener("click", copyResult);
-if (playAgainButton) playAgainButton.addEventListener("click", startRandomGame);
+if (playAgainButton) playAgainButton.addEventListener("click", async()=>{
+  if(sessionRound<sessionRoundLimit){sessionRound+=1;await startRandomGame();return;}
+  closeDialog();wordGame.hidden=true;setupScreen.hidden=false;ReabilityClinic.focusGame?.(setupScreen);
+});
+wordModeSelect.addEventListener('change',()=>{
+  if(wordModeSelect.value===config.mode)return;
+  const paths={unico:'../jogo-termo-unico/index.html',dueto:'../jogo-termo-dueto/index.html',quarteto:'../jogo-termo-quarteto/index.html'};
+  location.assign(paths[wordModeSelect.value]);
+});
+wordStartButton.addEventListener('click',async()=>{
+  config.maxAttempts=Math.max(4,Math.min(12,Number(wordAttemptsSelect.value)||6));sessionRoundLimit=Math.max(1,Math.min(10,Math.round(Number(wordRoundsInput.value)||1)));sessionRound=1;
+  setupScreen.hidden=true;wordGame.hidden=false;ReabilityClinic.focusGame?.(wordGame);await startRandomGame();
+});
 
 updateDailyStatus();
-startRandomGame();
