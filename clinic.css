@@ -126,9 +126,8 @@
 .detail-meta-icon svg { width:21px; height:21px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
 .detail-meta-label { display:block; color:#6b6d68; font:700 10px/1.25 Arial,sans-serif; letter-spacing:.55px; text-transform:uppercase; }
 .detail-meta-value { display:block; min-width:0; margin-top:2px; overflow-wrap:anywhere; color:#061b31; font:700 14px/1.3 Arial,sans-serif; }
-.detail-summary-section,.detail-rounds-section { padding:26px 34px; }
-.detail-summary-section { background:#f7f4ea; }
-.detail-summary-section h3,.detail-section-heading h3 { margin:0; color:#061b31; font:700 18px/1.3 Arial,sans-serif; }
+.detail-summary-section { padding:26px 34px 34px; border-radius:0 0 16px 16px; background:#f7f4ea; }
+.detail-summary-section h3 { margin:0; color:#061b31; font:700 18px/1.3 Arial,sans-serif; }
 .detail-summary { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:16px; }
 .detail-summary:empty::after { grid-column:1/-1; padding:16px; border:1px dashed #c9c2b2; border-radius:8px; color:#626866; content:"Resumo indisponível para esta partida."; font:14px/1.5 Arial,sans-serif; text-align:center; }
 .detail-metric { min-width:0; padding:14px; border:1px solid #d7d0be; border-radius:8px; background:#fffdf6; }
@@ -146,38 +145,6 @@
 .detail-feedback[data-tone="success"] { border-color:#6e9f7d; background:#eff8f1; }
 .detail-feedback[data-tone="danger"] { border-color:#cd7e6d; background:#fff3ef; }
 .detail-feedback[data-tone="warning"] { border-color:#c1a43b; background:#fff9df; }
-.detail-rounds-section { padding-bottom:34px; }
-.detail-section-heading { display:flex; align-items:end; justify-content:space-between; gap:16px; margin-bottom:18px; }
-.detail-section-heading p { margin:5px 0 0; color:#626866; font:13px/1.5 Arial,sans-serif; }
-.detail-round-count { flex:0 0 auto; padding:5px 9px; border-radius:999px; color:#061b31; background:#efe8c9; font:700 12px/1.4 Arial,sans-serif; }
-.detail-round-labels,.detail-round {
-  display:grid;
-  grid-template-columns:72px 120px 105px minmax(0,1fr);
-  gap:18px;
-  align-items:start;
-}
-.detail-round-labels { padding:0 14px 9px; color:#626866; font:700 11px/1.3 Arial,sans-serif; letter-spacing:.5px; text-transform:uppercase; }
-.detail-round-list { display:grid; gap:8px; }
-.detail-round { padding:16px 14px; border:1px solid #e2ded2; border-left:4px solid #b9c9d3; border-radius:8px; background:#fff; font-family:Arial,sans-serif; }
-.detail-round[data-result="success"] { border-left-color:#57906c; }
-.detail-round[data-result="danger"] { border-left-color:#c76551; }
-.detail-round[data-result="warning"] { border-left-color:#b69a2f; }
-.detail-round-number { color:#061b31; font:700 18px/1.4 Arial,sans-serif; }
-.detail-result { display:inline-flex; width:max-content; align-items:center; gap:7px; padding:4px 8px; border-radius:999px; color:#28445a; background:#edf3f6; font:700 12px/1.4 Arial,sans-serif; }
-.detail-result::before { width:7px; height:7px; border-radius:50%; background:#6f8798; content:""; }
-.detail-round[data-result="success"] .detail-result { color:#225b36; background:#e5f3e8; }
-.detail-round[data-result="success"] .detail-result::before { background:#3f8558; }
-.detail-round[data-result="danger"] .detail-result { color:#8c3828; background:#fdebe7; }
-.detail-round[data-result="danger"] .detail-result::before { background:#bd503d; }
-.detail-round[data-result="warning"] .detail-result { color:#745f12; background:#fff4c8; }
-.detail-round[data-result="warning"] .detail-result::before { background:#aa8b20; }
-.detail-round-time { color:#263744; font:600 14px/1.5 Arial,sans-serif; white-space:nowrap; }
-.detail-data { display:grid; grid-template-columns:repeat(3,minmax(115px,1fr)); gap:10px 18px; margin:0; }
-.detail-data div { min-width:0; }
-.detail-data dt { margin:0 0 2px; color:#777369; font:700 10px/1.3 Arial,sans-serif; letter-spacing:.4px; text-transform:uppercase; }
-.detail-data dd { margin:0; overflow-wrap:anywhere; color:#263744; font:14px/1.4 Arial,sans-serif; }
-.detail-empty { margin:0; padding:24px; border:1px dashed #c9c2b2; border-radius:8px; color:#626866; font:14px/1.5 Arial,sans-serif; text-align:center; }
-.detail-footer { display:flex; justify-content:flex-end; padding:18px 34px; border-top:1px solid #e5e1d5; background:#f7f4ea; }
 [hidden] { display:none !important; }
 @media(max-width:980px) {
   .clinic-shell { padding-left:18px; padding-right:18px; }
@@ -213,10 +180,6 @@
   .clinic-detail { width:calc(100% - 20px); max-height:96dvh; }
   .detail-meta { grid-template-columns:repeat(2,minmax(0,1fr)); }
   .detail-summary { grid-template-columns:repeat(4,minmax(0,1fr)); }
-  .detail-round-labels { display:none; }
-  .detail-round { grid-template-columns:52px minmax(110px,1fr) auto; gap:12px 16px; padding:18px; border-radius:12px; }
-  .detail-data { grid-column:1/-1; padding-top:12px; border-top:1px solid #ece8dc; }
-  .detail-footer { position:sticky; bottom:0; z-index:2; }
 }
 @media(max-width:700px) {
   .clinic-shell { padding:25px 14px; }
@@ -228,7 +191,7 @@
   .history-selection .clinic-button { width:100%; }
   .clinic-bar { padding:10px 14px; }
   .clinic-detail { width:100%; max-width:none; max-height:100dvh; height:100dvh; margin:0; border:0; border-radius:0; }
-  .detail-header,.detail-summary-section,.detail-rounds-section { padding-left:18px; padding-right:18px; }
+  .detail-header,.detail-summary-section { padding-left:18px; padding-right:18px; }
   .detail-header { gap:12px; padding-top:18px; padding-bottom:18px; }
   .clinic-dialog .detail-header h2 { font-size:26px; white-space:nowrap; }
   .detail-meta { gap:8px; margin-top:16px; }
@@ -237,8 +200,6 @@
   .detail-meta-icon svg { width:19px; height:19px; }
   .detail-meta-label { grid-column:2; }
   .detail-meta-value { grid-column:1/-1; margin-top:7px; overflow-wrap:normal; font-size:13px; }
-  .detail-footer { position:sticky; bottom:0; padding:12px 18px; }
-  .detail-footer .clinic-button { width:100%; }
   .detail-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
 }
 @media(max-width:520px) {
@@ -252,18 +213,11 @@
   .history-date-group label { align-items:center; padding:11px 10px; }
   .history-date-group strong { font-size:14px; }
   .history-date-group small { margin-left:auto; }
-  .detail-summary-section,.detail-rounds-section { padding-top:20px; padding-bottom:20px; }
+  .detail-summary-section { padding-top:20px; padding-bottom:20px; }
   .detail-summary { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .detail-round { grid-template-columns:42px minmax(0,1fr); }
-  .detail-result { grid-column:2; }
-  .detail-round-time { grid-column:2; }
-  .detail-data { grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .detail-section-heading { align-items:flex-start; flex-direction:column; }
-  .detail-round-count { align-self:flex-start; }
 }
 @media(max-width:360px) {
   .clinic-dialog .detail-header h2 { font-size:24px; }
-  .detail-data { grid-template-columns:1fr; }
 }
 
 /* Shared game setup and active-screen positioning */
@@ -360,16 +314,14 @@
 .clinic-dialog .detail-header h2{font-size:clamp(1.75rem,5vw,2.125rem)}
 .detail-close{font-size:1.75rem}
 .detail-meta{font-size:.875rem}
-.detail-summary-section h3,.detail-section-heading h3{font-size:1.125rem}
+.detail-summary-section h3{font-size:1.125rem}
 .detail-summary:empty::after{font-size:.875rem}
-.detail-metric span,.detail-feedback span,.detail-round-labels{font-size:.6875rem}
+.detail-metric span,.detail-feedback span{font-size:.6875rem}
 .detail-metric strong{font-size:1.25rem}
 .detail-metric[data-tone="status"] strong{font-size:1rem}
-.detail-feedback strong,.detail-round-number{font-size:1.125rem}
-.detail-feedback p,.detail-round-time,.detail-data dd,.detail-empty{font-size:.875rem}
-.detail-section-heading p{font-size:.8125rem}
-.detail-round-count,.detail-result{font-size:.75rem}
-.detail-data dt,.clinic-table tbody tr:not(.history-date-group) td[data-label]::before{font-size:.625rem}
+.detail-feedback strong{font-size:1.125rem}
+.detail-feedback p{font-size:.875rem}
+.clinic-table tbody tr:not(.history-date-group) td[data-label]::before{font-size:.625rem}
 .game-config-field{font-size:.8125rem}
 .game-config-field small{font-size:.75rem}
 .game-config-field input,.game-config-field select{font-size:1rem}

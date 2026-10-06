@@ -16,11 +16,6 @@
   const cell=(tr,value,label)=>{ const td=document.createElement('td');td.textContent=value;if(label)td.dataset.label=label;tr.append(td);return td; };
   const summaryCell=(tr,label,primary,secondary,className='')=>{const td=cell(tr,'',label);if(className)td.className=className;appendText(td,'strong',primary,'history-primary');if(secondary)appendText(td,'span',secondary,'history-secondary');return td;};
   const result=data=>data.outcome==='omission'?'Sem resposta':data.correct===true?'Acerto':data.correct===false?'Erro':'Movimento';
-  const metricNames={score:'Pontos',correct:'Acertos',errors:'Erros',omissions:'Sem resposta',attempts:'Tentativas',matches:'Pares',moves:'Movimentos',won:'Concluiu o objetivo',correctAnswers:'Respostas corretas',solved:'Palavras resolvidas',perfect:'Pulsos perfeitos',good:'Pulsos bons',miss:'Pulsos perdidos',maxCombo:'Maior combo',correctSlots:'Peças corretas',durationMs:'Duração (ms)',rounds:'Rodadas',status:'Situação',responseMs:'Tempo de resposta (ms)',action:'Ação',outcome:'Resultado',response:'Resposta',expected:'Esperado',guess:'Palpite',rule:'Regra',color:'Cor',shape:'Forma',switched:'Houve troca de regra',trackingMs:'Tempo de acompanhamento (ms)',target:'Alvo',chosen:'Selecionado',count:'Quadrados',round:'Rodada',selected:'Selecionado',answer:'Resposta esperada',modifier:'Mecânica',newMatches:'Novas peças corretas',lostMatches:'Peças retiradas do lugar certo',lane:'Pista',timingErrorMs:'Desvio do pulso (ms)',elapsedMs:'Tempo de jogo (ms)',hits:'Pulsos',age:'Idade',game:'Jogo',level:'Nível'};
-  const values={left:'Esquerda',right:'Direita',blue:'Azul',green:'Verde',circle:'Círculo',triangle:'Triângulo',color:'Cor',shape:'Forma',omission:'Sem resposta',error:'Erro',correct:'Acerto',move:'Movimento',early_or_late:'Fora da janela de resposta'};
-  const readable=value=>typeof value==='boolean'?(value?'Sim':'Não'):value===null?'—':typeof value==='object'?JSON.stringify(value):(values[value]||String(value));
-  const describe=data=>Object.entries(data).map(([k,v])=>`${k==='correct'&&typeof v==='boolean'?'Acertou':metricNames[k]||k}: ${k==='status'?(statuses[v]||v):readable(v)}`).join('\n');
-  const resultTone=data=>data.outcome==='omission'?'warning':data.correct===true?'success':data.correct===false?'danger':'';
   const appendText=(parent,tag,text,className)=>{const element=document.createElement(tag);element.textContent=text;if(className)element.className=className;parent.append(element);return element;};
   const detailIcons={
     patient:['M20 21a8 8 0 0 0-16 0','M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8'],
@@ -92,21 +87,6 @@
       const feedbackBox=document.createElement('div');feedbackBox.className='detail-feedback';feedbackBox.dataset.tone=feedback.tone;
       appendText(feedbackBox,'span','Feedback');appendText(feedbackBox,'strong',feedback.title);appendText(feedbackBox,'p',feedback.text);summary.append(feedbackBox);
       $('detail-summary').replaceChildren(summary);
-      $('detail-round-count').textContent=`${rounds.length} ${rounds.length===1?'rodada':'rodadas'}`;
-      const roundList=document.createDocumentFragment();
-      rounds.forEach((e,index)=>{
-        const row=document.createElement('article');row.className='detail-round';row.dataset.result=resultTone(e.data);
-        appendText(row,'div',String(e.data.round??index+1).padStart(2,'0'),'detail-round-number');
-        appendText(row,'span',result(e.data),'detail-result');
-        appendText(row,'div',e.data.responseMs==null?'Sem registro':`${Number(e.data.responseMs).toLocaleString('pt-BR')} ms`,'detail-round-time');
-        const data=document.createElement('dl');data.className='detail-data';
-        for(const [key,value] of Object.entries(e.data).filter(([key])=>!['round','correct','outcome','responseMs'].includes(key))) {
-          const item=document.createElement('div');appendText(item,'dt',metricNames[key]||key);appendText(item,'dd',readable(value));data.append(item);
-        }
-        row.append(data);roundList.append(row);
-      });
-      if(!rounds.length) appendText(roundList,'p','Nenhuma rodada foi registrada nesta partida.','detail-empty');
-      $('detail-rows').replaceChildren(roundList);
       $('details').scrollTop=0;
       if(!$('details').open) {
         $('details').showModal();

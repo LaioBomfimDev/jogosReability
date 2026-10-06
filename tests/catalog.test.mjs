@@ -39,3 +39,12 @@ test("the shared countdown sends players to the interactive area", async () => {
   assert.match(shell, /game-tutorial\[open\]/);
   assert.match(shell, /queuePlayFocus\(\)/);
 });
+
+test("professional report ends after the summary and feedback", async () => {
+  const report = await read("profissional.html");
+  const behavior = await read("profissional.js");
+
+  assert.match(report, /id="detail-summary"/);
+  assert.doesNotMatch(report, /Desempenho por rodada|detail-rounds-section|detail-rows|detail-round-count/);
+  assert.doesNotMatch(behavior, /detail-rows|detail-round-count|detail-round-number/);
+});
