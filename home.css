@@ -351,15 +351,6 @@ body::before {
   letter-spacing: 0.07em;
 }
 
-.hero-chip--score {
-  top: 10px;
-  right: 0;
-  padding: 0 13px;
-  color: #0a1017;
-  background: var(--game-gold);
-  transform: rotate(4deg);
-}
-
 .hero-chip--level {
   bottom: 0;
   left: 5px;
@@ -633,10 +624,6 @@ body::before {
     transform: rotate(-1deg);
   }
 
-  .hero-chip--score {
-    right: 3%;
-  }
-
   .hero-chip--level {
     left: 3%;
   }
@@ -689,11 +676,6 @@ body::before {
     right: 18px;
     bottom: 16px;
     left: 18px;
-  }
-
-  .hero-chip--score {
-    top: -1px;
-    right: -2px;
   }
 
   .hero-chip--level {

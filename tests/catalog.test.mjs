@@ -48,3 +48,11 @@ test("professional report ends after the summary and feedback", async () => {
   assert.doesNotMatch(report, /Desempenho por rodada|detail-rounds-section|detail-rows|detail-round-count/);
   assert.doesNotMatch(behavior, /detail-rows|detail-round-count|detail-round-number/);
 });
+
+test("home does not promise an XP system that the games do not have", async () => {
+  const home = await read("index.html");
+  const styles = await read("home.css");
+
+  assert.doesNotMatch(home, /\bXP\b|hero-chip--score/i);
+  assert.doesNotMatch(styles, /hero-chip--score/);
+});
