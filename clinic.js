@@ -37,12 +37,13 @@
     focusFrame = window.requestAnimationFrame(() => {
       const surface = target || document.querySelector(gameSurfaceSelector);
       if (!surface) return;
+      const playTarget = surface.matches?.('[data-game-focus]') ? surface : surface.querySelector?.('[data-game-focus]') || surface;
       const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      const tall=surface.getBoundingClientRect().height>window.innerHeight-140;
-      surface.scrollIntoView({ block:tall?'start':'center', inline:'nearest', behavior:reduced?'auto':'smooth' });
-      const heading = surface.querySelector('h1,h2,[data-game-focus]') || surface;
-      if (!heading.hasAttribute('tabindex')) heading.setAttribute('tabindex','-1');
-      heading.focus({ preventScroll:true });
+      const tall=playTarget.getBoundingClientRect().height>window.innerHeight-100;
+      playTarget.scrollIntoView({ block:tall?'start':'center', inline:'nearest', behavior:reduced?'auto':'smooth' });
+      const focusable = playTarget.matches?.('input,button,canvas,[tabindex]') ? playTarget : playTarget.querySelector?.('input:not(:disabled),button:not(:disabled),[tabindex],canvas') || playTarget;
+      if (!focusable.hasAttribute('tabindex') && !focusable.matches?.('input,button')) focusable.setAttribute('tabindex','-1');
+      focusable.focus({ preventScroll:true });
     });
   };
   const login = () => location.assign(`/login.html?return=${encodeURIComponent(location.pathname)}`);
@@ -89,7 +90,7 @@
     return flushing;
   };
   const emit = (kind, data) => {
-    if (!active) return;
+    if (!active || !account || patient?.guest) return;
     const event = { id:crypto.randomUUID(), matchId:active.id, kind, at:new Date().toISOString(), data };
     memoryQueue.push(event);
     try { localStorage.setItem(key(), JSON.stringify(memoryQueue)); } catch { storageFailed = true; }
@@ -115,11 +116,12 @@
   };
   const toolbar = () => {
     const bar = document.createElement('nav');
-    bar.className = 'clinic-bar'; bar.setAttribute('aria-label','Área da profissional');
-    bar.innerHTML = '<span class="clinic-identity"></span><span id="clinic-sync" class="clinic-sync" role="status"></span><a href="/index.html">Jogos</a><a href="/profissional.html">Histórico</a>';
+    bar.className = 'clinic-bar'; bar.setAttribute('aria-label','Navegação Reability');
+    bar.innerHTML = '<span class="clinic-identity"></span><span id="clinic-sync" class="clinic-sync" role="status"></span><a href="/index.html">Jogos</a>';
     const identity = bar.querySelector('.clinic-identity');
-    identity.textContent = account ? account.name : 'Reability · Área da profissional';
+    identity.textContent = account ? account.name : (title ? 'Reability · Jogando livremente' : 'Reability · Jogos cognitivos');
     if (account) {
+      const history = document.createElement('a'); history.href='/profissional.html'; history.textContent='Histórico'; bar.append(history);
       const logout = document.createElement('button'); logout.textContent = 'Sair';
       logout.onclick = async () => {
         finish({}, 'interrupted');
@@ -128,7 +130,7 @@
       };
       bar.append(logout);
     } else {
-      const link = document.createElement('a'); link.href='/login.html'; link.textContent='Entrar'; bar.append(link);
+      const link = document.createElement('a'); link.href=`/login.html?return=${encodeURIComponent(location.pathname)}`; link.textContent='Área profissional'; bar.append(link);
     }
     document.body.prepend(bar);
   };
@@ -174,11 +176,18 @@
     if (title) document.querySelector('main')?.setAttribute('inert','');
     try { account=await api('/api/me'); }
     catch(e) {
-      if (title || page==='profissional.html') { login(); return new Promise(()=>{}); }
+      if (page==='profissional.html') { login(); return new Promise(()=>{}); }
     }
     toolbar();
     if (account) { await flush(); window.setInterval(flush,4000); }
-    if (title) { await choosePatient(); focusGame(); }
+    if (title) {
+      if (account) await choosePatient();
+      else {
+        patient={ id:'guest', name:'Jogador livre', age:null, guest:true };
+        document.querySelector('main')?.removeAttribute('inert');
+      }
+      focusGame();
+    }
     return account;
   })();
   if (title) {
@@ -195,5 +204,5 @@
   window.addEventListener('pageshow',event=>{ if(event.persisted) location.reload(); });
   // Avoid game keyboard shortcuts consuming input in the patient dialog.
   document.addEventListener('keydown',event=>{ if (event.target.closest('.clinic-dialog')) event.stopPropagation(); },true);
-  window.ReabilityClinic={api,ready,confirmReady,start,round,mark,finish,flush,safeReturn,focusGame,getPatient:()=>patient};
+  window.ReabilityClinic={api,ready,confirmReady,start,round,mark,finish,flush,safeReturn,focusGame,getPatient:()=>patient,isProfessional:()=>!!account,getMode:()=>account?'professional':'guest'};
 })();

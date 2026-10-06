@@ -109,7 +109,25 @@
     const answered=correct+errors+omissions,accuracy=answered?Math.round(correct/answered*100):0,averageResponseMs=responseTimes.length?Math.round(responseTimes.reduce((sum,value)=>sum+value,0)/responseTimes.length):null;
     ReabilityClinic.finish({score:correct,correct,errors,omissions,accuracy,averageResponseMs,totalRounds:roundLimit},interrupted?'interrupted':'completed');
     $('play').hidden=true;$('result').hidden=false;$('result-title').textContent=interrupted?'Partida encerrada':'Partida concluída';
-    $('summary').textContent=`${correct} acertos · ${errors} erros · ${omissions} sem resposta · ${accuracy}% de precisão${averageResponseMs===null?'':` · média de ${(averageResponseMs/1000).toFixed(1).replace('.',',')} s`}. ${answered} de ${roundLimit} rodadas concluídas.`;
+    const metrics=[
+      {icon:'✓',value:correct,label:correct===1?'Acerto':'Acertos',tone:'success'},
+      {icon:'×',value:errors,label:errors===1?'Erro':'Erros',tone:'error'},
+      {icon:'…',value:omissions,label:'Sem resposta',tone:'omission'},
+      {icon:'%',value:`${accuracy}%`,label:'Precisão',tone:'accuracy'},
+    ];
+    if(averageResponseMs!==null)metrics.push({icon:'◷',value:`${(averageResponseMs/1000).toFixed(1).replace('.',',')} s`,label:'Tempo médio',tone:'time'});
+    const summary=$('summary'),grid=document.createElement('div');grid.className='attention-result-grid';
+    metrics.forEach(metric=>{
+      const item=document.createElement('div');item.className=`attention-result-item is-${metric.tone}`;
+      const icon=document.createElement('span');icon.className='attention-result-icon';icon.setAttribute('aria-hidden','true');icon.textContent=metric.icon;
+      const copy=document.createElement('span'),value=document.createElement('strong'),label=document.createElement('small');
+      value.textContent=String(metric.value);label.textContent=metric.label;copy.append(value,label);item.append(icon,copy);grid.append(item);
+    });
+    const total=document.createElement('div');total.className='attention-result-total';
+    const totalIcon=document.createElement('span');totalIcon.className='attention-result-icon';totalIcon.setAttribute('aria-hidden','true');totalIcon.textContent='▦';
+    const totalCopy=document.createElement('span'),totalValue=document.createElement('strong'),totalLabel=document.createElement('small');
+    totalValue.textContent=`${answered} de ${roundLimit}`;totalLabel.textContent='Rodadas concluídas';totalCopy.append(totalValue,totalLabel);total.append(totalIcon,totalCopy);
+    summary.replaceChildren(grid,total);
   }
   async function start(){
     const token=++run;await ReabilityClinic.ready;if(token!==run)return;await ReabilityClinic.confirmReady();if(token!==run)return;

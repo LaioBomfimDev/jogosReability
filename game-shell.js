@@ -104,8 +104,23 @@
     } catch (_) {}
   };
 
+  const focusPlayArea = () => {
+    const target = Array.from(document.querySelectorAll("[data-game-focus]")).find((candidate) => candidate.getClientRects().length && !candidate.closest("[hidden]"));
+    if (!target) return false;
+    const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const tall = target.getBoundingClientRect().height > window.innerHeight - 80;
+    target.scrollIntoView({ block: tall ? "start" : "center", inline: "nearest", behavior: reducedMotion ? "auto" : "smooth" });
+    const focusable = target.matches("input,button,canvas,[tabindex]") ? target : target.querySelector("input:not(:disabled),button:not(:disabled),[tabindex],canvas") || target;
+    if (!focusable.matches("input,button") && !focusable.hasAttribute("tabindex")) focusable.setAttribute("tabindex", "-1");
+    focusable.focus({ preventScroll: true });
+    return true;
+  };
+
+  const queuePlayFocus = () => window.requestAnimationFrame(() => window.requestAnimationFrame(focusPlayArea));
+
   const countdown = async () => {
     document.querySelector(".game-countdown")?.remove();
+    document.querySelectorAll(".game-tutorial[open]").forEach((tutorial) => { tutorial.open = false; });
     const overlay = document.createElement("div");
     const value = document.createElement("strong");
     const reducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
@@ -129,9 +144,10 @@
     await wait(reducedMotion ? 0 : 140);
     overlay.remove();
     document.body.classList.remove("game-countdown-active");
+    queuePlayFocus();
   };
 
-  window.ReabilityGameShell = { countdown };
+  window.ReabilityGameShell = { countdown, focusPlayArea, queuePlayFocus };
 
   const setupSoundControl = () => {
     const navigation = document.querySelector(".game-hero .game-navigation");

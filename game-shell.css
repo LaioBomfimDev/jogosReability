@@ -502,15 +502,15 @@ body:has(.game-hero) .clinic-bar .clinic-sync {
 
 .game-shell-sound {
   display: inline-flex;
-  min-height: 34px;
+  min-height: 30px;
   align-items: center;
-  gap: 7px;
-  padding: 6px 10px;
+  gap: 5px;
+  padding: 4px 7px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
   color: #fffdf6;
   background: rgba(3, 15, 27, 0.34);
-  font: 800 0.65rem/1 var(--sans);
+  font: 800 0.58rem/1 var(--sans);
   letter-spacing: 0.035em;
   cursor: pointer;
   transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
@@ -524,13 +524,13 @@ body:has(.game-hero) .clinic-bar .clinic-sync {
 
 .game-shell-sound > span:first-child {
   display: grid;
-  width: 20px;
-  height: 20px;
+  width: 17px;
+  height: 17px;
   place-items: center;
   border-radius: 50%;
   color: #061b31;
   background: var(--game-accent);
-  font-size: 0.75rem;
+  font-size: 0.66rem;
 }
 
 .game-tutorial {

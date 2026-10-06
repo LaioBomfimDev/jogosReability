@@ -115,14 +115,14 @@
       </div>
       <div class="attention-time-track" aria-hidden="true"><span id="timer-fill"></span></div>
       <div id="rule" class="attention-rule"><small>Regra da rodada</small><strong id="rule-label"></strong></div>
-      <div id="stage" class="attention-stage"><span id="wait">Prepare-se</span><div id="symbol" class="attention-symbol" hidden></div><span id="result-mark" class="attention-result-mark" aria-hidden="true"></span></div>
+      <div id="stage" class="attention-stage" data-game-focus><span id="wait">Prepare-se</span><div id="symbol" class="attention-symbol" hidden></div><span id="result-mark" class="attention-result-mark" aria-hidden="true"></span></div>
       <div class="attention-responses"><button id="left" disabled aria-keyshortcuts="ArrowLeft"><span class="response-arrow" aria-hidden="true">←</span><span class="response-copy"><strong></strong><small>Seta esquerda</small></span></button><button id="right" disabled aria-keyshortcuts="ArrowRight"><span class="response-copy"><strong></strong><small>Seta direita</small></span><span class="response-arrow" aria-hidden="true">→</span></button></div>
       <p id="feedback" class="attention-feedback" role="status"></p>
       <button id="stop" class="clinic-button secondary">Encerrar partida</button>
     </section>
 
     <section id="result" class="attention-panel" data-game-screen hidden>
-      <p class="clinic-kicker">Partida registrada</p><h2 id="result-title">Resultado</h2><p id="summary" class="attention-summary"></p>
+      <p class="clinic-kicker">Partida registrada</p><h2 id="result-title">Resultado</h2><div id="summary" class="attention-summary" role="status" aria-live="polite"></div>
       <div class="clinic-actions"><button id="again" class="clinic-button">Jogar novamente</button><button id="change" class="clinic-button secondary">Escolher outro modo</button><a class="clinic-button secondary" href="/index.html">Trocar paciente ou jogo</a></div>
     </section>
   </main>

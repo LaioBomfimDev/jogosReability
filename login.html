@@ -1,1 +1,61 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Entrar · Reability</title><link rel="stylesheet" href="/reability.css"><link rel="stylesheet" href="/clinic.css"></head><body><main class="clinic-shell clinic-auth"><p class="clinic-kicker">Reability · Profissional</p><h1>Cuidado que acompanha cada sessão.</h1><p>Acesse seus pacientes e os registros dos jogos.</p><section class="clinic-card"><h2>Entrar</h2><form id="auth-form" class="clinic-form"><label>Usuário<input name="username" autocomplete="username" maxlength="40" autocapitalize="none" spellcheck="false" required></label><label>Senha<input name="password" type="password" minlength="8" maxlength="200" autocomplete="current-password" required></label><p id="auth-error" class="clinic-error" role="alert"></p><button id="auth-submit" class="clinic-button">Entrar</button></form></section><a href="/index.html">Conhecer os jogos</a></main><script src="/clinic-local.js" defer></script><script src="/login.js" defer></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#061b31" />
+    <title>Área profissional · Reability</title>
+    <link rel="icon" href="/assets/brand/favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="/reability.css" />
+    <link rel="stylesheet" href="/clinic.css" />
+    <link rel="stylesheet" href="/login.css" />
+  </head>
+  <body class="login-page">
+    <main class="login-shell">
+      <section class="login-intro" aria-labelledby="login-title">
+        <a class="login-brand" href="/index.html" aria-label="Reability — voltar aos jogos">
+          <img
+            src="/assets/brand/reability-signature-transparent.png"
+            alt="Reability — Transformando limites em possibilidades"
+            width="720"
+            height="565"
+          />
+        </a>
+        <p class="login-eyebrow">Área exclusiva para profissionais</p>
+        <h1 id="login-title">Acompanhe cada sessão com segurança.</h1>
+        <p class="login-lead">Acesse pacientes, resultados e históricos registrados durante os atendimentos.</p>
+        <div class="login-assurance">
+          <span aria-hidden="true">✓</span>
+          <p><strong>Jogadores não precisam de conta.</strong> O login é usado apenas para acompanhamento profissional.</p>
+        </div>
+      </section>
+
+      <section class="login-panel" aria-labelledby="auth-title">
+        <div class="login-panel__heading">
+          <p>Clínica Reability</p>
+          <h2 id="auth-title">Entrar como profissional</h2>
+          <span>Use suas credenciais para acessar a área clínica.</span>
+        </div>
+
+        <form id="auth-form" class="clinic-form login-form">
+          <label>
+            Usuário
+            <input name="username" autocomplete="username" maxlength="40" autocapitalize="none" spellcheck="false" required />
+          </label>
+          <label>
+            Senha
+            <input name="password" type="password" minlength="8" maxlength="200" autocomplete="current-password" required />
+          </label>
+          <p id="auth-error" class="clinic-error" role="alert"></p>
+          <button id="auth-submit" class="clinic-button login-submit">Entrar na área profissional</button>
+        </form>
+
+        <div class="login-divider"><span>ou</span></div>
+        <a id="guest-link" class="login-guest" href="/index.html">Continuar sem login</a>
+        <p class="login-guest-note">Para jogar livremente, sem registrar resultados em prontuário.</p>
+      </section>
+    </main>
+    <script src="/clinic-local.js" defer></script>
+    <script src="/login.js" defer></script>
+  </body>
+</html>

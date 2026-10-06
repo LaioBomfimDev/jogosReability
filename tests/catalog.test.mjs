@@ -4,15 +4,16 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("catalog keeps ten game families numbered in a stable sequence", async () => {
+test("catalog keeps eight active game families numbered in a stable sequence", async () => {
   const home = await read("index.html");
   const numbers = [...home.matchAll(/<span class="game-number">(\d{2})<\/span>/g)].map((match) => match[1]);
 
-  assert.match(home, /<span class="game-count">10 jogos<\/span>/);
-  assert.deepEqual(numbers, ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10"]);
+  assert.match(home, /<span class="game-count">8 jogos<\/span>/);
+  assert.deepEqual(numbers, ["01", "02", "03", "04", "05", "06", "07", "08"]);
+  assert.doesNotMatch(home, /jogo-puzzle-rotacao|jogo-termo-unico/);
 });
 
-test("game headers match the catalog and Termooo modes share family 09", async () => {
+test("active game headers match the catalog", async () => {
   const expected = new Map([
     ["jogo-atencao-cores/index.html", "01"],
     ["jogo-rastreio-foco/index.html", "02"],
@@ -21,14 +22,20 @@ test("game headers match the catalog and Termooo modes share family 09", async (
     ["jogo-cerebro-feliz/index.html", "05"],
     ["jogo-cubos-em-foco/index.html", "06"],
     ["jogo-matriz-neuro/index.html", "07"],
-    ["jogo-puzzle-rotacao/index.html", "08"],
-    ["jogo-termo-unico/index.html", "09"],
-    ["jogo-termo-dueto/index.html", "09"],
-    ["jogo-termo-quarteto/index.html", "09"],
-    ["jogo-ritmo-neuro/index.html", "10"],
+    ["jogo-ritmo-neuro/index.html", "08"],
   ]);
 
   for (const [path, number] of expected) {
-    assert.match(await read(path), new RegExp(`<span class="game-hero__number">Jogo ${number}<\\/span>`), path);
+    const html = await read(path);
+    assert.match(html, new RegExp(`<span class="game-hero__number">Jogo ${number}<\\/span>`), path);
+    assert.match(html, /data-game-focus/, `${path} precisa indicar a área interativa da partida`);
   }
+});
+
+test("the shared countdown sends players to the interactive area", async () => {
+  const shell = await read("game-shell.js");
+
+  assert.match(shell, /querySelectorAll\("\[data-game-focus\]"\)/);
+  assert.match(shell, /game-tutorial\[open\]/);
+  assert.match(shell, /queuePlayFocus\(\)/);
 });

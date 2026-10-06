@@ -7,8 +7,8 @@
       name="description"
       content="Jogos leves e educativos da clínica de reabilitação neurológica."
     />
-    <meta name="theme-color" content="#F7F4EA" />
-    <title>Jogos da Clínica</title>
+    <meta name="theme-color" content="#080d18" />
+    <title>Teste Seu Cérebro — Clínica Reability</title>
     <link rel="icon" href="./assets/brand/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/brand/favicon-32.png" />
     <link rel="apple-touch-icon" href="./assets/brand/apple-touch-icon.png" />
@@ -22,27 +22,58 @@
       <section class="welcome" aria-labelledby="page-title">
         <header class="welcome-hero">
           <div class="welcome-hero__copy">
-            <img
-              class="brand-signature"
-              src="./assets/brand/reability-signature-transparent.png"
-              alt="Reability — Transformando limites em possibilidades"
-              width="720"
-              height="565"
-              decoding="async"
-            />
-            <p class="eyebrow">Cuidado, ciência e humanidade</p>
-            <h1 id="page-title">Um novo olhar para cada sessão</h1>
-            <p class="intro">Escolha um desafio e comece a jogar.</p>
+            <div class="hero-brand" aria-label="Clínica Reability">
+              <img
+                src="./assets/brand/logo-mark.png"
+                alt=""
+                width="512"
+                height="512"
+                decoding="async"
+              />
+              <span>Clínica <strong>Reability</strong></span>
+            </div>
+            <p class="hero-kicker"><span aria-hidden="true">●</span> Arena de desafios cognitivos</p>
+            <h1 id="page-title">
+              Teste Seu <strong>Cérebro</strong>
+              <small>by Clínica Reability</small>
+            </h1>
+            <p class="intro">Escolha um jogo, desafie suas habilidades e avance uma fase de cada vez.</p>
+            <div class="hero-actions">
+              <a class="hero-play" href="#games-title">Começar a jogar <span aria-hidden="true">▶</span></a>
+              <p><strong>8</strong><span>jogos para<br />explorar</span></p>
+            </div>
+          </div>
+
+          <div class="hero-game" aria-hidden="true">
+            <div class="hero-game__glow"></div>
+            <div class="hero-game__card">
+              <img
+                src="./assets/games/home/cores-e-regras-960.jpg"
+                alt=""
+                width="960"
+                height="540"
+                decoding="async"
+              />
+              <div class="hero-game__overlay">
+                <span>Desafio em destaque</span>
+                <strong>Cores e Regras</strong>
+                <small>Atenção alternada</small>
+              </div>
+            </div>
+            <span class="hero-chip hero-chip--score">+250 XP</span>
+            <span class="hero-chip hero-chip--level">FASE 01</span>
+            <span class="hero-orbit hero-orbit--one"></span>
+            <span class="hero-orbit hero-orbit--two"></span>
           </div>
         </header>
 
         <section class="game-library" aria-labelledby="games-title">
           <header class="game-library__heading">
             <div>
-              <p class="eyebrow">Biblioteca de jogos</p>
-              <h2 id="games-title">Escolha seu desafio</h2>
+              <p class="eyebrow">Selecione sua próxima missão</p>
+              <h2 id="games-title">Jogos para desafiar sua mente</h2>
             </div>
-            <span class="game-count">10 jogos</span>
+            <span class="game-count">8 jogos</span>
           </header>
 
           <div class="game-options">
@@ -169,37 +200,11 @@
             </a>
           </article>
 
-          <article class="game-option">
-            <a class="game-option__link" href="./jogo-puzzle-rotacao/index.html" aria-label="Jogar Puzzle de Rotação">
-              <div class="game-visual" aria-hidden="true">
-                <img src="./assets/games/puzzle-rotacao.svg" alt="" width="1280" height="720" decoding="async" loading="lazy" />
-                <span class="game-number">08</span>
-              </div>
-              <div class="game-option__content">
-                <div><p class="game-kicker">3 níveis</p><h3>Puzzle de Rotação</h3></div>
-                <span class="game-cta" aria-hidden="true">→</span>
-              </div>
-            </a>
-          </article>
-
-          <article class="game-option game-option--words">
-            <a class="game-option__link" href="./jogo-termo-unico/index.html" aria-label="Jogar Termooo">
-              <div class="game-visual" aria-hidden="true">
-                <img src="./assets/games/palavras-em-jogo.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
-                <span class="game-number">09</span>
-              </div>
-              <div class="game-option__content">
-                <div><p class="game-kicker">Único, Dueto e Quarteto</p><h3>Termooo</h3></div>
-                <span class="game-cta" aria-hidden="true">→</span>
-              </div>
-            </a>
-          </article>
-
           <article class="game-option game-option--rhythm">
             <a class="game-option__link" href="./jogo-ritmo-neuro/index.html" aria-label="Jogar Ritmo em Foco">
               <div class="game-visual" aria-hidden="true">
                 <img src="./assets/games/ritmo-em-foco.svg" alt="" width="960" height="540" decoding="async" loading="lazy" />
-                <span class="game-number">10</span>
+                <span class="game-number">08</span>
               </div>
               <div class="game-option__content">
                 <div><p class="game-kicker">4 pistas</p><h3>Ritmo em Foco</h3></div>
