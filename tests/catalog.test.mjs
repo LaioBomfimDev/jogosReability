@@ -56,3 +56,15 @@ test("home does not promise an XP system that the games do not have", async () =
   assert.doesNotMatch(home, /\bXP\b|hero-chip--score/i);
   assert.doesNotMatch(styles, /hero-chip--score/);
 });
+
+test("home hero keeps only the brand and the direct invitation to play", async () => {
+  const home = await read("index.html");
+  const styles = await read("home.css");
+
+  assert.match(
+    home,
+    /Teste Seu <strong>Cérebro<\/strong>[\s\S]*?<div class="hero-brand"[\s\S]*?Escolha um jogo, desafie suas habilidades cognitivas\./,
+  );
+  assert.doesNotMatch(home, /Arena de desafios cognitivos|Desafio em destaque|FASE 01|hero-game/);
+  assert.doesNotMatch(styles, /hero-kicker|hero-game|hero-chip|hero-orbit/);
+});
