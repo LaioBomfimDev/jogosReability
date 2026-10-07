@@ -3,6 +3,7 @@ import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { createClinicAPI } from "./clinic-server.mjs";
+import creativeGrade from "./api/creative-grade.js";
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const host = process.env.HOST || "127.0.0.1";
@@ -45,6 +46,7 @@ function resolveRequestPath(requestUrl) {
 const server = createServer(async (request, response) => {
   response.setHeader('X-Content-Type-Options', 'nosniff');
   response.setHeader('Referrer-Policy', 'same-origin');
+  if (request.url.split('?')[0] === '/api/creative-grade') return creativeGrade(request, response);
   if (request.url.startsWith('/api/')) return clinic.handle(request, response);
   if (request.method !== "GET" && request.method !== "HEAD") {
     sendText(response, 405, "Method not allowed");

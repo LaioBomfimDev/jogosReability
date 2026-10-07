@@ -4,12 +4,12 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("catalog keeps eight active game families numbered in a stable sequence", async () => {
+test("catalog keeps nine active game families numbered in a stable sequence", async () => {
   const home = await read("index.html");
   const numbers = [...home.matchAll(/<span class="game-number">(\d{2})<\/span>/g)].map((match) => match[1]);
 
-  assert.match(home, /<span class="game-count">8 jogos<\/span>/);
-  assert.deepEqual(numbers, ["01", "02", "03", "04", "05", "06", "07", "08"]);
+  assert.match(home, /<span class="game-count">9 jogos<\/span>/);
+  assert.deepEqual(numbers, ["01", "02", "03", "04", "05", "06", "07", "08", "09"]);
   assert.doesNotMatch(home, /jogo-puzzle-rotacao|jogo-termo-unico/);
 });
 
@@ -23,6 +23,7 @@ test("active game headers match the catalog", async () => {
     ["jogo-cubos-em-foco/index.html", "06"],
     ["jogo-matriz-neuro/index.html", "07"],
     ["jogo-ritmo-neuro/index.html", "08"],
+    ["jogo-forja-criativa/index.html", "09"],
   ]);
 
   for (const [path, number] of expected) {

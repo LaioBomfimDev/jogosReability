@@ -1,0 +1,5 @@
+{
+  "functions": {
+    "api/creative-grade.js": { "maxDuration": 60 }
+  }
+}

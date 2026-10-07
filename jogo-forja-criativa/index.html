@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#10101a" />
+    <meta
+      name="description"
+      content="Escreva, receba a correção da IA e forje seu personagem em uma aventura criativa de dez níveis."
+    />
+    <title>Forja Criativa · Reability</title>
+    <link rel="icon" href="../assets/brand/favicon.ico" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="back" href="../index.html">← Biblioteca</a>
+      <a class="brand" href="./index.html"
+        ><span aria-hidden="true">✦</span> FORJA CRIATIVA
+        <small><span class="game-hero__number">Jogo 09</span> · TESTE</small></a
+      >
+      <span class="top-signature"
+        >Reability <span aria-hidden="true">/</span> Creative Lab</span
+      >
+    </header>
+    <main>
+      <section id="setup" aria-labelledby="setup-title">
+        <div class="intro-layout">
+          <div class="intro-copy">
+            <p class="eyebrow">UMA JORNADA. DEZ DESAFIOS.</p>
+            <h1 id="setup-title">
+              Sua criatividade.<br /><em>Sua armadura.</em>
+            </h1>
+            <p class="lead">
+              Escreva sua ideia. Receba a correção da IA.<br />Transforme cada
+              desafio em uma nova peça de equipamento.
+            </p>
+            <div class="difficulty-legend">
+              <span><i class="easy"></i>3 fáceis</span
+              ><span><i class="medium"></i>3 médios</span
+              ><span><i class="hard"></i>3 difíceis</span
+              ><span><i class="extreme"></i>1 extremo</span>
+            </div>
+            <div id="resume-box" class="resume-box" hidden>
+              <p id="resume-copy"></p>
+              <button id="resume" class="primary" type="button">
+                Continuar jornada →
+              </button>
+            </div>
+            <form id="setup-form">
+              <fieldset class="character-choice">
+                <legend>01 <span>Escolha seu personagem</span></legend>
+                <label
+                  ><input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked
+                  /><span>Guardião <small>Masculino</small></span></label
+                >
+                <label
+                  ><input type="radio" name="gender" value="female" /><span
+                    >Guardiã <small>Feminino</small></span
+                  ></label
+                >
+              </fieldset>
+              <fieldset class="category-choice">
+                <legend>02 <span>Escolha sua trilha</span></legend>
+                <div id="category-options"></div>
+              </fieldset>
+              <button class="primary start-button" type="submit">
+                Iniciar jornada <span aria-hidden="true">→</span>
+              </button>
+              <p class="small-print">
+                Sua jornada fica salva neste navegador. A correção avalia o
+                texto que você escrever.
+              </p>
+            </form>
+          </div>
+          <div class="character-preview">
+            <div class="preview-label">
+              <span>SEU PERSONAGEM</span
+              ><strong id="preview-name">Guardião da criação</strong>
+            </div>
+            <div id="preview-avatar"></div>
+            <div class="preview-footer">
+              <span>COMECE COM UMA IDEIA</span
+              ><strong>Conquiste seu equipamento.</strong>
+              <p>A nota define o material. O nível aumenta o poder da peça.</p>
+            </div>
+          </div>
+        </div>
+        <div class="journey-teaser">
+          <span>O CAMINHO DA FORJA</span>
+          <div id="teaser-slots"></div>
+        </div>
+      </section>
+
+      <section id="journey" aria-labelledby="journey-title" hidden>
+        <div class="journey-header">
+          <div>
+            <p class="eyebrow" id="track-name"></p>
+            <h1 id="journey-title">A sua jornada</h1>
+          </div>
+          <button id="change-journey" class="quiet" type="button">
+            Personagem e trilha
+          </button>
+        </div>
+        <ol
+          id="level-path"
+          class="level-path"
+          aria-label="Progresso dos dez níveis"
+        ></ol>
+        <div class="play-layout">
+          <aside
+            class="character-panel panel"
+            aria-label="Personagem e equipamentos"
+          >
+            <div class="panel-heading">
+              <span id="character-name">Guardião</span
+              ><span class="pill" id="gear-count">0 / 10 peças</span>
+            </div>
+            <div id="equipped-avatar"></div>
+            <div class="power-line">
+              <span>Poder do conjunto</span><strong id="power">0</strong>
+            </div>
+            <div id="inventory" class="inventory"></div>
+            <details class="materials">
+              <summary>Como as notas viram equipamentos</summary>
+              <p>
+                Nota 1 a 10 define o material. Cada nível entrega uma peça
+                específica. Poder da peça = nível × 10 + nota.
+              </p>
+              <ol id="material-list"></ol>
+            </details>
+          </aside>
+          <div class="main-column">
+            <section
+              id="challenge-panel"
+              class="panel mission"
+              aria-labelledby="challenge-title"
+              data-game-focus
+            >
+              <div class="mission-top">
+                <span id="level-label" class="eyebrow"></span
+                ><span id="difficulty" class="pill"></span>
+              </div>
+              <p id="category-label" class="category-label"></p>
+              <h2 id="challenge-title" tabindex="-1"></h2>
+              <p id="brief" class="brief"></p>
+              <ul id="requirements" class="requirements"></ul>
+              <div class="reward-hint" id="reward-hint"></div>
+              <form id="answer-form">
+                <label for="answer" class="answer-label"
+                  >Sua resposta <span>Escreva com suas palavras</span></label
+                >
+                <textarea
+                  id="answer"
+                  name="answer"
+                  rows="8"
+                  minlength="5"
+                  maxlength="8000"
+                  required
+                  placeholder="Escreva aqui sua ideia, prompt, roteiro ou revisão…"
+                  aria-describedby="answer-help"
+                ></textarea>
+                <div class="answer-meta">
+                  <span id="answer-help"
+                    >A IA corrige seu texto; imagens e vídeos não são
+                    gerados.</span
+                  ><span id="char-count">0 / 8.000</span>
+                </div>
+                <details class="rubric">
+                  <summary>O que vale na nota?</summary>
+                  <div id="rubric-list"></div>
+                  <p>
+                    A exigência acompanha a dificuldade. Não precisa escrever
+                    muito: precisa atender ao pedido.
+                  </p>
+                </details>
+                <div id="api-status" class="service-status" role="status"></div>
+                <p id="answer-error" class="error" role="alert" hidden></p>
+                <button id="submit-answer" class="primary submit" type="submit">
+                  Enviar para a IA <span aria-hidden="true">✦</span>
+                </button>
+                <p class="small-print">
+                  Ao enviar, seu texto será compartilhado com o Google Gemini
+                  para correção. Use apenas conteúdo do desafio, sem dados
+                  pessoais.
+                </p>
+              </form>
+            </section>
+            <section
+              id="result-panel"
+              class="panel result"
+              aria-labelledby="result-title"
+              hidden
+            >
+              <p class="eyebrow" id="result-eyebrow">DESAFIO CONCLUÍDO</p>
+              <div class="result-top">
+                <h2 id="result-title" tabindex="-1">
+                  Uma nova peça foi forjada.
+                </h2>
+                <div class="score-seal">
+                  <strong id="result-score"></strong><span>/ 10</span>
+                </div>
+              </div>
+              <div id="reward-card" class="reward-card"></div>
+              <p id="feedback-summary" class="feedback-summary"></p>
+              <div id="result-trend" class="trend result-trend">
+                <strong></strong>
+                <p></p>
+              </div>
+              <div id="criterion-scores" class="criterion-scores"></div>
+              <div class="feedback-columns">
+                <div>
+                  <h3>O que funcionou</h3>
+                  <ul id="strengths"></ul>
+                </div>
+                <div>
+                  <h3>Seu próximo passo</h3>
+                  <ul id="improvements"></ul>
+                </div>
+              </div>
+              <details class="example">
+                <summary>Ver um exemplo de melhoria</summary>
+                <p id="improved-example"></p>
+              </details>
+              <details class="example">
+                <summary>Rever sua resposta</summary>
+                <p id="submitted-answer"></p>
+              </details>
+              <button id="next-level" type="button" class="primary">
+                Ir para o próximo nível →
+              </button>
+            </section>
+            <section class="panel progression" aria-labelledby="progress-title">
+              <div class="panel-heading">
+                <h2 id="progress-title">Seu desempenho</h2>
+                <span id="average" class="pill">Média —</span>
+              </div>
+              <div id="chart"></div>
+              <div id="trend" class="trend" role="status">
+                <strong></strong>
+                <p></p>
+              </div>
+              <details id="history-details">
+                <summary>Notas e correções anteriores</summary>
+                <div id="history"></div>
+              </details>
+            </section>
+          </div>
+        </div>
+      </section>
+      <p id="storage-warning" class="error" role="status" hidden>
+        Não foi possível salvar neste navegador. Mantenha esta aba aberta para
+        continuar a jornada.
+      </p>
+    </main>
+    <footer>
+      FORJA CRIATIVA
+      <span
+        >Protótipo de criação com IA · As notas são orientativas e podem
+        variar.</span
+      >
+    </footer>
+    <dialog id="restart-dialog">
+      <h2>Começar outra jornada?</h2>
+      <p>
+        A jornada salva neste navegador será substituída. Você pode cancelar e
+        continuar de onde parou.
+      </p>
+      <form method="dialog">
+        <button value="cancel" class="quiet">Manter jornada</button
+        ><button value="confirm" class="primary">Começar nova</button>
+      </form>
+    </dialog>
+    <noscript
+      >Ative o JavaScript para escolher seu personagem e jogar.</noscript
+    >
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

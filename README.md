@@ -2,6 +2,8 @@
 
 Aplicação em português com jogos cognitivos de acesso livre e acompanhamento opcional para profissionais da Clínica Reability.
 
+O jogo de teste **[Forja Criativa](./jogo-forja-criativa/README.md)** tem 10 níveis de criação e escrita, correção por Gemini e equipamentos para o personagem. É independente do acompanhamento clínico e precisa de `GEMINI_API_KEY` no servidor/Vercel para corrigir respostas.
+
 ## Executar
 
 Requer Node.js 22.13 ou superior (testado com Node 24). Não há dependências externas.
