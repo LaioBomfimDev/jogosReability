@@ -227,7 +227,7 @@ export function createGrader({
                   temperature: 0.2,
                   maxOutputTokens: 4096,
                   responseFormat: {
-                    text: { mimeType: "application/json", schema },
+                    text: { mimeType: "APPLICATION_JSON", schema },
                   },
                 },
               }),

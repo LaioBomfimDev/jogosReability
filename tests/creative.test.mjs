@@ -165,6 +165,11 @@ test("creative API: input validation, trusted brief, secret isolation, deduplica
     fetchImpl: async (url, init) => {
       calls++;
       sent = JSON.parse(init.body);
+      assert.equal(
+        sent.generationConfig.responseFormat.text.mimeType,
+        "APPLICATION_JSON",
+      );
+      assert.equal(sent.generationConfig.responseFormat.text.schema.type, "object");
       assert.equal(init.headers["x-goog-api-key"], "test-secret");
       assert.ok(!url.includes("test-secret"));
       return providerResponse(correction());
