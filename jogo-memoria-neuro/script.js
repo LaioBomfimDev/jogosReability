@@ -13,6 +13,14 @@ const cardSymbols = [
   { symbol: "🧩", label: "Puzzle" },
   { symbol: "⭐", label: "Destaque" },
 ];
+const illustratedSymbols = [
+  {symbol:'leaf',label:'Folha'}, {symbol:'key',label:'Chave'},
+  {symbol:'umbrella',label:'Guarda-chuva'}, {symbol:'notebook',label:'Caderno'},
+  {symbol:'vase',label:'Vaso'}, {symbol:'train',label:'Trem'},
+  {symbol:'house',label:'Casa'}, {symbol:'grape',label:'Uva'},
+  {symbol:'flower',label:'Flor'}, {symbol:'pencil',label:'Lápis'},
+].map(item=>({...item,image:`/assets/alphabet-kit/objects/${item.symbol}.svg`}));
+const collectionNames = {objects:'Objetos ilustrados',clinical:'Símbolos de saúde'};
 
 const LEVELS = {
   easy: {
@@ -53,6 +61,9 @@ const playAgainButton = document.querySelector("#play-again-button");
 const startButton = document.querySelector("#memory-start-button");
 const timeLimitSelect = document.querySelector("#memory-time-limit");
 const revealTimeSelect = document.querySelector("#memory-reveal-time");
+const collectionSelect = document.querySelector("#memory-collection");
+const collectionPreview = document.querySelector("#memory-collection-preview");
+const turnGuide = document.querySelector("#memory-turn-guide");
 
 let activeLevelKey = "easy";
 let firstCard;
@@ -68,10 +79,16 @@ let dailyAttemptPending = false;
 let timeLimitSeconds = 90;
 let revealTime = 700;
 let gameFinished = false;
+let activeCollection = 'objects';
 
 const activeLevel = () => LEVELS[activeLevelKey];
 
-const activeSymbols = () => cardSymbols.slice(0, activeLevel().pairCount);
+const activeSymbols = () => (activeCollection==='clinical'?cardSymbols:illustratedSymbols).slice(0, activeLevel().pairCount);
+const setCardOpen = (card,open) => {
+  card.classList.toggle('is-open',open);
+  card.setAttribute('aria-pressed',String(open));
+  card.setAttribute('aria-label',open?`Carta ${Number(card.dataset.position)+1}: ${card.dataset.label}`:`Carta ${Number(card.dataset.position)+1}, fechada`);
+};
 
 const shuffle = (cards) => {
   const shuffledCards = [...cards];
@@ -234,6 +251,7 @@ const resolveTurn = () => {
     firstCard.disabled = true;
     secondCard.disabled = true;
     matches += 1;
+    turnGuide.textContent=`Par encontrado: ${firstCard.dataset.label}. ${matches} de ${activeLevel().pairCount} pares.`;
     updateStatus();
     resetTurn();
 
@@ -244,10 +262,12 @@ const resolveTurn = () => {
     return;
   }
 
+  turnGuide.textContent='As imagens são diferentes. Observe suas posições antes de as cartas fecharem.';
   turnTimeout = window.setTimeout(() => {
-    firstCard.classList.remove("is-open");
-    secondCard.classList.remove("is-open");
+    setCardOpen(firstCard,false);
+    setCardOpen(secondCard,false);
     resetTurn();
+    turnGuide.textContent='Escolha mais duas cartas para comparar.';
   }, revealTime);
 };
 
@@ -255,6 +275,7 @@ const handleCardClick = async (event) => {
   const selectedCard = event.currentTarget;
 
   if (
+    gameFinished ||
     isResolving ||
     selectedCard === firstCard ||
     selectedCard.classList.contains("is-matched")
@@ -265,10 +286,11 @@ const handleCardClick = async (event) => {
   if (!(await recordDailyAttempt())) return;
 
   startTimer();
-  selectedCard.classList.add("is-open");
+  setCardOpen(selectedCard,true);
 
   if (!firstCard) {
     firstCard = selectedCard;
+    turnGuide.textContent='Agora escolha a segunda carta para comparar com a primeira.';
     return;
   }
 
@@ -279,18 +301,20 @@ const handleCardClick = async (event) => {
   resolveTurn();
 };
 
-const createCard = ({ symbol, label }, index) => {
+const createCard = ({ symbol, label, image }, index) => {
   const card = document.createElement("button");
   const cardId = `card-${index + 1}`;
 
   card.className = "memory-card";
   card.type = "button";
   card.dataset.symbol = symbol;
-  card.setAttribute("aria-label", `Carta ${index + 1}`);
+  card.dataset.label = label;
+  card.dataset.position = String(index);
+  card.setAttribute("aria-label", `Carta ${index + 1}, fechada`);
   card.setAttribute("aria-pressed", "false");
   card.innerHTML = `
-    <span class="card-face card-front" aria-hidden="true"></span>
-    <span class="card-face card-back" id="${cardId}" aria-hidden="true" title="${label}">${symbol}</span>
+    <span class="card-face card-front" aria-hidden="true"><span class="card-edition">REABILITY</span></span>
+    <span class="card-face card-back" id="${cardId}" aria-hidden="true">${image?`<img src="${image}" alt="" draggable="false" decoding="async">`:symbol}</span>
   `;
   card.addEventListener("click", handleCardClick);
 
@@ -303,9 +327,11 @@ const startGame = async () => {
   window.clearTimeout(turnTimeout);
   timeLimitSeconds = Math.max(0, Math.min(600, Number(timeLimitSelect.value) || 0));
   revealTime = Math.max(250, Math.min(2500, Number(revealTimeSelect.value) || 700));
-  ReabilityClinic.start(GAME_ID, activeLevelKey, { pairs:activeLevel().pairCount, timeLimitSeconds, revealTimeMs:revealTime });
+  activeCollection=collectionSelect.value==='clinical'?'clinical':'objects';
+  ReabilityClinic.start(GAME_ID, activeLevelKey, { pairs:activeLevel().pairCount, timeLimitSeconds, revealTimeMs:revealTime, collection:activeCollection });
   stopTimer();
   board.replaceChildren();
+  board.dataset.pairs=String(activeLevel().pairCount);
   if (victoryDialog.open) victoryDialog.close();
   shareFeedback.textContent = "";
   firstCard = undefined;
@@ -319,7 +345,8 @@ const startGame = async () => {
   gameFinished = false;
   timerElement.textContent = timeLimitSeconds ? formatTime(timeLimitSeconds * 1000) : "00:00";
   totalMatchesElement.textContent = activeLevel().pairCount;
-  selectedLevelElement.textContent = `${activeLevel().name} · ${activeLevel().pairCount} pares`;
+  selectedLevelElement.textContent = `${activeLevel().name} · ${activeLevel().pairCount} pares · ${collectionNames[activeCollection]}`;
+  turnGuide.textContent='Vire duas cartas por vez para comparar as imagens.';
   startScreen.hidden = true;
   gameArea.hidden = false;
   updateStatus();
@@ -376,6 +403,7 @@ restartButton.addEventListener("click", restartGame);
 changeLevelButton.addEventListener("click", showLevelSelection);
 playAgainButton.addEventListener("click", restartGame);
 shareButton.addEventListener("click", shareChallenge);
+collectionSelect.addEventListener('change',()=>{collectionPreview.hidden=collectionSelect.value==='clinical';});
 
 updateDailyStatus();
 selectLevel({ currentTarget:difficultyButtons[0] });

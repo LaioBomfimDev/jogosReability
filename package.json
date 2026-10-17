@@ -8,6 +8,7 @@
     "start": "node static-server.mjs",
     "test": "node --test tests/*.test.mjs",
     "build:alphabet": "node tools/build-alphabet-games.mjs",
+    "build:collection": "node tools/build-cognitive-covers.mjs",
     "validate:termo": "node tools/validate-termo-words.mjs --write"
   },
   "engines": { "node": ">=22.13.0" },

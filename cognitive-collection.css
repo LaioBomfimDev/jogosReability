@@ -1,0 +1,74 @@
+/* A restrained collection treatment, scoped to the two original games. */
+.cognitive-collection { --collection-ink:#102c3c;--collection-sage:#506d64;--collection-gold:#aa9b70;--collection-paper:#faf9f3;--game-accent:#a49b75;--game-accent-soft:#e5e8dc; }
+.cognitive-collection--memory { --game-accent:#78876d;--game-accent-soft:#e6ebdd; }
+.cognitive-collection .attention-shell,.cognitive-collection .game-card { background:linear-gradient(145deg,#fcfbf6,#f0eee4);border-color:#c7c4b0; }
+.cognitive-collection .game-hero { border-color:#344e58;background:linear-gradient(115deg,#0b2334,#173b48); }
+.cognitive-collection .game-hero::before { opacity:.5; }
+.cognitive-collection .game-hero__visual::before { border:0; }
+.cognitive-collection .game-hero__visual::after { background:linear-gradient(90deg,#133442,transparent 30%); }
+.cognitive-collection .game-hero__visual img { object-position:center; }
+.cognitive-collection .game-tutorial { border-color:#cfd2c3;box-shadow:none;background:#f8f8f1; }
+.cognitive-collection .collection-kicker { display:flex;align-items:center;gap:9px;margin:0 0 12px;color:#67735f;font:750 .65rem/1.4 var(--sans);letter-spacing:.14em;text-transform:uppercase; }
+.cognitive-collection .collection-kicker::before { content:"";width:19px;height:24px;flex:none;background:#7b8569;mask:url('/assets/alphabet-kit/objects/leaf.svg') center/contain no-repeat; }
+.cognitive-collection .collection-preview { display:flex;align-items:center;gap:14px;padding:15px 18px;margin:20px 0;border:1px solid #d8d9cc;border-radius:13px;background:#eeefe6; }
+.cognitive-collection .collection-preview__images { display:flex;flex:none;gap:8px; }
+.cognitive-collection .collection-preview__images img { width:42px;height:48px;object-fit:contain;filter:saturate(.28); }
+.cognitive-collection .collection-preview p { margin:0;color:#4f6159;font:400 .8rem/1.6 var(--sans); }
+.cognitive-collection .collection-preview strong { display:block;color:#263f3b;font-size:.85rem; }
+.cognitive-collection .collection-credit { color:#6d786f;font:400 .67rem/1.6 var(--sans);text-align:center;margin:22px 0 0; }
+.cognitive-collection .collection-credit a { color:inherit;text-underline-offset:3px; }
+.cognitive-collection--attention .attention-panel { background:#fcfbf6;border:1px solid #d2d3c5;box-shadow:0 12px 32px #0925360a; }
+.cognitive-collection--attention .attention-panel::before { height:2px;background:linear-gradient(90deg,#405e58,#b6ab87); }
+.cognitive-collection--attention .attention-choice { min-height:350px;border-radius:15px;background:#fffefa;border-color:#d6d9cd;box-shadow:none; }
+.cognitive-collection--attention .attention-choice::after { display:none; }
+.cognitive-collection--attention .attention-choice:hover { background:#fffef9;box-shadow:0 8px 20px #173c4310;transform:translateY(-2px); }
+.cognitive-collection--attention .attention-choice.is-selected { outline:0;border-color:#667d68;box-shadow:0 0 0 3px #667d681a; }
+.cognitive-collection--attention .attention-choice-tag { border-radius:5px;color:#687058;background:#e9ecdf;font-size:10px; }
+.cognitive-collection--attention .attention-choice>strong { font-family:var(--sans);font-size:28px;letter-spacing:-.025em; }
+.cognitive-collection--attention .attention-map,.cognitive-collection--attention .attention-steps { background:#f5f6ef;border-color:#e0e2d8; }
+.cognitive-collection--attention .attention-select { border-radius:9px;font-weight:650; }
+.cognitive-collection--attention #play { border-top:3px solid #78846a; }
+.cognitive-collection--attention #play::before { display:none; }
+.cognitive-collection--attention .attention-stage { background:#f6f6ef;box-shadow:inset 0 0 0 1px #dce1d5; }
+/* Stimulus and response colors intentionally retain the original mappings. */
+.cognitive-collection--memory #start-screen>h2 { margin-bottom:8px; }
+.cognitive-collection--memory .difficulty-options { grid-template-columns:repeat(3,minmax(0,1fr));gap:12px; }
+.cognitive-collection--memory .difficulty-option { display:flex;flex-direction:column;gap:12px;padding:20px 18px;border:1px solid #d1d5c8;border-radius:12px;background:#fafbf5;color:#18383b;box-shadow:none; }
+.cognitive-collection--memory .difficulty-option strong { font:750 1.6rem/1.1 var(--sans);color:#1d4145; }
+.cognitive-collection--memory .difficulty-option small { color:#647266;font:400 .75rem/1.6 var(--sans); }
+.cognitive-collection--memory .difficulty-option.is-selected { background:#eef1e7;border-color:#6c816b;box-shadow:0 0 0 3px #6c816b16; }
+.cognitive-collection--memory .difficulty-option span { color:#637563;font-size:.67rem; }
+.cognitive-collection--memory .difficulty-option:hover { border-color:#6c816b;transform:translateY(-2px); }
+.cognitive-collection--memory .selected-level { background:#e6ebdf;border-color:#c7d0bb;color:#465c47;border-radius:7px; }
+.cognitive-collection--memory .game-status { max-width:700px;margin:14px auto 22px; }
+.cognitive-collection--memory .game-status p { background:#f7f8f1;border-color:#d7ddce;border-radius:9px; }
+.cognitive-collection--memory .game-board { max-width:660px;margin:0 auto;padding:18px;border:1px solid #d1d7ca;border-radius:17px;background:#e9ede2;gap:12px; }
+.cognitive-collection--memory .game-board[data-pairs="10"] { grid-template-columns:repeat(5,minmax(0,1fr)); }
+.cognitive-collection--memory .memory-card { border-radius:10px;aspect-ratio:1; }
+.cognitive-collection--memory .memory-card:focus-visible { outline:3px solid #6a805c;outline-offset:4px; }
+.cognitive-collection--memory .card-front { background:linear-gradient(135deg,#193b4c,#0c293a);border:1px solid #344e5b;box-shadow:0 4px 7px #0b283214; }
+.cognitive-collection--memory .card-front::before { position:absolute;inset:8px;width:auto;height:auto;border:1px solid #b6ac7c80;border-radius:5px;box-shadow:none;background:none; }
+.cognitive-collection--memory .card-front::after { content:"";position:absolute;top:28%;left:36%;width:28%;height:34%;background:#cec296;mask:url('/assets/alphabet-kit/objects/leaf.svg') center/contain no-repeat;opacity:.64; }
+.cognitive-collection--memory .card-edition { position:absolute;bottom:15%;left:0;width:100%;color:#d1c9aa;font:500 clamp(5px,.7vw,8px)/1 var(--sans);text-align:center;letter-spacing:.21em; }
+.cognitive-collection--memory .card-back { overflow:hidden;border:1px solid #d0d7c7;background:#fffef8;box-shadow:0 3px 7px #17372d0a;font-size:clamp(1.7rem,5vw,3rem); }
+.cognitive-collection--memory .card-back img { position:absolute;inset:15%;width:70%;height:70%;object-fit:contain;filter:saturate(.32) contrast(.96); }
+.cognitive-collection--memory .memory-card.is-matched .card-back { background:#f1f4e9;box-shadow:inset 0 0 0 2px #9bad8b; }
+.cognitive-collection--memory .memory-card.is-matched .card-back::after { content:"✓";position:absolute;top:5px;right:6px;color:#587350;font:700 .75rem var(--sans); }
+.cognitive-collection--memory .memory-turn-guide { max-width:660px;margin:16px auto 12px;color:#4d655a;text-align:center;font:400 .83rem/1.6 var(--sans); }
+.cognitive-collection--memory .victory-dialog { border-color:#c4cab7;background:#f9faf2; }
+@media(max-width:600px) {
+  .cognitive-collection--memory .difficulty-options { gap:8px; }
+  .cognitive-collection--memory .difficulty-option { padding:15px 10px;gap:9px; }
+  .cognitive-collection--memory .difficulty-option strong { font-size:1.1rem; }
+  .cognitive-collection--memory .difficulty-option small { font-size:.65rem; }
+  .cognitive-collection--memory .game-board,.cognitive-collection--memory .game-board[data-pairs="10"] { grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px;border-radius:13px; }
+  .cognitive-collection--memory .memory-card { border-radius:7px; }
+  .cognitive-collection--memory .card-front::before { inset:5px;border-radius:3px; }
+  .cognitive-collection .collection-preview { gap:10px;padding:13px 12px; }
+  .cognitive-collection .collection-preview__images { gap:4px; }
+  .cognitive-collection .collection-preview__images img { width:26px;height:34px; }
+  .cognitive-collection--attention .attention-choice { min-height:0; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .cognitive-collection .memory-card .card-face { transition:none; }
+}

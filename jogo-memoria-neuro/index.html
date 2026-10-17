@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Um jogo da memória com símbolos relacionados à reabilitação neurológica."
+      content="Encontre pares de objetos ilustrados ou símbolos de saúde em um jogo de memória visual."
     />
     <meta name="theme-color" content="#F7F4EA" />
     <title>Memória Visual | Reability</title>
@@ -17,8 +17,9 @@
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="/clinic.css" />
     <link rel="stylesheet" href="/game-shell.css" />
+    <link rel="stylesheet" href="/cognitive-collection.css" />
   </head>
-  <body>
+  <body class="cognitive-collection cognitive-collection--memory">
     <main class="page-shell">
       <section class="game-card" aria-labelledby="game-title">
         <header class="game-hero">
@@ -36,15 +37,16 @@
                 <p class="eyebrow">Memória e reconhecimento</p>
               </div>
               <h1 id="game-title">Memória Visual</h1>
-              <p class="intro">Escolha um nível, encontre os pares e exercite a atenção de um jeito leve.</p>
+              <p class="intro">Observe os detalhes, reconheça as formas e encontre os pares. Uma coleção de objetos para exercitar sua memória visual.</p>
             </div>
             <div class="game-hero__visual" aria-hidden="true">
-              <img src="../assets/games/home/memoria-visual-960.jpg" alt="" />
+              <img src="/assets/games/collection/memoria-visual.svg" alt="" />
             </div>
           </div>
         </header>
 
         <section id="start-screen" class="start-screen" data-game-screen aria-labelledby="difficulty-title">
+          <p class="collection-kicker">Coleção visual · Formas do cotidiano</p>
           <h2 id="difficulty-title">Configure a partida</h2>
           <p id="daily-status" class="daily-status" aria-live="polite"></p>
           <div class="difficulty-options">
@@ -65,6 +67,10 @@
             </button>
           </div>
           <div class="game-config-grid">
+            <label class="game-config-field">Coleção de cartas
+              <select id="memory-collection"><option value="objects">Objetos ilustrados</option><option value="clinical">Símbolos de saúde · coleção original</option></select>
+              <small>Escolha as imagens que serão usadas nos pares.</small>
+            </label>
             <label class="game-config-field">Tempo da partida
               <select id="memory-time-limit"><option value="0">Livre</option><option value="60">60 segundos</option><option value="90" selected>90 segundos</option><option value="120">120 segundos</option><option value="180">180 segundos</option></select>
               <small>O relógio encerra somente esta partida.</small>
@@ -73,6 +79,10 @@
               <select id="memory-reveal-time"><option value="400">0,4 segundo</option><option value="700" selected>0,7 segundo</option><option value="1000">1 segundo</option><option value="1500">1,5 segundo</option></select>
               <small>Tempo para observar as duas cartas diferentes.</small>
             </label>
+          </div>
+          <div class="collection-preview" id="memory-collection-preview">
+            <div class="collection-preview__images" aria-hidden="true"><img src="/assets/alphabet-kit/objects/leaf.svg" alt=""><img src="/assets/alphabet-kit/objects/key.svg" alt=""><img src="/assets/alphabet-kit/objects/umbrella.svg" alt=""></div>
+            <p><strong>Objetos ilustrados</strong>Folhas, chaves e objetos do cotidiano. Observe a forma e a posição para reconhecer cada par.</p>
           </div>
           <button id="memory-start-button" class="button button-primary" type="button">Começar partida</button>
         </section>
@@ -94,6 +104,7 @@
             role="group"
             aria-label="Cartas do jogo da memória"
           ></div>
+          <p id="memory-turn-guide" class="memory-turn-guide" role="status">Vire duas cartas por vez para comparar as imagens.</p>
 
           <div class="game-actions">
             <button id="restart-button" class="button button-secondary" type="button">
@@ -109,6 +120,7 @@
 
           <p id="share-feedback" class="feedback" aria-live="polite"></p>
         </section>
+        <p class="collection-credit">Ilustrações: <a href="https://craftpix.net/" target="_blank" rel="noopener noreferrer">CraftPix</a> · coleção e composição Reability.</p>
       </section>
     </main>
 

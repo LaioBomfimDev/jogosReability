@@ -8,6 +8,8 @@ As páginas e os cartões dos oito jogos são gerados por `node tools/build-alph
 
 Nas tarefas de ordem, todas as posições ficam numeradas, com progresso do preenchimento e confirmação explícita; a última escolha ainda pode ser desfeita. A Sequência Mágica começa a apresentação somente ao tocar em **Ver sequência** e permite figuras repetidas. Na memória, pares diferentes ficam visíveis até tocar em **Fechar estas cartas**. A contagem separa o modelo da área que deve ser contada. Palavras preservam acentos e cedilha; a dica opcional de nome é identificada em cada registro com `hintUsed`.
 
+**Cores e Regras** e **Memória Visual** usam uma apresentação mais sóbria da coleção: papel claro, azul-marinho, detalhes vegetais e ilustrações com saturação reduzida. Em Memória Visual, a coleção padrão de objetos do cotidiano pode ser trocada pelos símbolos de saúde originais; a escolha é preservada no parâmetro `collection` da partida. As regras, tempos e quantidades de pares permanecem configuráveis. `npm run build:collection` recompõe as duas capas vetoriais a partir das ilustrações fornecidas.
+
 O jogo de teste **[Forja Criativa](./jogo-forja-criativa/README.md)** tem 10 níveis de criação e escrita, correção por Gemini e equipamentos para o personagem. É independente do acompanhamento clínico e precisa de `GEMINI_API_KEY` no servidor/Vercel para corrigir respostas.
 
 ## Executar

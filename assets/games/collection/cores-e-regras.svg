@@ -1,0 +1,199 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 960 540" role="img" aria-label="Cores e Regras"><defs>
+  <linearGradient id="paper" x2="1" y2="1"><stop stop-color="#fcfaf2"/><stop offset="1" stop-color="#e7e5d8"/></linearGradient>
+  <linearGradient id="navy" x2="1" y2="1"><stop stop-color="#15374a"/><stop offset="1" stop-color="#071d30"/></linearGradient>
+  <filter id="ink"><feColorMatrix type="saturate" values=".23"/></filter>
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#e6dfc2" stroke-opacity=".045"/></pattern>
+</defs><rect width="960" height="540" fill="url(#navy)"/><rect width="960" height="540" fill="url(#grid)"/>
+  <rect x="35" y="35" width="890" height="470" rx="24" fill="none" stroke="#bbb48a" stroke-opacity=".25"/>
+  <path d="M64 83h42M64 83v42M896 457h-42M896 457v-42" fill="none" stroke="#b8ad78" stroke-width="2"/>
+  <circle cx="850" cy="99" r="4" fill="#baa975"/>
+  <text x="92" y="107" fill="#c1b58c" font-family="Segoe UI,Arial,sans-serif" font-size="12" letter-spacing="3">ATENÇÃO E FLEXIBILIDADE</text>
+  <rect x="150" y="151" width="264" height="238" rx="21" fill="url(#paper)" transform="rotate(-5 282 270)"/>
+  <rect x="439" y="151" width="264" height="238" rx="21" fill="url(#paper)" transform="rotate(5 571 270)"/>
+  <circle cx="282" cy="261" r="61" fill="#1461c9"/><circle cx="282" cy="261" r="73" fill="none" stroke="#1461c9" stroke-opacity=".15"/>
+  <path d="M571 192L644 324H498Z" fill="#148151"/>
+  <path d="M260 365h44M549 365h44" stroke="#a99b69" stroke-width="2"/>
+  <g opacity=".55"><g filter="url(#ink)"><svg x="745" y="309" width="85" height="105" id="leaf-Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 121.47 181.45">
+  <defs>
+    <style>
+      .leaf-cls-1 {
+        fill: #d0d784;
+      }
+
+      .leaf-cls-2 {
+        fill: #babf55;
+      }
+
+      .leaf-cls-3 {
+        stroke: #f7f79c;
+      }
+
+      .leaf-cls-3, .leaf-cls-4, .leaf-cls-5 {
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2.79px;
+      }
+
+      .leaf-cls-4 {
+        stroke: #d0d784;
+      }
+
+      .leaf-cls-6 {
+        fill: #301305;
+        font-family: AlteHaasGrotesk, 'Alte Haas Grotesk';
+        font-size: 52.55px;
+      }
+
+      .leaf-cls-5 {
+        stroke: #8a9332;
+      }
+    </style>
+  </defs>
+  <g id="leaf-Layer_15" data-name="Layer 15">
+    <g>
+      <path class="leaf-cls-1" d="M1.94,136.86s7.62-14.4,16.94-28.8C1.09,90.27,1.09,45.37,40.9,18.27,80.71-8.84,119.68,3.87,119.68,3.87c0,0,9.32,49.98-22.02,88.94-31.34,38.96-72,19.48-72,19.48,0,0-14.4,22.87-16.94,29.65-10.16,6.78-6.78-5.08-6.78-5.08Z"/>
+      <path class="leaf-cls-2" d="M110.64,10.93s-52.8,27.95-68.89,68.89c11.86-9.04,59.01-55.34,68.89-68.89Z"/>
+      <path class="leaf-cls-2" d="M120.36,34.35c-.24-.74-.48-1.47-.73-2.16-9.87,46.59-38.44,69.47-57.64,73.99-21.71,5.11-27.39-9.46-18.07-29.74-30.6,28.9-37.05-.7-32.25-22.32-8.04,21.26-3.87,42.86,7.21,53.94-9.32,14.4-16.94,28.8-16.94,28.8,0,0-3.39,11.86,6.78,5.08,2.54-6.78,16.94-29.65,16.94-29.65,0,0,40.66,19.48,72-19.48,15.48-19.25,21.04-41.19,22.7-58.46Z"/>
+      <path class="leaf-cls-5" d="M1.94,136.86s7.62-14.4,16.94-28.8C1.09,90.27.02,43.73,40.9,18.27,80.17-6.18,119.63,3.14,119.63,3.14c0,0,5.48,52.62-21.97,89.67-29.77,40.18-72,19.48-72,19.48,0,0-14.4,22.87-16.94,29.65-10.16,6.78-6.78-5.08-6.78-5.08Z"/>
+      <path class="leaf-cls-5" d="M25.36,101.8S62.63,48.08,94.42,25.61"/>
+      <path class="leaf-cls-5" d="M75.78,26.71s-1.64,9.32-.55,15.89c6.58-2.19,16.99-2.19,16.99-2.19"/>
+      <path class="leaf-cls-5" d="M54.4,34.38s-1.1,18.09,1.1,27.95c8.22-1.64,25.76-4.38,25.76-4.38"/>
+      <path class="leaf-cls-5" d="M28.64,60.14s.55,15.35,7.13,25.21c12.61-2.19,27.95,0,27.95,0"/>
+      <path class="leaf-cls-3" d="M57.56,15.16c-21.4,10.07-28.87,18.9-35.58,27.67-3.67,4.8-7.06,14.68-7.06,14.68"/>
+      <path class="leaf-cls-3" d="M86.08,7.01c13.17-1.88,28.98-.22,28.98-.22,0,0,1.13,6.4.38,12.8"/>
+      <line class="leaf-cls-3" x1="68.86" y1="10.89" x2="74.89" y2="9.06"/>
+      <path class="leaf-cls-4" d="M22.27,110.03s-14.4,23.72-16.38,27.95"/>
+    </g>
+  </g>
+  <g id="leaf-Layer_16" data-name="Layer 16">
+
+  </g>
+</svg></g></g>
+  <g opacity=".55" transform="rotate(18 774 205)"><g filter="url(#ink)"><svg x="748" y="112" width="57" height="172" id="pencil-Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 148.62 196.90">
+  <defs>
+    <style>
+      .pencil-cls-1 {
+        fill: #a9d8fc;
+      }
+
+      .pencil-cls-2, .pencil-cls-3 {
+        stroke: #848484;
+      }
+
+      .pencil-cls-2, .pencil-cls-3, .pencil-cls-4, .pencil-cls-5, .pencil-cls-6, .pencil-cls-7, .pencil-cls-8, .pencil-cls-9, .pencil-cls-10, .pencil-cls-11, .pencil-cls-12 {
+        fill: none;
+        stroke-linejoin: round;
+      }
+
+      .pencil-cls-2, .pencil-cls-3, .pencil-cls-4, .pencil-cls-5, .pencil-cls-6, .pencil-cls-7, .pencil-cls-8, .pencil-cls-9, .pencil-cls-11, .pencil-cls-12 {
+        stroke-width: 2.79px;
+      }
+
+      .pencil-cls-2, .pencil-cls-4, .pencil-cls-6, .pencil-cls-7, .pencil-cls-8, .pencil-cls-9 {
+        stroke-linecap: round;
+      }
+
+      .pencil-cls-13 {
+        fill: #98c7ef;
+      }
+
+      .pencil-cls-4 {
+        stroke: #fde3ab;
+      }
+
+      .pencil-cls-5 {
+        stroke: #c9c9c9;
+      }
+
+      .pencil-cls-14 {
+        fill: #fed06e;
+      }
+
+      .pencil-cls-15 {
+        fill: #e0d7cd;
+      }
+
+      .pencil-cls-16 {
+        fill: #f4eee6;
+      }
+
+      .pencil-cls-6 {
+        stroke: #fff;
+      }
+
+      .pencil-cls-7 {
+        stroke: #c6e0f6;
+      }
+
+      .pencil-cls-8 {
+        stroke: #ff7b7b;
+      }
+
+      .pencil-cls-9 {
+        stroke: #e2e2e2;
+      }
+
+      .pencil-cls-17 {
+        fill: #bfbfbf;
+      }
+
+      .pencil-cls-18 {
+        fill: #7db7e2;
+      }
+
+      .pencil-cls-19 {
+        fill: #301305;
+        font-family: AlteHaasGrotesk, 'Alte Haas Grotesk';
+        font-size: 52.55px;
+      }
+
+      .pencil-cls-20 {
+        fill: #d35464;
+      }
+
+      .pencil-cls-10 {
+        stroke-width: 3px;
+      }
+
+      .pencil-cls-10, .pencil-cls-12 {
+        stroke: #eda52f;
+      }
+
+      .pencil-cls-11 {
+        stroke: #4b89bc;
+      }
+    </style>
+  </defs>
+  <g id="pencil-Layer_15" data-name="Layer 15">
+    <g>
+      <path class="pencil-cls-16" d="M99.12,24.98l8.47-14.96s7.06-11.29,17.22-7.91c10.16,3.39,16.38,7.34,19.48,11.29,3.11,3.95,2.82,14.4.28,18.64s-8.75,13.27-8.75,13.27l-36.71-20.33Z"/>
+      <path class="pencil-cls-15" d="M138.08,9.17c5.65,4.24,5.08,16.66-1.69,20.05-6.78,3.39-13.97-1.73-24.85-7.62-6.78-3.67-2.54-11.58-2.54-11.58l-2.1,1.21-7.78,13.75,36.71,20.33s6.21-9.04,8.75-13.27c2.54-4.24,2.82-14.68-.28-18.64-1.12-1.43-2.66-2.86-4.63-4.26-.51,0-1.04,0-1.58.03Z"/>
+      <path class="pencil-cls-6" d="M111.83,10.87s2.82-5.08,8.47-5.08,15.81,6.49,15.81,6.49"/>
+      <path class="pencil-cls-5" d="M99.12,24.98l8.47-14.96s5.65-11.58,17.22-7.91c10.21,3.24,16.13,7.55,19.48,11.29,4.8,5.36,2.82,14.4.28,18.64s-8.75,13.27-8.75,13.27l-36.71-20.33Z"/>
+      <path class="pencil-cls-14" d="M49.14,113.64l-4.8,48.56,40.38-24.85s-2.82-29.36-35.58-23.72"/>
+      <path class="pencil-cls-20" d="M46.31,142.29l-1.97,19.92,18.09-11.13c-4.69-8.46-11.67-9.29-16.12-8.79Z"/>
+      <path class="pencil-cls-10" d="M49.14,113.64l-4.8,48.56,40.38-24.85s-2.82-29.36-35.58-23.72"/>
+      <path class="pencil-cls-13" d="M49.14,113.64l41.79-73.41,36.71,20.89s-31.34,59.01-42.92,76.24c-5.08-3.11-2.54-7.62-7.06-10.73-2.83-1.95-8.19,2.54-12.14-.28-3.95-2.82-2.82-9.04-6.78-10.73s-2.82,1.41-9.6-1.98Z"/>
+      <path class="pencil-cls-13" d="M101.95,46.5l-40.85,71.44c-.53-1.01-1.24-1.85-2.35-2.32-3.96-1.69-2.83,1.41-9.6-1.98l41.78-73.41,11.02,6.27Z"/>
+      <path class="pencil-cls-18" d="M127.64,61.13s-31.34,59.01-42.92,76.23c-5.08-3.1-2.54-7.62-7.06-10.73-.23-.16-.47-.27-.73-.35l39.45-71.56,11.26,6.41Z"/>
+      <path class="pencil-cls-1" d="M116.38,54.72l-39.45,71.56c-2.95-.92-7.77,2.66-11.41.07-2.84-2.03-3.05-5.81-4.42-8.41l40.85-71.44,14.43,8.22Z"/>
+      <path class="pencil-cls-11" d="M49.14,113.64l41.79-73.41,36.71,20.89s-31.34,59.01-42.92,76.24c-5.08-3.11-2.54-7.62-7.06-10.73-2.83-1.95-8.19,2.54-12.14-.28-3.95-2.82-2.82-9.04-6.78-10.73s-2.82,1.41-9.6-1.98Z"/>
+      <path class="pencil-cls-12" d="M46.31,142.29s11.58-1.54,14.97,8.34"/>
+      <path class="pencil-cls-17" d="M90.93,40.23c0-.56,36.71,20.89,36.71,20.89,0,0,4.52.28,5.93-8.75,5.65-1.41,6.21-8.19,5.93-9.88-3.67-3.11-33.32-19.48-38.12-20.89-6.78,0-5.36,8.75-5.36,8.75,0,0-8.19,2.82-5.08,9.88"/>
+      <path class="pencil-cls-3" d="M90.93,40.23c0-.56,36.71,20.89,36.71,20.89,0,0,4.52.28,5.93-8.75,5.65-1.41,6.21-8.19,5.93-9.88-3.67-3.11-33.32-19.48-38.12-20.89-6.78,0-5.36,8.75-5.36,8.75,0,0-8.19,2.82-5.08,9.88"/>
+      <line class="pencil-cls-2" x1="96.01" y1="30.35" x2="103.35" y2="34.02"/>
+      <line class="pencil-cls-2" x1="118.88" y1="42.77" x2="133.57" y2="52.37"/>
+      <path class="pencil-cls-9" d="M101.66,26.11s17.22,9.04,23.44,12.99"/>
+      <path class="pencil-cls-9" d="M95.73,36s17.22,9.04,23.44,12.99"/>
+      <line class="pencil-cls-7" x1="78.07" y1="71.49" x2="57.61" y2="108"/>
+      <line class="pencil-cls-7" x1="90.37" y1="49.55" x2="85.79" y2="57.71"/>
+      <line class="pencil-cls-4" x1="52.53" y1="121.27" x2="50.84" y2="136.51"/>
+      <line class="pencil-cls-8" x1="49.43" y1="149.78" x2="49.14" y2="152.33"/>
+    </g>
+  </g>
+  <g id="pencil-Layer_16" data-name="Layer 16">
+
+  </g>
+</svg></g></g>
+  <text x="480" y="466" text-anchor="middle" fill="#d4d0ba" font-family="Segoe UI,Arial,sans-serif" font-size="13" letter-spacing="4">OBSERVE · ASSOCIE · RESPONDA</text></svg>
