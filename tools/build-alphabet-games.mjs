@@ -55,7 +55,7 @@ for(const game of games) {
           <div class="setup-controls">
             <label for="level">Dificuldade
               <select id="level"><option value="easy">Fácil · primeiros passos</option><option value="medium">Médio · um pouco mais de desafio</option><option value="hard">Difícil · novas conquistas</option></select>
-              <small>${memory?'3, 4 ou 6 pares de figuras, conforme a dificuldade.':sequence?'Memorize 2, 3 ou 5 figuras, conforme a dificuldade.':'A dificuldade ajusta a quantidade de opções ou a complexidade da tarefa.'}</small>
+              <small id="difficulty-help" aria-live="polite">${memory?'3 pares em 6 cartas.':sequence?'Observe 2 figuras e depois repita as 2, na mesma ordem.':'Veja o que muda ao escolher a dificuldade.'}</small>
             </label>
             <label for="rounds">${memory?'Quantidade de tabuleiros':'Quantidade de rodadas'}
               <select id="rounds">${(memory?[1,2,3]:[5,10,15]).map(value=>`<option value="${value}">${value} ${memory?(value===1?'tabuleiro':'tabuleiros'):'rodadas'}</option>`).join('')}</select>
@@ -79,16 +79,25 @@ for(const game of games) {
     <section id="play" class="alphabet-panel" data-game-screen data-game-focus tabindex="-1" aria-labelledby="instruction" hidden>
       <div class="game-stats"><span id="progress"></span><span id="score">0 acertos</span></div>
       <progress id="progress-bar" class="round-progress" value="0" max="5" aria-label="Progresso da partida"></progress>
+      <p id="phase" class="task-phase" role="status"></p>
       <div class="play-heading"><img id="mascot" src="${ASSETS}/cat/idle.svg" alt=""><h2 id="instruction" aria-live="polite"></h2></div>
+      <p id="task-help" class="task-help"></p>
       <div class="play-canvas">
-        <div id="prompt" class="prompt"></div>
-        <div id="slots" class="slots" aria-label="Sua sequência"></div>
-        <div id="board" class="play-board" role="group" aria-label="Opções do desafio"></div>
+        <div id="prompt" class="prompt" aria-live="polite"></div>
+        <div class="observation-actions"><button id="show-sequence" type="button" class="alphabet-button" hidden>Ver sequência</button><button id="show-hint" type="button" class="hint-button" hidden>Dica: mostrar nome</button></div>
+        <div id="slots-panel" class="slots-panel" hidden>
+          <div class="selection-heading"><strong id="selection-label"></strong><span id="selection-count"></span></div>
+          <div id="slots" class="slots" role="group" aria-label="Posições da sua resposta, na ordem"></div>
+          <p id="selection-help" class="selection-help" role="status"></p>
+        </div>
+        <p id="board-label" class="board-label"></p>
+        <div id="board" class="play-board" role="group" aria-labelledby="board-label"></div>
+        <div class="response-actions"><button id="undo" type="button" class="alphabet-button secondary" hidden>↶ Desfazer última escolha</button><button id="confirm" type="button" class="alphabet-button" hidden>Conferir resposta</button></div>
       </div>
       <div id="feedback" class="feedback" role="status" aria-live="polite"></div>
       <div class="play-footer">
-        <div class="alphabet-actions"><button id="undo" type="button" class="alphabet-button secondary" hidden>↶ Desfazer</button><button id="confirm" type="button" class="alphabet-button" hidden>Confirmar palavra</button><button id="next" type="button" class="alphabet-button" hidden>Próxima rodada →</button></div>
-        <div class="alphabet-actions"><button id="stop" type="button" class="alphabet-button secondary">Encerrar</button></div>
+        <div class="alphabet-actions"><button id="close-pair" type="button" class="alphabet-button" hidden>Fechar estas cartas</button><button id="next" type="button" class="alphabet-button" hidden>Próxima rodada →</button></div>
+        <div class="alphabet-actions"><button id="stop" type="button" class="alphabet-button secondary">Encerrar partida</button></div>
       </div>
       <p class="keyboard-tip">Tab + Enter para escolher · teclas 1 a 9 para as primeiras nove opções</p>
     </section>

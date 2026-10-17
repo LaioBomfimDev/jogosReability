@@ -6,6 +6,8 @@ A biblioteca tem **17 jogos**, incluindo oito atividades com o pacote Alphabet E
 
 As páginas e os cartões dos oito jogos são gerados por `node tools/build-alphabet-games.mjs`; regras, conteúdo e comportamento estão em `jogo-alfabeto-core/`. Créditos dos 153 SVGs em `assets/alphabet-kit/CREDITS.md`.
 
+Nas tarefas de ordem, todas as posições ficam numeradas, com progresso do preenchimento e confirmação explícita; a última escolha ainda pode ser desfeita. A Sequência Mágica começa a apresentação somente ao tocar em **Ver sequência** e permite figuras repetidas. Na memória, pares diferentes ficam visíveis até tocar em **Fechar estas cartas**. A contagem separa o modelo da área que deve ser contada. Palavras preservam acentos e cedilha; a dica opcional de nome é identificada em cada registro com `hintUsed`.
+
 O jogo de teste **[Forja Criativa](./jogo-forja-criativa/README.md)** tem 10 níveis de criação e escrita, correção por Gemini e equipamentos para o personagem. É independente do acompanhamento clínico e precisa de `GEMINI_API_KEY` no servidor/Vercel para corrigir respostas.
 
 ## Executar
