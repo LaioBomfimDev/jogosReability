@@ -1,3 +1,31 @@
+.alphabet-preview {
+  isolation:isolate;
+  background:#e5efdf!important;
+}
+.alphabet-preview::before {
+  content:"";position:absolute;inset:0;z-index:-1;
+  background-image:linear-gradient(0deg,#e4f0dfaa,#f8f8ed22),var(--preview-bg);
+  background-size:cover;background-position:center;
+}
+.alphabet-preview .alphabet-preview__art {
+  position:absolute;inset:15% 8% 18%;display:flex;align-items:center;justify-content:center;gap:5%;
+}
+.game-visual .alphabet-preview__item {
+  position:relative;inset:auto;width:25%;max-width:120px;height:76%;object-fit:contain;
+  transform:rotate(var(--tilt));filter:drop-shadow(0 9px 5px #1b3c3525);
+}
+.game-visual .alphabet-preview__letter { max-width:80px;height:67%; }
+.alphabet-preview .alphabet-preview__tag {
+  position:absolute;bottom:20px;left:22px;background:#ffffffdf;color:#345448;border:1px solid #fff;
+  padding:6px 12px;border-radius:30px;font-size:.7rem;font-weight:750;letter-spacing:.04em;
+}
+.game-visual .alphabet-preview__cat {
+  position:absolute;inset:auto 8px -7px auto;width:18%;height:40%;object-fit:contain;object-position:bottom;
+  transform:rotate(-8deg);filter:drop-shadow(0 5px 3px #19392f1a);
+}
+.game-option--alphabet .game-badge { background:#113e31;color:#daf1b8;border-color:#376a48; }
+.game-option--alphabet .game-number { background:#12342ad9;color:#f2ffde;border-color:#ffffff50; }
+
 :root {
   --game-bg: #080d18;
   --game-surface: #0e1625;

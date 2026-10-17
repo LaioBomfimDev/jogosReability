@@ -2,6 +2,10 @@
 
 Aplicação em português com jogos cognitivos de acesso livre e acompanhamento opcional para profissionais da Clínica Reability.
 
+A biblioteca tem **17 jogos**, incluindo oito atividades com o pacote Alphabet Education Kit da CraftPix: Jardim das Letras, Palavra em Peças, Trilha do Alfabeto, Pares do Gatinho, Olho de Lince, Conta e Brinca, Sequência Mágica e Cada Coisa no seu Lugar. Os jogos usam 52 objetos originais, letras vetoriais e o gato guia, com três dificuldades, quantidade de rodadas configurável e respostas sem limite de tempo. A sequência permite ajustar o tempo de observação; a memória registra cada tentativa de par. No modo profissional, os novos jogos usam a mesma seleção de paciente e o mesmo histórico. Sair da aba encerra a partida como interrompida.
+
+As páginas e os cartões dos oito jogos são gerados por `node tools/build-alphabet-games.mjs`; regras, conteúdo e comportamento estão em `jogo-alfabeto-core/`. Créditos dos 153 SVGs em `assets/alphabet-kit/CREDITS.md`.
+
 O jogo de teste **[Forja Criativa](./jogo-forja-criativa/README.md)** tem 10 níveis de criação e escrita, correção por Gemini e equipamentos para o personagem. É independente do acompanhamento clínico e precisa de `GEMINI_API_KEY` no servidor/Vercel para corrigir respostas.
 
 ## Executar

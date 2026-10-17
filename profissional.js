@@ -1,5 +1,5 @@
 (() => {
-  const names={'memoria-visual':'Memória Visual','logica-numerica':'Lógica Numérica','cerebro-feliz':'Atenção Plena','cubos-em-foco':'Cubos em Foco','matriz-em-movimento':'Matriz em Movimento','puzzle-rotacao':'Puzzle de Rotação','ritmo-em-foco':'Ritmo em Foco','jogo-de-palavras':'Termooo','atencao-cores':'Cores e Regras','rastreio-foco':'Siga o Foco'};
+  const names={'memoria-visual':'Memória Visual','logica-numerica':'Lógica Numérica','cerebro-feliz':'Atenção Plena','cubos-em-foco':'Cubos em Foco','matriz-em-movimento':'Matriz em Movimento','puzzle-rotacao':'Puzzle de Rotação','ritmo-em-foco':'Ritmo em Foco','jogo-de-palavras':'Termooo','atencao-cores':'Cores e Regras','rastreio-foco':'Siga o Foco','jardim-letras':'Jardim das Letras','palavra-pecas':'Palavra em Peças','trilha-alfabeto':'Trilha do Alfabeto','pares-gatinho':'Pares do Gatinho','olho-lince':'Olho de Lince','conta-brinca':'Conta e Brinca','sequencia-magica':'Sequência Mágica','cada-coisa':'Cada Coisa no seu Lugar'};
   const levels={easy:'Fácil',medium:'Médio',hard:'Difícil',simple:'Simples',leve:'Leve',ritmo:'Ritmo',intenso:'Intenso',unico:'Único',dueto:'Dueto',quarteto:'Quarteto'};
   const statuses={active:'Em aberto',completed:'Concluída',interrupted:'Interrompida',timeout:'Tempo esgotado'};
   const $=id=>document.getElementById(id); let rows=[]; const selectedIds=new Set();

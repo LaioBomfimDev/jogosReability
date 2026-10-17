@@ -6,6 +6,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { createClinicAPI } from '../clinic-server.mjs';
+import { games as alphabetGames } from '../jogo-alfabeto-core/content.js';
 
 test('authentication, ownership, round persistence and idempotent retries', async t => {
   const directory=mkdtempSync(path.join(tmpdir(),'reability-test-'));
@@ -63,6 +64,19 @@ test('authentication, ownership, round persistence and idempotent retries', asyn
   const deleted=await req('/api/matches/delete',{ids:[matchId]},a);assert.equal(deleted.status,200);assert.equal(deleted.body.deleted,1);
   assert.equal((await req('/api/history',undefined,a)).body.length,0);
   assert.equal((await req('/api/matches/'+matchId,undefined,a)).status,404);
+  for(const game of alphabetGames) {
+    const gameMatchId=randomUUID();
+    const makeEvent=(kind,data)=>({id:randomUUID(),matchId:gameMatchId,kind,data,at:new Date().toISOString()});
+    const events=[
+      makeEvent('start',{patientId:patient.id,age:31,game:game.id,level:'easy',config:{rounds:5}}),
+      makeEvent('round',{round:1,correct:true,responseMs:400,expected:'G',choice:'G'}),
+      makeEvent('finish',{status:'completed',correct:1,errors:0}),
+    ];
+    assert.equal((await req('/api/events',{events},a)).status,200,game.title);
+    const saved=(await req('/api/matches/'+gameMatchId,undefined,a)).body;
+    assert.equal(saved.events.length,3);assert.equal(saved.events[1].data.correct,true);
+  }
+  assert.equal((await req('/api/history',undefined,a)).body.length,8);
   assert.equal((await req('/api/logout',{},a)).status,200);
   assert.equal((await req('/api/me',undefined,a)).status,401);
 });

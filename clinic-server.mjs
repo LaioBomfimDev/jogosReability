@@ -8,7 +8,7 @@ const str = (value, max = 120) => typeof value === 'string' && value.trim().leng
 const id = value => /^[a-f0-9-]{36}$/.test(value) ? value : fail(400, 'Identificador inválido.');
 const age = value => Number.isInteger(value) && value >= 0 && value <= 120 ? value : fail(400, 'Informe uma idade entre 0 e 120 anos.');
 const digest = token => createHash('sha256').update(token).digest('hex');
-const games = new Set(['memoria-visual', 'logica-numerica', 'cerebro-feliz', 'cubos-em-foco', 'matriz-neuro', 'matriz-em-movimento', 'puzzle-rotacao', 'ritmo-neuro', 'ritmo-em-foco', 'termo', 'termooo', 'jogo-de-palavras', 'atencao-cores', 'rastreio-foco']);
+const games = new Set(['memoria-visual', 'logica-numerica', 'cerebro-feliz', 'cubos-em-foco', 'matriz-neuro', 'matriz-em-movimento', 'puzzle-rotacao', 'ritmo-neuro', 'ritmo-em-foco', 'termo', 'termooo', 'jogo-de-palavras', 'atencao-cores', 'rastreio-foco', 'jardim-letras', 'palavra-pecas', 'trilha-alfabeto', 'pares-gatinho', 'olho-lince', 'conta-brinca', 'sequencia-magica', 'cada-coisa']);
 const soleAccount = {
   id: '6f0fcb5b-b4bf-4e86-987f-55832c00d3e8',
   name: 'Denise Neves',

@@ -1,5 +1,9 @@
 (() => {
   const GAME_PAGES = {
+    'jogo-jardim-letras':'Jardim das Letras', 'jogo-palavra-pecas':'Palavra em Peças',
+    'jogo-trilha-alfabeto':'Trilha do Alfabeto', 'jogo-pares-gatinho':'Pares do Gatinho',
+    'jogo-olho-lince':'Olho de Lince', 'jogo-conta-brinca':'Conta e Brinca',
+    'jogo-sequencia-magica':'Sequência Mágica', 'jogo-cada-coisa':'Cada Coisa no seu Lugar',
     'jogo-memoria-neuro':'Memória Visual', 'jogo-numero-neuro':'Lógica Numérica', 'jogo-cerebro-feliz':'Atenção Plena',
     'jogo-cubos-em-foco':'Cubos em Foco', 'jogo-matriz-neuro':'Matriz em Movimento', 'jogo-puzzle-rotacao':'Puzzle de Rotação',
     'jogo-ritmo-neuro':'Ritmo em Foco', 'jogo-termo-unico':'Termooo · Único', 'jogo-termo-dueto':'Termooo · Dueto',

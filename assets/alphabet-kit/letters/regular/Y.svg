@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 117.52 156.25">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #663c23;
+        stroke-linejoin: round;
+        stroke-width: 3.51px;
+      }
+    </style>
+  </defs>
+  <g id="Layer_9_copy" data-name="Layer 9 copy">
+    <path class="cls-1" d="M107.75,5.11c-8.48-5.9-20.14-3.82-26.04,4.66l-22.35,32.08c-.21,0-.42.02-.63.04l-23.32-30.92C29.18,2.71,17.44,1.07,9.2,7.29.95,13.51-.69,25.24,5.53,33.49l35.96,47.68.32,54.73c.06,10.29,8.42,18.6,18.71,18.6h.11c10.33-.06,18.66-8.48,18.6-18.82l-.33-56.43,33.51-48.09c5.91-8.48,3.82-20.14-4.66-26.04Z"/>
+  </g>
+</svg>

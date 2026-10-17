@@ -4,12 +4,12 @@ import test from "node:test";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
 
-test("catalog keeps nine active game families numbered in a stable sequence", async () => {
+test("catalog keeps seventeen active game families numbered in a stable sequence", async () => {
   const home = await read("index.html");
   const numbers = [...home.matchAll(/<span class="game-number">(\d{2})<\/span>/g)].map((match) => match[1]);
 
-  assert.match(home, /<span class="game-count">9 jogos<\/span>/);
-  assert.deepEqual(numbers, ["01", "02", "03", "04", "05", "06", "07", "08", "09"]);
+  assert.match(home, /<span class="game-count">17 jogos<\/span>/);
+  assert.deepEqual(numbers, Array.from({length:17},(_,i)=>String(i+1).padStart(2,'0')));
   assert.doesNotMatch(home, /jogo-puzzle-rotacao|jogo-termo-unico/);
 });
 
@@ -24,6 +24,14 @@ test("active game headers match the catalog", async () => {
     ["jogo-matriz-neuro/index.html", "07"],
     ["jogo-ritmo-neuro/index.html", "08"],
     ["jogo-forja-criativa/index.html", "09"],
+    ["jogo-jardim-letras/index.html", "10"],
+    ["jogo-palavra-pecas/index.html", "11"],
+    ["jogo-trilha-alfabeto/index.html", "12"],
+    ["jogo-pares-gatinho/index.html", "13"],
+    ["jogo-olho-lince/index.html", "14"],
+    ["jogo-conta-brinca/index.html", "15"],
+    ["jogo-sequencia-magica/index.html", "16"],
+    ["jogo-cada-coisa/index.html", "17"],
   ]);
 
   for (const [path, number] of expected) {
